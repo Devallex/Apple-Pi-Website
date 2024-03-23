@@ -1,0 +1,299 @@
+/* Constants */
+:root {
+	--raw-light-color: #F5F5F5;
+	--raw-dark-color: #1b1b1b;
+	--dim-amount: 95%;
+
+	--primary-color: #FF0800;
+	--secondary-color: #8DB600;
+
+	--light-color: var(--raw-light-color);
+	--dark-color: var(--raw-dark-color);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--light-color: var(--raw-dark-color);
+		--dark-color: var(--raw-light-color);
+	}
+}
+
+/* Text */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	transition: font-size 0.25 ease;
+	font-family: "helvetica";
+}
+
+.title {
+	color: var(--dark-color);
+	text-align: center;
+	text-shadow: 3px 1px var(--primary-color);
+	transition: text-shadow 0.25s;
+}
+
+.title:hover {
+	text-shadow: -3px -1px var(--secondary-color);
+}
+
+html {
+	color: var(--dark-color);
+	font-family: sans-serif;
+	margin: 0px;
+	filter: opacity(0);
+	transition: filter 0.5s;
+}
+
+main {
+	background-color: var(--light-color);
+	margin: 10%;
+}
+
+body {
+	background-color: var(--light-color);
+	margin: 0px;
+}
+
+hr {
+	transition: width 0.25s;
+	width: 75%;
+}
+
+hr:hover {
+	width: 85%;
+}
+
+blockquote {
+	margin: 10px;
+	padding: 2.5%;
+	background: var(--light-color);
+	filter: brightness(var(--dim-amount));
+	color: var(--dark);
+	border-radius: 5px;
+	border-color: var(--light-color);
+	border-width: 5px;
+}
+
+/* Address */
+address {
+	font-style: italic;
+}
+
+/* Unordered List */
+ul {
+	list-style-type: none;
+}
+
+ul>li:before {
+	content: "– ";
+}
+
+/* Anchors */
+a {
+	color: var(--primary-color);
+	text-decoration: underline;
+	text-decoration-color: var(--dark-color);
+}
+
+a:hover {
+	color: var(--secondary-color);
+}
+
+a:active {
+	filter: opacity(0.5);
+}
+
+/* Object */
+object {
+	width: 100%;
+}
+
+/* Strong */
+strong {
+	color: var(--light-color);
+	stroke-color: var(--primary-color);
+	stroke-width: 1px;
+}
+
+md-block strong,
+md-span strong {
+	style: italic;
+	color: var(--dark-color);
+	stroke-width: 0;
+}
+
+/* Code */
+code {
+	position: relative;
+	margin: 5px;
+	padding: 5px;
+	z-index: 1;
+	background-color: #8DB600;
+	border-radius: 10px;
+}
+
+/* Text Area */
+textarea {
+	color: var(--dark-color);
+	width: 100%;
+	height: 100px;
+	resize: none;
+	margin: 0px;
+	padding: 0px;
+	background-color: var(--light-color);
+	border-color: var(--dark-color);
+	border-radius: 10px;
+	/* TODO: Add background shade, add inner margin between text and wall */
+}
+
+table,
+tr,
+td,
+th {
+	border: 0.5px solid;
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+.search {
+	display: block;
+	margin: auto;
+	transition: textContent cubic-bezier(0.075, 0.82, 0.165, 1);
+	width: 80%;
+	border: 0;
+	padding: 5px;
+}
+
+/*** PAGE SECTIONS ***/
+
+/* Split */
+.split {
+	display: flex;
+	width: 100%;
+}
+
+.split .left {
+	flex: 50%;
+	padding: 15px;
+}
+
+.split .right {
+	flex: 50%;
+	padding: 15px;
+}
+
+/* Header */
+header {
+	height: 10%;
+	margin: 0px;
+	padding: 15px;
+	position: sticky;
+	position: -webkit-sticky;
+	text-align: center;
+	left: 0px;
+	right: 0px;
+}
+
+header .background {
+	background-color: var(--light-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	filter: brightness(var(--dim-amount));
+	z-index: -1;
+}
+
+header a {
+	position: relative;
+	list-style-type: none;
+	margin: 5px 0px 10px 15px;
+	padding: 0;
+}
+
+header a {
+	color: var(--raw-light-color);
+	display: inline-block;
+	padding: 20px;
+	text-decoration: none;
+	transition: box-shadow 0.25s ease;
+	background-color: var(--primary-color);
+}
+
+header a div {
+	transition: transform 0.25s ease;
+}
+
+header a:hover div {
+	transform: scale(1.25);
+}
+
+header a:hover {
+	box-shadow: 5px 5px var(--secondary-color);
+}
+
+/* Breadcrumbs */
+nav-breadcrumbs {
+	position: relative;
+	margin: 20px;
+	padding: 20px;
+	z-index: 1;
+}
+
+nav-breadcrumbs .document {
+	size: 100%;
+}
+
+nav-breadcrumbs .background {
+	background-color: var(--light-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	filter: brightness(var(--dim-amount));
+	z-index: -1;
+	border-radius: 10px;
+}
+
+/* Footer */
+footer {
+	height: 10%;
+	margin: 0px;
+	padding: 10px;
+	position: sticky;
+	position: -webkit-sticky;
+	text-align: center;
+	left: 0px;
+	right: 0px;
+}
+
+footer .background {
+	background-color: var(--light-color);
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	filter: brightness(var(--dim-amount));
+	z-index: -1;
+}
+
+/* Address */
+address {
+	font-style: italic;
+}
+
+/* Unordered List */
+ul {
+	list-style-type: none;
+}
+
+ul>li:before {
+	content: "– ";
+}

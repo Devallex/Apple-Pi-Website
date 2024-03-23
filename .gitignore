@@ -1,0 +1,11 @@
+# Operating System Files
+.DS_Store
+
+# Cache Files
+__pycache__
+*.pyc
+
+# Data Files
+instance
+.db
+.db-*
