@@ -8,7 +8,7 @@ pip3 install -r requirements.txt
 3. Create `.env` file (Configure options here)
 ```env
 ADMIN_USERNAME="admin"
-ADMIN_PASSWORD=&DM1N"
+ADMIN_PASSWORD="&DM1N"
 ```
 ## Running
 1. Start the web server
