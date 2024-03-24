@@ -5,6 +5,7 @@ from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_cors import CORS
 from apscheduler.schedulers.background import BackgroundScheduler
+from os import getenv
 
 
 class Base(DeclarativeBase):
