@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/resources/css/styles.css">
+    </link>
+    <title>
+        Users
+    </title>
+    <script src="/resources/js/modules.js" id="modules">
+    </script>
+</head>
+
+<body>
+    <noscript>
+        <meta http-equiv='refresh' content='0; URL=/noscript'>
+    </noscript>
+    <header></header>
+    <main>
+        <h1 class="title">Profile — {{ user.getNameText() }} </h1>
+        <h2>Description</h2>
+        <p>
+            {% if user.description %}
+            {{ user.description }}
+            {% else %}
+            <i>This profile has no description</i>
+            {% endif %}
+        </p>
+        <hr>
+        <h2>Information</h2>
+        <p>
+            Joined on: {{ user.getDateText() }}
+        </p>
+    </main>
+    <footer></footer>
+</body>
+
+</html>

@@ -3,6 +3,7 @@ var MODULES = [
 	"api",
 
 	"cookies",
+	"users",
 
 	"header",
 	"footer",

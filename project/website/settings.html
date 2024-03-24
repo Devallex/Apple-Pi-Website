@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	</link>
+	<title>User Settings</title>
+	<script src="/resources/js/modules.js" id="modules"></script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<nav-breadcrumbs></nav-breadcrumbs>
+		<h1 class="title">User Settings {{ user.getNameText() }}</h1>
+		Here you can modify the settings for your account.
+		<blockquote><strong>WARNING:</strong><br>This website is still in development and data loss may be possible. You
+			may want to save things such as your description to a document to avoid re-writing it later.</blockquote>
+		<h2>Log Out</h2>
+
+		<form action="/sessions/" method="delete">
+			<input type="submit" value="Log Out">
+			<label for="log_out">Click this button to log out on this
+				browser.</label>
+		</form>
+		<br>
+		<form action="/sessions/all/" method="delete">
+			<input type="submit" value="Log Out Everywhere">
+			<label for="log_out_everywhere">Click
+				this button to log out on all devices.</label>
+		</form>
+	</main>
+	<footer></footer>
+</body>
+
+</html>
