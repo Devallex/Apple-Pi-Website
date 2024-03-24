@@ -5,6 +5,9 @@
 __pycache__
 *.pyc
 
+# Env Files
+.env
+
 # Data Files
 instance
 .db
