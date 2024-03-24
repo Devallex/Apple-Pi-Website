@@ -6,7 +6,6 @@ from app import (
     render_template,
     Mapped,
     mapped_column,
-    flask,
     getenv,
     make_response,
     on_create_all,
