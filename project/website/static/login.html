@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	</link>
+	<title>Login</title>
+	<script src="/resources/js/modules.js" id="modules"></script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">Login</h1>
+		<p>Don't have an account? <a href="/sign-up/">Sign up here</a>.</p>
+
+		<form action="/sessions/" method="POST">
+			<label for="username">Username:</label>
+			<input type="text" id="username" name="username"><br><br>
+
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password"><br><br>
+
+			<input type="submit" value="Submit" id="submit">
+		</form>
+	</main>
+	<footer></footer>
+</body>
+
+</html>
