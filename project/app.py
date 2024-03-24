@@ -22,9 +22,18 @@ CORS(app, support_credentials=False)
 
 scheduler = BackgroundScheduler()
 
+on_create_all_callbacks = []
+
+
+def on_create_all(callback):
+    on_create_all_callbacks.append(callback)
+
+
 def run():
     with app.app_context():
         db.create_all()
+        for callback in on_create_all_callbacks:
+            callback()
     scheduler.start()
     app.run()
 
