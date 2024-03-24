@@ -13,6 +13,11 @@ function createHeaderLink(name, url) {
 }
 
 function updateHeader(header, variables) {
+	editorLink = ""
+	if (variables["isLoggedIn"]) {
+		editorLink = createHeaderLink("Editor", "/editor")
+	}
+
 	header.innerHTML = `
 	<div class="background"></div>
 	<div>
@@ -21,13 +26,27 @@ function updateHeader(header, variables) {
 		${createHeaderLink("News & Media", "/news")}
 		${createHeaderLink("Our Team", "/users")}
 		${createHeaderLink("Documents", "/documents")}
-		${createHeaderLink("Log In", "/login")}
+		${createHeaderLink(variables["userText"], variables["userLink"])}
 	</div>
 `
 }
 
 Array.prototype.slice.call(document.getElementsByTagName("header")).forEach((header) => {
-	updateHeader(header, {})
+	if (isLoggedIn()) {
+		getUserInfo((userInfo) => {
+			updateHeader(header, {
+				"isLoggedIn": true,
+				"userLink": "/settings",
+				"userText": `User: <b>${userInfo["username"]}</b>`
+			})
+		})
+	} else {
+		updateHeader(header, {
+			"isLoggedIn": false,
+			"userLink": "/login",
+			"userText": "Log In"
+		})
+	}
 })
 
 loaded()
