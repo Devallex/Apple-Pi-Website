@@ -1,6 +1,5 @@
 import flask
 from flask import Flask, request, render_template, redirect, url_for, make_response
-from flask_api import status
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
