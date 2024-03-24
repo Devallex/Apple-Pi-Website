@@ -34,6 +34,4 @@ def run():
         for callback in on_create_all_callbacks:
             callback()
     scheduler.start()
-    app.run()
-
-
+    app.run()  # TODO: Fix issue with error when starting in debug mode
