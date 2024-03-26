@@ -5,6 +5,7 @@ var MODULES = [
 	"cookies",
 	"users",
 
+	"editor",
 	"header",
 	"footer",
 ]
