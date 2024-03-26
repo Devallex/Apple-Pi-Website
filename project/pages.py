@@ -1,6 +1,7 @@
 # NOTE: Do not remove unused imports
-from app import app, render_template
+from app import app, render_template, request
 from flask import Flask, send_from_directory
+from werkzeug.exceptions import HTTPException
 
 
 def send(path):
@@ -14,6 +15,18 @@ def attempt_send(paths):
         except:
             continue
         break
+
+@app.errorhandler(HTTPException)
+def handle_error(error):
+    if "text/html" in request.headers.getlist("accept")[0]:
+        return render_template(
+            "error.html",
+            name="Not Found",
+            code=error.code,
+            description=error.description,
+            show_home=True,
+        )
+    return "Error — " + str(error.code) + "\n\n" + error.description, error.code
 
 
 @app.route("/<path:path>")
