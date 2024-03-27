@@ -17,7 +17,7 @@
 	<header></header>
 	<main>
 		<h1 class="title">{{ code }} — {{ name }}</h1>
-		<p>{{ description }}</p>
+		<p>{{ description|safe }}</p>
 		{% if show_home %}
 		<hr>
 		<a href="/">Return to the home page.</a>
