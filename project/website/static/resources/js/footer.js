@@ -2,7 +2,7 @@ Array.prototype.slice.call(document.getElementsByTagName("footer")).forEach((foo
 	const textContent = footer.textContent
 	footer.innerHTML = `
 		<div class="background"></div>
-		<p>
+		<div class="content">
 			${textContent}
 			<h1>Find Us</h1>
 			<address>
@@ -24,7 +24,7 @@ Array.prototype.slice.call(document.getElementsByTagName("footer")).forEach((foo
 				<br>
 				Guilford, CT 06437
 			</address>
-		</p>
+		</div>
 	`
 })
 

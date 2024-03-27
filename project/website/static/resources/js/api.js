@@ -1,9 +1,5 @@
 const API_URL = window.location.origin + "/api"
 
-function call_error(code) {
-	window.location.replace("/errors/" + code)
-}
-
 function call_api(url, method = "get", callback = () => { }, body = {}) {
 	url = API_URL + url
 

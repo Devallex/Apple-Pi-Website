@@ -20,7 +20,7 @@ function updateHeader(header, variables) {
 
 	header.innerHTML = `
 	<div class="background"></div>
-	<div>
+	<div class="content">
 		${createHeaderLink("Home", "/")}
 		${createHeaderLink("About Us", "/about-us")}
 		${createHeaderLink("News & Media", "/news")}
