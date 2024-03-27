@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/resources/css/styles.css">
 	</link>
-	<title>{{ code }} {{ name }}</title>
+	<title>{{ title }}</title>
 	<script src="/resources/js/modules.js" id="modules"></script>
 </head>
 
@@ -16,12 +16,14 @@
 	</noscript>
 	<header></header>
 	<main>
-		<h1 class="title">{{ code }} — {{ name }}</h1>
-		<p>{{ description|safe }}</p>
-		{% if show_home %}
-		<hr>
-		<a href="/">Return to the home page.</a>
-		{% endif %}
+		<h1 class="title">{{ title }} ({{ document_type }})</h1>
+		<i>Post creator: <a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a></i>
+		<br>
+		<i>Posted on: {{ creation_date }}</i>
+        <p>
+            {{ body }}
+        </p>
+        <hr>
 	</main>
 	<footer></footer>
 </body>

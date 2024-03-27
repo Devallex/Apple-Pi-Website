@@ -30,12 +30,12 @@ function getUserInfo(callback) {
 
 	session = getSession()
 
-	call_api("/users/" + session.user_id, method="GET", callback = callback)
+	call_api("/users/" + session.user_id, method="get", callback = callback)
 }
 
 // Validate
 if (getSession()) {
-	call_api("/sessions/validate/", method = "GET", callback = (valid) => {
+	call_api("/sessions/validate/", method = "get", callback = (valid) => {
 		if (valid) {
 			return
 		}
