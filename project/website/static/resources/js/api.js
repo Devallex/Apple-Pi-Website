@@ -4,12 +4,12 @@ function call_error(code) {
 	window.location.replace("/errors/" + code)
 }
 
-function call_api(url, method = "GET", callback = () => { }, body = {}) {
+function call_api(url, method = "get", callback = () => { }, body = {}) {
 	url = API_URL + url
 
-	method = method.toUpperCase()
+	method = method.toLowerCase()
 
-	if (method == "GET") {
+	if (method == "get") {
 		body = null
 	} else {
 		body = JSON.stringify(body)
@@ -41,7 +41,7 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 		const action = form.getAttribute("action")
 		const method = form.getAttribute("method").toUpperCase()
 
-		if (method == "GET") {
+		if (method == "get") {
 			body = null
 		} else {
 			body = formData
