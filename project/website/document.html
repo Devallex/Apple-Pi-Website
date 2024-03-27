@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	</link>
+	<title>{{ title }}</title>
+	<script src="/resources/js/modules.js" id="modules"></script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">{{ title }} ({{ document_type }})</h1>
+		<i>Post creator: <a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a></i>
+		<br>
+		<i>Posted on: {{ creation_date }}</i>
+        <p>
+            {{ body }}
+        </p>
+        <hr>
+	</main>
+	<footer></footer>
+</body>
+
+</html>

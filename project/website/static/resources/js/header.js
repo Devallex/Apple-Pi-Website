@@ -23,7 +23,7 @@ function updateHeader(header, variables) {
 	<div class="content">
 		${createHeaderLink("Home", "/")}
 		${createHeaderLink("About Us", "/about-us")}
-		${createHeaderLink("News & Media", "/news")}
+		${createHeaderLink("Posts", "/posts")}
 		${createHeaderLink("Our Team", "/users")}
 		${createHeaderLink("Documents", "/documents")}
 		${createHeaderLink(variables["userText"], variables["userLink"])}
