@@ -1,13 +1,24 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
-from documents import Document
+from datetime import datetime
 
 from users import User
 from time import time
 
 
-class Post(Document):
+class Post(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    creation_date: Mapped[int] = mapped_column()
+    creator_id: Mapped[int] = mapped_column()
+    is_published: Mapped[str] = mapped_column(default=False)
     event: Mapped[int] = mapped_column(nullable=True)
     propagate: Mapped[bool] = mapped_column(default=False)
+    title: Mapped[str] = mapped_column(unique=True)
+    abstract: Mapped[str] = mapped_column(nullable=True)
+    body: Mapped[str] = mapped_column()
+    # history: Mapped[str] = mapped_column(nullable=True) # TODO: History
+
+    def getDateText(self):
+        return str(datetime.fromtimestamp(self.creation_date))
 
 
 # API
@@ -26,7 +37,7 @@ def api_create_post():
 
     if existing_post:
         return (
-            "This title is already taken by another document (post/article). Please choose another one.",
+            "This title is already taken by another post. Please choose another one.",
             403,
         )
 
@@ -64,7 +75,11 @@ def page_create_post():
 
 @app.route("/posts/")
 def page_view_posts():
-    posts = Post.query.order_by(Post.creation_date.desc()).limit(25)
+    posts = (
+        db.session.execute(db.select(Post).order_by(Post.creation_date.desc()))
+        .scalars()
+        .fetchmany(25)
+    )
     user = User.getFromRequest()
 
     items = []
