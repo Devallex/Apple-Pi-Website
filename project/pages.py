@@ -29,7 +29,7 @@ def handle_error(error):
     return "Error — " + str(error.code) + "\n\n" + error.description, error.code
 
 
-@app.route("/<path:path>")
+@app.route("/<path:path>/")
 def page(path):
     while path[-1] == "/":
         path = path[0:-1]
