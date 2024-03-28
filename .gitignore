@@ -1,9 +1,12 @@
 # Operating System Files
 .DS_Store
 
-# Cache Files
+# Cache/Build Files
 __pycache__
 *.pyc
+build
+dist
+*.egg-info
 
 # Env Files
 .env
