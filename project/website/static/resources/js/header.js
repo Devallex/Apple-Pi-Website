@@ -22,10 +22,10 @@ function updateHeader(header, variables) {
 	<div class="background"></div>
 	<div class="content">
 		${createHeaderLink("Home", "/")}
-		${createHeaderLink("About Us", "/about-us")}
-		${createHeaderLink("Posts", "/posts")}
-		${createHeaderLink("Our Team", "/users")}
-		${createHeaderLink("Documents", "/documents")}
+		${createHeaderLink("About Us", "/about-us/")}
+		${createHeaderLink("Posts", "/posts/")}
+		${createHeaderLink("Our Team", "/users/")}
+		${createHeaderLink("Articles", "/articles/")}
 		${createHeaderLink(variables["userText"], variables["userLink"])}
 	</div>
 `
@@ -36,7 +36,7 @@ Array.prototype.slice.call(document.getElementsByTagName("header")).forEach((hea
 		getUserInfo((userInfo) => {
 			updateHeader(header, {
 				"isLoggedIn": true,
-				"userLink": "/settings",
+				"userLink": "/settings/",
 				"userText": `User: <b>${userInfo["username"]}</b>`
 			})
 		})

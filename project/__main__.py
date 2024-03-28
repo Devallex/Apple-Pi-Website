@@ -4,6 +4,6 @@ system("clear")
 
 from app import run
 
-import pages, users, posts
+import pages, users, articles, posts
 
 run()

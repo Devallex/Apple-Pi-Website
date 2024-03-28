@@ -251,7 +251,7 @@ def user_profile(id):
     )
 
 
-@app.route("/settings")
+@app.route("/settings/")
 def settings():
     user = User.getFromRequest()
     if not user:
