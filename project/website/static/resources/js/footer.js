@@ -12,9 +12,9 @@ Array.prototype.slice.call(document.getElementsByTagName("footer")).forEach((foo
 				</p>
 				<h2>Social Media</h2>
 				<p>
-					<a href="http://www.facebook.com/home.php?m2w#!/pages/Apple-Pi-Robotics-Team-2067/">Facebook</a
+					<a href="https://www.facebook.com/people/Apple-Pi-Robotics-FRC-Team-2067/100054299360253/">Facebook</a
 					<br>
-					<a href="http://www.twitter.com/FRC2067">Twitter</a
+					<a href="https://www.twitter.com/FRC2067">Twitter</a
 					<br>
 				</p>
 				<h2>Address</h2>
