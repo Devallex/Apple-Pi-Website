@@ -12,3 +12,7 @@ __pycache__
 instance
 .db
 .db-*
+
+# TODOs
+TODO.md
+todo.md
