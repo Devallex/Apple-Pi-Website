@@ -50,6 +50,7 @@ class User(db.Model):
     creation_date: Mapped[int] = mapped_column()
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column(unique=True)
+    roles: Mapped[str] = mapped_column(default="[]")
     is_admin: Mapped[bool] = mapped_column(default=False)
     display_name: Mapped[str] = mapped_column(nullable=True)
     email: Mapped[str] = mapped_column(nullable=True)
