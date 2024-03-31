@@ -2,42 +2,42 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/resources/css/styles.css">
-    </link>
-    <title>
-        Role — {{ role.label }}
-    </title>
-    <script src="/resources/js/modules.js" id="modules">
-    </script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	</link>
+	<title>
+		Role — {{ role.label }}
+	</title>
+	<script src="/resources/js/modules.js" id="modules">
+	</script>
 </head>
 
 <body>
-    <noscript>
-        <meta http-equiv='refresh' content='0; URL=/noscript'>
-    </noscript>
-    <header></header>
-    <main>
-        <h1 class="title">Role — {{ role.label }} </h1>
-        <h2>Description</h2>
-        <p>
-            {{ role.description or "<i>No description provided</i>"|safe }}
-        </p>
-        <hr>
-        <h2>Information</h2>
-        <p>
-            {% if parent_role %}
-            Parent role: <dfn title="{{ parent_role.description }}"><a href="/roles/{{ parent_role.id }}/">{{
-                    parent_role.label }}</a></dfn>
-            {% else %}
-            Parent role: <i>None</i>
-            {% endif %}
-            <br>
-            Created on: {{ role.getDateText() }}
-        </p>
-    </main>
-    <footer></footer>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">Role — {{ role.label }} </h1>
+		<h2>Description</h2>
+		<p>
+			{{ role.description or "<i>No description provided</i>"|safe }}
+		</p>
+		<hr>
+		<h2>Information</h2>
+		<p>
+			{% if parent_role %}
+			Parent role: <dfn title="{{ parent_role.description }}"><a href="/roles/{{ parent_role.id }}/">{{
+					parent_role.label }}</a></dfn>
+			{% else %}
+			Parent role: <i>None</i>
+			{% endif %}
+			<br>
+			Created on: {{ role.getDateText() }}
+		</p>
+	</main>
+	<footer></footer>
 </body>
 
 </html>
