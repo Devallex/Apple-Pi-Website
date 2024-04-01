@@ -226,6 +226,10 @@ th {
 	text-align: center;
 }
 
+.inline {
+	display: inline;
+}
+
 /* Header */
 header {
 	height: 10%;
