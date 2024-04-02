@@ -10,11 +10,12 @@ from app import (
     make_response,
     redirect,
 )
-from time import time
+
 from enum import Enum
 from json import dumps, loads
 from datetime import datetime
 from users import User
+from utils import timestamp
 
 Permission = Enum(
     "Permission",
@@ -30,8 +31,8 @@ Permission = Enum(
 class Role(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[int] = mapped_column(nullable=True)
-    creation_date: Mapped[int] = mapped_column()
     label: Mapped[str] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     permissions: Mapped[str] = mapped_column(default="[]")
     description: Mapped[str] = mapped_column(nullable=True)
 
@@ -96,7 +97,7 @@ def create_admin():
             permissions.append(permission_item.name)
 
         root_role = Role(
-            creation_date=int(time()),
+            creation_date=timestamp(),
             label=label,
             permissions=dumps(permissions),
             description="The role reserved for the administrator account.",
@@ -132,7 +133,7 @@ def api_create_role():
 
     role = Role(
         parent_id=parent.id,
-        creation_date = int(time()),
+        creation_date=timestamp(),
         label=Role.formatLabel(data["label"]),
         permissions=dumps(permissions),
         description=data["description"],

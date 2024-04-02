@@ -1,13 +1,12 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
 from datetime import datetime
-
 from users import User
-from time import time
+from utils import time, timestamp
 
 
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[int] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     creator_id: Mapped[int] = mapped_column()
     is_published: Mapped[str] = mapped_column(default=False)
     event: Mapped[int] = mapped_column(nullable=True)
@@ -42,7 +41,7 @@ def api_create_post():
         )
 
     post = Post(
-        creation_date=int(time()),
+        creation_date=timestamp(),
         creator_id=user.id,
         title=title,
         body=data["body"],

@@ -1,12 +1,12 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
 from users import User
-from time import time
 from datetime import datetime
+from utils import timestamp
 
 
 class Article(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[int] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     creator_id: Mapped[int] = mapped_column()
     is_published: Mapped[str] = mapped_column(default=False)
     title: Mapped[str] = mapped_column(unique=True)
@@ -39,7 +39,7 @@ def api_create_article():
         )
 
     article = Article(
-        creation_date=int(time()),
+        creation_date=timestamp(),
         creator_id=user.id,
         title=title,
         body=data["body"],

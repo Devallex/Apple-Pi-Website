@@ -13,9 +13,10 @@ from app import (
 
 from uuid import uuid4
 from bcrypt import hashpw, gensalt, checkpw
-from time import time
 from datetime import datetime
 from json import dumps
+from json import dumps, loads
+from utils import timestamp
 
 
 def hash(code):
@@ -47,7 +48,7 @@ class Session(db.Model):
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[int] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column(unique=True)
     roles: Mapped[str] = mapped_column(default="[]")
@@ -79,7 +80,7 @@ class User(db.Model):
     def createSession(self):
         token = str(uuid4())  # Session id is unique, so token doesn't need to be
 
-        session = Session(user_id=self.id, token=token, expires=int(time()) + 2_592_000)
+        session = Session(user_id=self.id, token=token, expires=timestamp() + 2_592_000)
         db.session.add(session)
 
         return session
@@ -111,7 +112,7 @@ def create_admin():
         ), "Please assign a username to the admin account in the .env file!"
 
         admin_user = User(
-            creation_date=int(time()),
+            creation_date=timestamp(),
             username=admin_username,
             password=hash(admin_password),
             is_admin=True,
@@ -147,7 +148,7 @@ def create_user():
     data = request.get_json(force=True)
 
     user = User(
-        creation_date=int(time()),
+        creation_date=timestamp(),
         username=data["username"],
         password=hash(data["password"]),
         description="",
