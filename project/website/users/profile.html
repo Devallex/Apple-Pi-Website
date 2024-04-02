@@ -32,7 +32,36 @@
 		<h2>Information</h2>
 		<p>
 			Joined on: {{ user.getDateText() }}
+			<br>
 		</p>
+		<h2>Roles</h2>
+		<label for="roles">Current roles:</label>
+		{% if user.getRoles()|length %}
+		<ul id="roles">
+			{% for role in user.getRoles() %}
+			<li>
+				<form class="inline" action="/users/{{ user.id }}/roles/{{ role.id }}/" method="delete">
+					<label for="unassign-{{ role.id }}">{{ role.label }}</label>
+					<input id="unassign-{{ role.id }}" type="submit" value="Unassign">
+				</form>
+			</li><br>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<i>None</i><br><br>
+		{% endif %}
+		<label for="assign-roles">Assign roles:</label>
+		<form id="assign-roles" action="/users/{{ user.id }}/roles/" method="patch">
+			<select name="role_id">
+				<option selected value="">None</option>
+				{% for role in roles %}
+				{% if not role in user.getRoles() %}
+				<option value="{{ role.id }}">{{ role.label }}</option>
+				{% endif %}
+				{% endfor %}
+			</select>
+			<input type="submit" value="Assign">
+		</form>
 	</main>
 	<footer></footer>
 </body>

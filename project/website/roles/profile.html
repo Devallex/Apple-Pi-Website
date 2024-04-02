@@ -24,7 +24,6 @@
 		<p>
 			{{ role.description or "<i>No description provided</i>"|safe }}
 		</p>
-		<hr>
 		<h2>Information</h2>
 		<p>
 			{% if parent_role %}
@@ -36,6 +35,16 @@
 			<br>
 			Created on: {{ role.getDateText() }}
 		</p>
+		<h2>Users</h2>
+		{% if role.getUsers()|length %}
+		<ul>
+			{% for user in role.getUsers() %}
+			<li><a href="/users/{{ user.id }}/">{{ user.getNameText() }}</a></li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<i>None</i>
+		{% endif %}
 	</main>
 	<footer></footer>
 </body>

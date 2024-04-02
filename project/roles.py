@@ -154,9 +154,61 @@ def api_create_role():
     return redirect("/roles/" + str(role.id) + "/")
 
 
+@app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
+def api_user_patch_role(user_id):
+    data = request.get_json(force=True)
+
+    user = users.User.getFromRequest()
+    if not user:
+        return "You must be logged in to assign roles.", 401
+
+    target_user = users.User.getFromId(user_id)
+    if not target_user:
+        return "A user with that id was not found on the server.", 404
+
+    role_id = data["role_id"]
+    if not role_id:
+        return "You must specify a role to assign.", 400
+
+    target_role = Role.getFromId(role_id)
+    if not target_role:
+        return "A role with that id was not found on the server.", 404
+
+    # TODO: Can oversee user and can oversee role
+
+    target_user.addRole(target_role)
+    db.session.commit()
+
+    return redirect("/users/" + str(user_id) + "/", code=303)
+
+
+@app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
+def api_user_delete_role(user_id, role_id):
+    data = request.get_json(force=True)
+
+    user = users.User.getFromRequest()
+    if not user:
+        return "You must be logged in to unassign roles.", 401
+
+    target_user = users.User.getFromId(user_id)
+    if not target_user:
+        return "A user with that id was not found on the server.", 404
+
+    target_role = Role.getFromId(role_id)
+    if not target_role:
+        return "A role with that id was not found on the server.", 404
+
+    # TODO: Can oversee user and can oversee role
+
+    target_user.removeRole(target_role)
+    db.session.commit()
+
+    return redirect("/users/" + str(user_id) + "/", code=303)
+
+
 # Pages
 @app.route("/roles/")
-def page_view_roles():    
+def page_view_roles():
     return render_template("roles/index.html", root_role=Role.getRootRole())
 
 
