@@ -14,8 +14,8 @@ from app import (
 from uuid import uuid4
 from bcrypt import hashpw, gensalt, checkpw
 from datetime import datetime
-from json import dumps
 from json import dumps, loads
+import roles
 from utils import timestamp
 
 
@@ -94,6 +94,48 @@ class User(db.Model):
     def getDateText(self):
         return str(datetime.fromtimestamp(self.creation_date))
 
+    def getRolesText(self):
+        roles = self.getRoles()
+        roles_text = ""
+        for role in roles:
+            roles_text += role.label + ", "
+        return roles_text.removesuffix(", ")
+
+    def getRoles(self):
+        parsed_roles = []
+        for role_id in loads(self.roles or "[]"):
+            parsed_roles.append(roles.Role.getFromId(role_id))
+
+        return parsed_roles
+
+    def setRoles(self, roles):
+        # TODO: Remove invalid permissions
+
+        raw_roles = []
+        for role in roles:
+            if not role or not role.id:
+                continue
+            raw_roles.append(role.id)
+
+        raw_roles.sort()
+        self.roles = dumps(raw_roles)
+
+    def addRole(self, role):
+        roles = self.getRoles()
+        if role in roles:
+            return
+        roles.append(role)
+        self.setRoles(roles)
+
+    def removeRole(self, role):
+        roles = self.getRoles()
+        while role in roles:
+            roles.remove(role)
+        self.setRoles(roles)
+
+    def hasRole(self, role):
+        return role in self.getRoles()
+
 
 # Create Admin
 @on_create_all
@@ -115,6 +157,7 @@ def create_admin():
             creation_date=timestamp(),
             username=admin_username,
             password=hash(admin_password),
+            roles="[1]",
             is_admin=True,
             display_name=admin_username,
             description="The administrator account for this website.",
@@ -209,7 +252,6 @@ def delete_sessions():
         db.select(Session).where(Session.user_id == user.id)
     ).scalars()
     for session in sessions:
-        print(session)
         db.session.delete(session)
     db.session.commit()
 
@@ -250,6 +292,7 @@ def user_profile(id):
     return render_template(
         "users/profile.html",
         user=user,
+        roles=db.session.execute(db.select(roles.Role)).scalars(),
     )
 
 

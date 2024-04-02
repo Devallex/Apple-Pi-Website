@@ -14,7 +14,7 @@ from app import (
 from enum import Enum
 from json import dumps, loads
 from datetime import datetime
-from users import User
+import users
 from utils import timestamp
 
 Permission = Enum(
@@ -31,8 +31,8 @@ Permission = Enum(
 class Role(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     parent_id: Mapped[int] = mapped_column(nullable=True)
-    label: Mapped[str] = mapped_column()
     creation_date: Mapped[float] = mapped_column()
+    label: Mapped[str] = mapped_column(unique=True)
     permissions: Mapped[str] = mapped_column(default="[]")
     description: Mapped[str] = mapped_column(nullable=True)
 
@@ -43,6 +43,13 @@ class Role(db.Model):
 
     def getRootRole():
         return Role.getFromId(1)
+
+    def getUsers(self):
+        all_users = []
+        for user in db.session.execute(db.select(users.User)).scalars():
+            if self in user.getRoles():
+                all_users.append(user)
+        return all_users
 
     def getParentRole(self):
         if self.parent_id == None:
@@ -66,7 +73,9 @@ class Role(db.Model):
         return str(datetime.fromtimestamp(self.creation_date))
 
     def getChildRoles(self):
-        return db.session.execute(db.select(Role).where(Role.parent_id == self.id)).scalars()
+        return db.session.execute(
+            db.select(Role).where(Role.parent_id == self.id)
+        ).scalars()
 
     def getPermissions(self):
         permissions = []
@@ -110,7 +119,7 @@ def create_admin():
 # API
 @app.route("/api/roles/", methods=["POST"])
 def api_create_role():
-    user = User.getFromRequest()
+    user = users.User.getFromRequest()
     if not user:
         return "You must be logged in to create a role.", 401
 
