@@ -16,6 +16,7 @@ def attempt_send(paths):
             continue
         break
 
+
 @app.errorhandler(HTTPException)
 def handle_error(error):
     if "text/html" in request.headers.getlist("accept")[0]:

@@ -1,13 +1,13 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
 from datetime import datetime
-
 from users import User
-from time import time
+from urllib.parse import urlparse, urlunparse
+from utils import time, timestamp
 
 
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[int] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     creator_id: Mapped[int] = mapped_column()
     is_published: Mapped[str] = mapped_column(default=False)
     event: Mapped[int] = mapped_column(nullable=True)
@@ -16,6 +16,9 @@ class Post(db.Model):
     abstract: Mapped[str] = mapped_column(nullable=True)
     body: Mapped[str] = mapped_column()
     # history: Mapped[str] = mapped_column(nullable=True) # TODO: History
+
+    def getCreator(self):
+        return User.getFromId(self.creator_id)
 
     def getDateText(self):
         return str(datetime.fromtimestamp(self.creation_date))
@@ -42,7 +45,7 @@ def api_create_post():
         )
 
     post = Post(
-        creation_date=int(time()),
+        creation_date=timestamp(),
         creator_id=user.id,
         title=title,
         body=data["body"],
@@ -53,6 +56,30 @@ def api_create_post():
     db.session.commit()
 
     return redirect("/posts/" + str(post.id) + "/")
+
+
+# Feed
+@app.route("/feed.rss/")
+def feed_rss():
+    parsed_url = urlparse(request.base_url)
+    base_url = urlunparse(
+        (
+            parsed_url.scheme,
+            parsed_url.netloc,
+            parsed_url.path.split("/")[0],
+            "",
+            "",
+            "",
+        )
+    )
+
+    return render_template(
+        "feeds/feed.rss",
+        base_url=base_url,
+        posts=db.session.execute(db.select(Post)).scalars(),
+        max_abstract=250,
+        year=time().year,
+    )
 
 
 # Pages

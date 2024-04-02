@@ -36,14 +36,14 @@ Array.prototype.slice.call(document.getElementsByTagName("header")).forEach((hea
 		getUserInfo((userInfo) => {
 			updateHeader(header, {
 				"isLoggedIn": true,
-				"userLink": "/settings/",
+				"userLink": "/manage/",
 				"userText": `User: <b>${userInfo["username"]}</b>`
 			})
 		})
 	} else {
 		updateHeader(header, {
 			"isLoggedIn": false,
-			"userLink": "/login",
+			"userLink": "/login/",
 			"userText": "Log In"
 		})
 	}

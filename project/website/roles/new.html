@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	</link>
+	<title>
+		Create Role
+	</title>
+	<script src="/resources/js/modules.js" id="modules">
+	</script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">Create Role</h1>
+		<form action="/roles/" method="post">
+			<label for="label">Label:</label>
+			<input name="label" id="label" type="text"><br><br>
+
+			<label for="description">Description:</label>
+			<textarea name="description" id="description"></textarea><br><br>
+
+			<label for="parent">Parent:</label>
+			<select name="parent" id="parent">
+				{% for role in roles %}
+				<option value="{{ role.id }}">{{ role.label }}</option>
+				{% endfor %}
+			</select><br><br>
+
+			<label for="permissions">Permissions:</label>
+			<ul id="permissions">
+				{% for permission in permissions %}
+				<li><input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}"
+						type="checkbox"> <label for="permission-{{ permission.name }}">{{ permission.name }}</label>
+				</li>
+				{% endfor %}
+			</ul>
+
+			<input type="submit" value="Create Role">
+		</form>
+	</main>
+	<footer></footer>
+</body>
+
+</html>

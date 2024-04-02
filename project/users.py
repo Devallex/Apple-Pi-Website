@@ -13,9 +13,10 @@ from app import (
 
 from uuid import uuid4
 from bcrypt import hashpw, gensalt, checkpw
-from time import time
 from datetime import datetime
-from json import dumps
+from json import dumps, loads
+import roles
+from utils import timestamp
 
 
 def hash(code):
@@ -47,9 +48,10 @@ class Session(db.Model):
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[int] = mapped_column()
+    creation_date: Mapped[float] = mapped_column()
     username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str] = mapped_column(unique=True)
+    roles: Mapped[str] = mapped_column(default="[]")
     is_admin: Mapped[bool] = mapped_column(default=False)
     display_name: Mapped[str] = mapped_column(nullable=True)
     email: Mapped[str] = mapped_column(nullable=True)
@@ -78,7 +80,7 @@ class User(db.Model):
     def createSession(self):
         token = str(uuid4())  # Session id is unique, so token doesn't need to be
 
-        session = Session(user_id=self.id, token=token, expires=int(time()) + 2_592_000)
+        session = Session(user_id=self.id, token=token, expires=timestamp() + 2_592_000)
         db.session.add(session)
 
         return session
@@ -91,6 +93,48 @@ class User(db.Model):
 
     def getDateText(self):
         return str(datetime.fromtimestamp(self.creation_date))
+
+    def getRolesText(self):
+        roles = self.getRoles()
+        roles_text = ""
+        for role in roles:
+            roles_text += role.label + ", "
+        return roles_text.removesuffix(", ")
+
+    def getRoles(self):
+        parsed_roles = []
+        for role_id in loads(self.roles or "[]"):
+            parsed_roles.append(roles.Role.getFromId(role_id))
+
+        return parsed_roles
+
+    def setRoles(self, roles):
+        # TODO: Remove invalid permissions
+
+        raw_roles = []
+        for role in roles:
+            if not role or not role.id:
+                continue
+            raw_roles.append(role.id)
+
+        raw_roles.sort()
+        self.roles = dumps(raw_roles)
+
+    def addRole(self, role):
+        roles = self.getRoles()
+        if role in roles:
+            return
+        roles.append(role)
+        self.setRoles(roles)
+
+    def removeRole(self, role):
+        roles = self.getRoles()
+        while role in roles:
+            roles.remove(role)
+        self.setRoles(roles)
+
+    def hasRole(self, role):
+        return role in self.getRoles()
 
 
 # Create Admin
@@ -110,9 +154,10 @@ def create_admin():
         ), "Please assign a username to the admin account in the .env file!"
 
         admin_user = User(
-            creation_date=int(time()),
+            creation_date=timestamp(),
             username=admin_username,
             password=hash(admin_password),
+            roles="[1]",
             is_admin=True,
             display_name=admin_username,
             description="The administrator account for this website.",
@@ -146,7 +191,7 @@ def create_user():
     data = request.get_json(force=True)
 
     user = User(
-        creation_date=int(time()),
+        creation_date=timestamp(),
         username=data["username"],
         password=hash(data["password"]),
         description="",
@@ -207,7 +252,6 @@ def delete_sessions():
         db.select(Session).where(Session.user_id == user.id)
     ).scalars()
     for session in sessions:
-        print(session)
         db.session.delete(session)
     db.session.commit()
 
@@ -248,6 +292,7 @@ def user_profile(id):
     return render_template(
         "users/profile.html",
         user=user,
+        roles=db.session.execute(db.select(roles.Role)).scalars(),
     )
 
 
