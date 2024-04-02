@@ -1,6 +1,7 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
 from datetime import datetime
 from users import User
+from urllib.parse import urlparse, urlunparse
 from utils import time, timestamp
 
 
@@ -55,6 +56,30 @@ def api_create_post():
     db.session.commit()
 
     return redirect("/posts/" + str(post.id) + "/")
+
+
+# Feed
+@app.route("/feed.rss/")
+def feed_rss():
+    parsed_url = urlparse(request.base_url)
+    base_url = urlunparse(
+        (
+            parsed_url.scheme,
+            parsed_url.netloc,
+            parsed_url.path.split("/")[0],
+            "",
+            "",
+            "",
+        )
+    )
+
+    return render_template(
+        "feeds/feed.rss",
+        base_url=base_url,
+        posts=db.session.execute(db.select(Post)).scalars(),
+        max_abstract=250,
+        year=time().year,
+    )
 
 
 # Pages

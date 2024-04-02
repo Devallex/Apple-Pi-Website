@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<rss version="2.0">
+	<!-- TODO: Unfilled entries -->
+
+	<channel>
+		<title>Apple Pi Robotics Posts</title>
+		<link>{{ base_url }}/posts/</link>
+		<description>The most recent news posts from the Apple Pi Website.</description>
+		<language>en-us</language>
+		<copyright>© {{ year }} Apple Pi Robotics</copyright>
+
+		<!-- <managingEditor></managingEditor>
+		<webMaster></webMaster> -->
+
+		<!-- <pubDate></pubDate>
+		<lastBuildDate></lastBuildDate> -->
+
+		<!-- <category></category> -->
+		<!-- <generator>Python Flask and Jinja Templates</generator> -->
+
+		{% for post in posts %}
+		<item>
+			<title>{{ post.title }}</title>
+			<link>{{ base_url }}/posts/{{ post.id }}/</link>
+			<description>
+				{{ post.abstract or (post.body|length > max_abstract and post.body[:max_abstract] + "..." or post.body) }}
+			</description>
+			<author>
+				<name>{{ post.getCreator().getNameText() }}</name>
+				<link>{{ base_url }}/users/{{ post.getCreator().id }}/</link>
+			</author>
+			<!-- <category></category> -->
+			<!-- <comments></comments> -->
+			<!-- <enclosure></enclosure> -->
+			<guid>{{ post.id }}</guid>
+			<pubDate>{{ post.getDateText() }}</pubDate>
+			<!-- <source></source> -->
+		</item>
+		{% endfor %}
+	</channel>
+</rss>
