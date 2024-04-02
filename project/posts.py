@@ -16,6 +16,9 @@ class Post(db.Model):
     body: Mapped[str] = mapped_column()
     # history: Mapped[str] = mapped_column(nullable=True) # TODO: History
 
+    def getCreator(self):
+        return User.getFromId(self.creator_id)
+
     def getDateText(self):
         return str(datetime.fromtimestamp(self.creation_date))
 
