@@ -1,6 +1,7 @@
 from app import app, db, Mapped, mapped_column, request, render_template, redirect
 from datetime import datetime
 from users import User
+from roles import Permission
 from urllib.parse import urlparse, urlunparse
 from utils import time, timestamp
 
@@ -32,6 +33,8 @@ def api_create_post():
     user = User.getFromRequest()
     if not user:
         return "You must be logged in to create a post.", 401
+    if not user.hasPermission(Permission.EditDocuments):
+        return "You do not have permission to publish documents.", 403
 
     title = data["title"]
     existing_post = db.session.execute(
@@ -94,6 +97,14 @@ def page_create_post():
             description="You must be signed in to create a post. Try <a href='/login'>logging in</a>.",
             show_home=True,
         )
+    if not user.hasPermission(Permission.EditDocuments):
+        return render_template(
+            "error.html",
+            name="Forbidden",
+            code=403,
+            description="You do not have permission to publish documents. If you need to, please ask someone with permission to give you access.",
+            show_home=True,
+        )
 
     return render_template(
         "editor.html", document_type="Post", api_url="/posts/", method="post"
@@ -133,7 +144,7 @@ def page_view_posts():
         base_url="/posts/",
         max_abstract=250,
         items=items,
-        allow_new=user != None,
+        allow_new=user and user.hasPermission(Permission.EditDocuments),
     )
 
 

@@ -19,11 +19,11 @@
 	</noscript>
 	<header></header>
 	<main>
-		<h1 class="title">Profile — {{ user.getNameText() }} </h1>
+		<h1 class="title">Profile — {{ target_user.getNameText() }} </h1>
 		<h2>Description</h2>
 		<p>
-			{% if user.description %}
-			{{ user.description }}
+			{% if target_user.description %}
+			{{ target_user.description }}
 			{% else %}
 			<i>This profile has no description</i>
 			{% endif %}
@@ -31,18 +31,21 @@
 		<hr>
 		<h2>Information</h2>
 		<p>
-			Joined on: {{ user.getDateText() }}
+			Joined on: {{ target_user.getDateText() }}
 			<br>
 		</p>
 		<h2>Roles</h2>
 		<label for="roles">Current roles:</label>
-		{% if user.getRoles()|length %}
+		{% if target_user.getRoles()|length %}
 		<ul id="roles">
-			{% for role in user.getRoles() %}
+			{% for role in target_user.getRoles() %}
 			<li>
-				<form class="inline" action="/users/{{ user.id }}/roles/{{ role.id }}/" method="delete">
-					<label for="unassign-{{ role.id }}">{{ role.label }}</label>
-					<input id="unassign-{{ role.id }}" type="submit" value="Unassign">
+				<form class="inline" action="/users/{{ target_user.id }}/roles/{{ role.id }}/" method="delete">
+					<a href="/roles/{{ role.id }}/">{{ role.label }}</a>
+					{% if user and user.hasPermission(Permission.AssignRoles) and user.overseesRole(role) and
+					(user.overseesUser(target_user) or user == target_user) %}
+					<input type="submit" value="Unassign">
+					{% endif %}
 				</form>
 			</li><br>
 			{% endfor %}
@@ -50,18 +53,20 @@
 		{% else %}
 		<i>None</i><br><br>
 		{% endif %}
+		{% if user and user.hasPermission(Permission.AssignRoles) and (user.overseesUser(target_user) or user == target_user) %}
 		<label for="assign-roles">Assign roles:</label>
-		<form id="assign-roles" action="/users/{{ user.id }}/roles/" method="patch">
+		<form id="assign-roles" action="/users/{{ target_user.id }}/roles/" method="patch">
 			<select name="role_id">
 				<option selected value="">None</option>
 				{% for role in roles %}
-				{% if not role in user.getRoles() %}
+				{% if not role in target_user.getRoles() and user.overseesRole(role) %}
 				<option value="{{ role.id }}">{{ role.label }}</option>
 				{% endif %}
 				{% endfor %}
 			</select>
 			<input type="submit" value="Assign">
 		</form>
+		{% endif %}
 	</main>
 	<footer></footer>
 </body>
