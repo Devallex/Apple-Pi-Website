@@ -53,7 +53,7 @@ class Role(db.Model):
 
     def getParentRole(self):
         if self.parent_id == None:
-            return
+            return None
 
         return Role.getFromId(self.parent_id)
 
@@ -94,6 +94,14 @@ class Role(db.Model):
     def hasPermission(self, permission: Permission):
         return permission in self.getPermissions()
 
+    def overseesRole(self, role) -> bool:
+        parent_role = role
+        while parent_role:
+            parent_role = parent_role.getParentRole()
+            if parent_role == self:
+                return True
+        return False
+
 
 # Create Admin
 @on_create_all
@@ -122,6 +130,8 @@ def api_create_role():
     user = users.User.getFromRequest()
     if not user:
         return "You must be logged in to create a role.", 401
+    if not user.hasPermission(Permission.ManageRoles):
+        return "You do not have permission to manage roles.", 403
 
     # TODO: Validate label properly
     # TODO: Validate parent
@@ -131,12 +141,18 @@ def api_create_role():
     parent = Role.getFromId(int(data["parent"]))
     if not parent:
         return "The parent supplied does not exist.", 404
+    if not user.overseesRole(parent) and not user.hasRole(parent):
+        return (
+            "Your account does not oversee or have the parent role, and therefore cannot create a child role.",
+            403,
+        )
 
     permissions = []
     for permission in Permission:
         if not "permission-" + permission.name in data:
             continue
-        # TODO: Validate permissions
+        if not user.hasPermission(permission):
+            continue
         if data["permission-" + permission.name] == "on":
             permissions.append(permission.name)
 
@@ -161,6 +177,8 @@ def api_user_patch_role(user_id):
     user = users.User.getFromRequest()
     if not user:
         return "You must be logged in to assign roles.", 401
+    if not user.hasPermission(Permission.AssignRoles):
+        return "You do not have permission to assign roles.", 403
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
@@ -174,7 +192,10 @@ def api_user_patch_role(user_id):
     if not target_role:
         return "A role with that id was not found on the server.", 404
 
-    # TODO: Can oversee user and can oversee role
+    if not user.overseesUser(target_user) and user != target_user:
+        return "You do not have permission to assign roles to this user.", 403
+    if not user.overseesRole(target_role):
+        return "You do not have permission to assign this role.", 403
 
     target_user.addRole(target_role)
     db.session.commit()
@@ -189,6 +210,8 @@ def api_user_delete_role(user_id, role_id):
     user = users.User.getFromRequest()
     if not user:
         return "You must be logged in to unassign roles.", 401
+    if not user.hasPermission(Permission.AssignRoles):
+        return "You do not have permission to assign roles.", 403
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
@@ -198,7 +221,10 @@ def api_user_delete_role(user_id, role_id):
     if not target_role:
         return "A role with that id was not found on the server.", 404
 
-    # TODO: Can oversee user and can oversee role
+    if not user.overseesUser(target_user) and user != target_user:
+        return "You do not have permission to assign roles to this user.", 403
+    if not user.overseesRole(target_role):
+        return "You do not have permission to assign this role.", 403
 
     target_user.removeRole(target_role)
     db.session.commit()
@@ -232,7 +258,7 @@ def page_view_role(id):
 
 @app.route("/roles/new/")
 def page_create_role():
-    # TODO: (in roles/new.html) only show valid permissions and roles
+    # TODO: (in roles/new.html) only show valid permissions and parent roles
     return render_template(
         "roles/new.html",
         roles=db.session.execute(db.select(Role)).scalars(),

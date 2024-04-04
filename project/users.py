@@ -94,6 +94,7 @@ class User(db.Model):
     def getDateText(self):
         return str(datetime.fromtimestamp(self.creation_date))
 
+    # Roles
     def getRolesText(self):
         roles = self.getRoles()
         roles_text = ""
@@ -135,6 +136,38 @@ class User(db.Model):
 
     def hasRole(self, role):
         return role in self.getRoles()
+
+    # Permissions
+    def hasPermission(self, permission) -> bool:
+        for role in self.getRoles():
+            if role.hasPermission(permission):
+                print(role, permission)
+                return True
+        return False
+
+    def getHighestRole(self):
+        highest_role = None
+        for role in self.getRoles():
+            if not highest_role:
+                highest_role = role
+                continue
+            if role.overseesRole(highest_role):
+                highest_role = role
+        return highest_role
+
+    def overseesRole(self, other_role) -> bool:
+        for role in self.getRoles():
+            if role.overseesRole(other_role):
+                return True
+        return False
+
+    def overseesUser(self, user) -> bool:
+        highest_role, user_highest_role = self.getHighestRole(), user.getHighestRole()
+        if not highest_role:
+            return False
+        if not user_highest_role:
+            return True
+        return highest_role.overseesRole(user_highest_role)
 
 
 # Create Admin
@@ -285,14 +318,18 @@ def user_list():
 
 @app.route("/users/<int:id>/")
 def user_profile(id):
-    user = User.getFromId(id)
-    if not user:
+    target_user = User.getFromId(id)
+    if not target_user:
         return make_response("A user with that id was not found.", 404)
+
+    user = User.getFromRequest()
 
     return render_template(
         "users/profile.html",
         user=user,
+        target_user=target_user,
         roles=db.session.execute(db.select(roles.Role)).scalars(),
+        Permission=roles.Permission,
     )
 
 
