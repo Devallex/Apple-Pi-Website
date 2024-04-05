@@ -230,7 +230,12 @@ def api_user_delete_role(user_id, role_id):
 # Pages
 @app.route("/roles/")
 def page_view_roles():
-    return render_template("roles/index.html", root_role=Role.getRootRole())
+    return render_template(
+        "roles/index.html",
+        user=users.User.getFromRequest(),
+        Permission=Permission,
+        root_role=Role.getRootRole(),
+    )
 
 
 @app.route("/roles/<int:id>/")
@@ -247,15 +252,20 @@ def page_view_role(id):
         )
 
     return render_template(
-        "roles/profile.html", role=role, parent_role=role.getParentRole()
+        "roles/profile.html",
+        role=role,
+        parent_role=role.getParentRole(),
     )
 
 
 @app.route("/roles/new/")
 def page_create_role():
-    # TODO: (in roles/new.html) only show valid permissions and parent roles
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(Permission.ManageRoles)
+
     return render_template(
         "roles/new.html",
+        user=user,
         roles=db.session.execute(db.select(Role)).scalars(),
         permissions=Permission,
     )

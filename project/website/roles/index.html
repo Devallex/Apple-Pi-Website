@@ -34,8 +34,10 @@
 			</li>
 			{% endfor %}
 		</ul>
+		{% if user and user.hasPermission(Permission.ManageRoles) %}
 		<hr>
 		<a class="center" href="/roles/new/">Create a new role</a>
+		{% endif %}
 	</main>
 	<footer></footer>
 </body>

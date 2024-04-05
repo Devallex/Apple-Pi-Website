@@ -30,20 +30,26 @@
 			<label for="parent">Parent:</label>
 			<select name="parent" id="parent">
 				{% for role in roles %}
+				{% if user.hasRole(role) or user.overseesRole(role) %}
 				<option value="{{ role.id }}">{{ role.label }}</option>
+				{% endif %}
 				{% endfor %}
 			</select><br><br>
 
 			<label for="permissions">Permissions:</label>
 			<ul id="permissions">
 				{% for permission in permissions %}
+				{% if user.hasPermission(permission) %}
 				<li><input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}"
 						type="checkbox"> <label for="permission-{{ permission.name }}">{{ permission.name }}</label>
 				</li>
+				{% endif %}
 				{% endfor %}
 			</ul>
 
 			<input type="submit" value="Create Role">
+			<hr>
+			<i class="center">You may not see all roles or permissions based on which ones you have.</i>
 		</form>
 	</main>
 	<footer></footer>

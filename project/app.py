@@ -1,4 +1,3 @@
-import flask
 from flask import Flask, request, render_template, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String

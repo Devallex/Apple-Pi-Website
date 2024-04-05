@@ -6,5 +6,4 @@ from users import User
 def page_manage():
     user = User.getFromRequestOrAbort()
 
-    
     return render_template("manage.html", user=user)
