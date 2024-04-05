@@ -10,6 +10,7 @@ from os import getenv
 
 load_dotenv()
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -38,3 +39,14 @@ def run():
             callback()
     scheduler.start()
     app.run()  # TODO: Fix issue with error when starting in debug mode
+
+
+def get_data():
+    print(request.content_type)
+    if (
+        "application/x-www-form-urlencoded" in request.content_type
+        or "multipart/form-data" in request.content_type
+    ):
+        return request.form
+
+    return request.get_json()

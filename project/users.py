@@ -9,6 +9,7 @@ from app import (
     getenv,
     make_response,
     on_create_all,
+    get_data,
 )
 
 from uuid import uuid4
@@ -221,7 +222,7 @@ def read_user(id: int):
 
 @app.route("/api/users/", methods=["POST"])
 def create_user():
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = User(
         creation_date=timestamp(),
@@ -245,7 +246,7 @@ def create_user():
 
 @app.route("/api/sessions/", methods=["POST"])
 def create_session():
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = db.session.execute(
         db.select(User).where(User.username == data["username"])

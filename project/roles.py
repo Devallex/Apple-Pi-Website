@@ -9,6 +9,7 @@ from app import (
     request,
     make_response,
     redirect,
+    get_data,
 )
 
 from enum import Enum
@@ -136,7 +137,7 @@ def api_create_role():
     # TODO: Validate label properly
     # TODO: Validate parent
 
-    data = request.get_json(force=True)
+    data = get_data()
 
     parent = Role.getFromId(int(data["parent"]))
     if not parent:
@@ -172,7 +173,7 @@ def api_create_role():
 
 @app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
 def api_user_patch_role(user_id):
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = users.User.getFromRequest()
     if not user:
@@ -205,7 +206,7 @@ def api_user_patch_role(user_id):
 
 @app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
 def api_user_delete_role(user_id, role_id):
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = users.User.getFromRequest()
     if not user:

@@ -1,4 +1,12 @@
-from app import app, db, Mapped, mapped_column, request, render_template, redirect
+from app import (
+    app,
+    db,
+    Mapped,
+    mapped_column,
+    render_template,
+    redirect,
+    get_data,
+)
 from users import User
 from roles import Permission
 from datetime import datetime
@@ -25,7 +33,7 @@ class Article(db.Model):
 # API
 @app.route("/api/articles/", methods=["POST"])
 def api_create_article():
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = User.getFromRequest()
     if not user:
