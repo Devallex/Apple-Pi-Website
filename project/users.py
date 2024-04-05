@@ -18,6 +18,7 @@ from datetime import datetime
 from json import dumps, loads
 import roles
 from utils import timestamp
+from pages import LoggedOut, NeedPermission
 
 
 def hash(code):
@@ -77,6 +78,13 @@ class User(db.Model):
             return
 
         return User.getFromSession(session)
+
+    def getFromRequestOrAbort():
+        user = User.getFromRequest()
+
+        if not user:
+            raise LoggedOut
+        return user
 
     def createSession(self):
         token = str(uuid4())  # Session id is unique, so token doesn't need to be
@@ -145,6 +153,10 @@ class User(db.Model):
                 print(role, permission)
                 return True
         return False
+
+    def hasPermissionOrAbort(self, permission):
+        if not self.hasPermission(permission):
+            raise NeedPermission
 
     def getHighestRole(self):
         highest_role = None
@@ -278,9 +290,7 @@ def validate_session():
 
 @app.route("/api/sessions/all/", methods=["DELETE"])
 def delete_sessions():
-    user = User.getFromRequest()
-    if not user:
-        return make_response("You could not be authenticated.", 401)
+    user = User.getFromRequestOrAbort()
 
     sessions = db.session.execute(
         db.select(Session).where(Session.user_id == user.id)
@@ -336,8 +346,6 @@ def user_profile(id):
 
 @app.route("/settings/")
 def settings():
-    user = User.getFromRequest()
-    if not user:
-        return make_response("You could not be authenticated.", 401)
+    user = User.getFromRequestOrAbort()
 
     return render_template("settings.html", user=user)

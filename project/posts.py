@@ -97,15 +97,8 @@ def feed_rss():
 # Pages
 @app.route("/posts/new/")
 def page_create_post():
-    user = User.getFromRequest()
-    if not user:
-        return render_template(
-            "error.html",
-            name="Unauthorized",
-            code=401,
-            description="You must be signed in to create a post. Try <a href='/login'>logging in</a>.",
-            show_home=True,
-        )
+    user = User.getFromRequestOrAbort()
+
     if not user.hasPermission(Permission.EditDocuments):
         return render_template(
             "error.html",
