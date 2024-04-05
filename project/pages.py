@@ -21,11 +21,13 @@ class LoggedOut(HTTPException):
     name = "Logged Out"
     description = "You must be logged in to access this resource."
     code = 401
-    
+
+
 class NeedPermission(HTTPException):
     name = "Need Permission"
     description = "Your account does not have permissions to access this resource. Please request a higher role from someone with access."
     code = 403
+
 
 @app.errorhandler(LoggedOut)
 def handle_unauthorized(error):
