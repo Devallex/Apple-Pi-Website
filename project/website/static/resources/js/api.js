@@ -41,15 +41,14 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 		const action = form.getAttribute("action")
 		const method = form.getAttribute("method").toUpperCase()
 
-		if (method == "get") {
-			body = null
-		} else {
+		var body = null
+		if (method != "get") {
 			body = formData
 		}
 
 		fetch("/api" + action, {
 			method: method,
-			body: JSON.stringify(Object.fromEntries(formData))
+			body: body
 		})
 			.then(response => {
 				if (response.redirected) {
@@ -59,29 +58,28 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 
 				const contentType = response.headers.get('Content-Type');
 
-				if (contentType) {
-					if (contentType.includes("application/json")) {
-						response.text().then((text) => {
-							alert(text)
-						})
-					} else if (contentType.includes("text/html")) {
-						response.text().then((html) => {
-							alert(html)
-						})
-					} else {
-						alert("ERROR: Unknown response type!")
-					}
-				} else {
-					alert("ERROR: Unspecified response type!")
-				}
+				response.text()
+					.then((text) => {
+						if (contentType && text) {
+							if (contentType.includes("application/json") || contentType.includes("text/html")) {
+								alert(text)
+							} else {
+								alert("ERROR: Unknown response type.")
+							}
+						}
+						onsuccess = form.getAttribute("data-onsuccess")
+						if (onsuccess) {
+							eval(onsuccess)
+						}
+					}).catch(error => {
+						alert("ERROR: " + error)
+						console.error("ERROR: ", error)
+					})
 			})
 			.catch(error => {
-				console.log("ERROR", error)
-
 				alert("ERROR: " + error)
-				console.error("Form error: ", error)
+				console.error("ERROR: ", error)
 			});
-
 	})
 })
 
