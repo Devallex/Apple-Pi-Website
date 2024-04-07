@@ -1,5 +1,9 @@
 const API_URL = window.location.origin + "/api"
 
+function go_back() {
+	return document.referrer ? window.location = document.referrer : history.back()
+}
+
 function call_api(url, method = "get", callback = () => { }, body = {}) {
 	url = API_URL + url
 

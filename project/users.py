@@ -273,7 +273,7 @@ def create_session():
     session = user.createSession()
     db.session.commit()
 
-    response = make_response(redirect("/"))
+    response = make_response()
     response.set_cookie("session", session.getRaw(), path="/", secure=False)
 
     return response
