@@ -80,11 +80,6 @@ blockquote {
 	border-width: 5px;
 }
 
-/* Address */
-address {
-	font-style: italic;
-}
-
 /* Unordered List */
 ul {
 	list-style-type: none;
@@ -138,6 +133,11 @@ article .background {
 
 article .background:hover {
 	filter: brightness(calc(var(--dim-amount) - var(--dim-step)));
+}
+
+/* Address */
+address {
+	font-style: normal;
 }
 
 /* Object */
@@ -334,11 +334,6 @@ footer .background {
 	left: 0;
 	filter: brightness(var(--dim-amount));
 	z-index: -1;
-}
-
-/* Address */
-address {
-	font-style: italic;
 }
 
 /* Unordered List */
