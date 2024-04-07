@@ -145,6 +145,12 @@ object {
 	width: 100%;
 }
 
+/* Embeds */
+embed {
+	width: 50%;
+	height: 50%;
+}
+
 /* Strong */
 strong {
 	color: var(--light-color);
