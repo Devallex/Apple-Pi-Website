@@ -25,6 +25,7 @@ Permission = Enum(
         "AssignRoles",
         "PreviewDocuments",
         "EditDocuments",
+        "EditMedia",
     ],
 )
 

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	<title>
+		Media Gallery
+	</title>
+	<script src="/resources/js/modules.js" id="modules">
+	</script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">Media Gallery</h1>
+		<ul>
+			{% for media in Media.getAll() %}
+			<li>
+				<a href="/media/{{ media.getEncodedName() }}/">{{ media.title or "<i>Untitled</i>"}}</a>
+				<embed src="/media/{{ media.getEncodedName() }}/raw/">
+			</li>
+			{% endfor %}
+		</ul>
+		{% if user and user.hasPermission(Permission.EditMedia) %}
+		<hr>
+		<a href="/media/new/" class="center">Upload a media file</a>
+		{% endif %}
+	</main>
+	<footer></footer>
+</body>
+
+</html>

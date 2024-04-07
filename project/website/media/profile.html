@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="/resources/css/styles.css">
+	<title>Media Profile</title>
+	<script src="/resources/js/modules.js" id="modules"></script>
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv='refresh' content='0; URL=/noscript'>
+	</noscript>
+	<header></header>
+	<main>
+		<h1 class="title">Media — {{ media.title }}</h1>
+		<div class="center">
+			<embed id="media"  src="{{ raw_url }}"><br><br>
+			<label for="media">"{{ media.caption|e }}"</label>
+			<p><i>{{ media.name + "."}}<b>{{ media.extension }}</b></i></p>
+			<p>Uploaded on {{ media.getDateText() }} by <a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}
+			</p>
+			<a href="{{ raw_url }}" download>Download</a> | <a href="{{ raw_url }}" target="_blank"
+				rel="noreferrer noopener">View Raw</a>
+		</div>
+	</main>
+	<footer></footer>
+</body>
+
+</html>

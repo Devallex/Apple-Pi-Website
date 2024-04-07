@@ -17,10 +17,14 @@
 	<main>
 		<h1 class="title">Create Media</h1>
 		<form action="/media/" method="post">
-			<input name="title" type="text"><br>
-			<input name="caption" type="text"><br><br>
+			<label for="title">Media Title</label><br>
+			<input name="title" id="title" type="text" placeholder="Title..."><br><br>
+
+			<label for="caption">Media Caption</label><br>
+			<input name="caption" id="caption" type="text" placeholder="Caption..."><br><br>
 			<input name="upload" type="file"><br><br>
-			<input type="submit">
+			
+			<input type="submit" value="Upload File">
 		</form>
 	</main>
 	<footer></footer>

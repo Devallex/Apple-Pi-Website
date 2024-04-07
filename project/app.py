@@ -16,6 +16,7 @@ class Base(DeclarativeBase):
 
 app = Flask("ApplePiWebsite", template_folder="./project/website")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config["UPLOAD_FOLDER"] = "./instance/"
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
