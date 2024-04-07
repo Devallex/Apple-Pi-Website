@@ -150,7 +150,6 @@ class User(db.Model):
     def hasPermission(self, permission) -> bool:
         for role in self.getRoles():
             if role.hasPermission(permission):
-                print(role, permission)
                 return True
         return False
 

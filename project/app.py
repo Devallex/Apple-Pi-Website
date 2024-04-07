@@ -41,7 +41,6 @@ def run():
 
 
 def get_data():
-    print(request.content_type)
     if (
         "application/x-www-form-urlencoded" in request.content_type
         or "multipart/form-data" in request.content_type
