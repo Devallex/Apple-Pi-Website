@@ -9,6 +9,7 @@ from app import (
     request,
     make_response,
     redirect,
+    get_data,
 )
 
 from enum import Enum
@@ -24,6 +25,7 @@ Permission = Enum(
         "AssignRoles",
         "PreviewDocuments",
         "EditDocuments",
+        "EditMedia",
     ],
 )
 
@@ -127,16 +129,14 @@ def create_admin():
 # API
 @app.route("/api/roles/", methods=["POST"])
 def api_create_role():
-    user = users.User.getFromRequest()
-    if not user:
-        return "You must be logged in to create a role.", 401
+    user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.ManageRoles):
         return "You do not have permission to manage roles.", 403
 
     # TODO: Validate label properly
     # TODO: Validate parent
 
-    data = request.get_json(force=True)
+    data = get_data()
 
     parent = Role.getFromId(int(data["parent"]))
     if not parent:
@@ -172,11 +172,9 @@ def api_create_role():
 
 @app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
 def api_user_patch_role(user_id):
-    data = request.get_json(force=True)
+    data = get_data()
 
-    user = users.User.getFromRequest()
-    if not user:
-        return "You must be logged in to assign roles.", 401
+    user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.AssignRoles):
         return "You do not have permission to assign roles.", 403
 
@@ -205,11 +203,9 @@ def api_user_patch_role(user_id):
 
 @app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
 def api_user_delete_role(user_id, role_id):
-    data = request.get_json(force=True)
+    data = get_data()
 
-    user = users.User.getFromRequest()
-    if not user:
-        return "You must be logged in to unassign roles.", 401
+    user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.AssignRoles):
         return "You do not have permission to assign roles.", 403
 
@@ -235,7 +231,12 @@ def api_user_delete_role(user_id, role_id):
 # Pages
 @app.route("/roles/")
 def page_view_roles():
-    return render_template("roles/index.html", root_role=Role.getRootRole())
+    return render_template(
+        "roles/index.html",
+        user=users.User.getFromRequest(),
+        Permission=Permission,
+        root_role=Role.getRootRole(),
+    )
 
 
 @app.route("/roles/<int:id>/")
@@ -252,15 +253,20 @@ def page_view_role(id):
         )
 
     return render_template(
-        "roles/profile.html", role=role, parent_role=role.getParentRole()
+        "roles/profile.html",
+        role=role,
+        parent_role=role.getParentRole(),
     )
 
 
 @app.route("/roles/new/")
 def page_create_role():
-    # TODO: (in roles/new.html) only show valid permissions and parent roles
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(Permission.ManageRoles)
+
     return render_template(
         "roles/new.html",
+        user=user,
         roles=db.session.execute(db.select(Role)).scalars(),
         permissions=Permission,
     )

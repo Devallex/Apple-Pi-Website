@@ -9,6 +9,7 @@ from app import (
     getenv,
     make_response,
     on_create_all,
+    get_data,
 )
 
 from uuid import uuid4
@@ -17,6 +18,7 @@ from datetime import datetime
 from json import dumps, loads
 import roles
 from utils import timestamp
+from pages import LoggedOut, NeedPermission
 
 
 def hash(code):
@@ -76,6 +78,13 @@ class User(db.Model):
             return
 
         return User.getFromSession(session)
+
+    def getFromRequestOrAbort():
+        user = User.getFromRequest()
+
+        if not user:
+            raise LoggedOut
+        return user
 
     def createSession(self):
         token = str(uuid4())  # Session id is unique, so token doesn't need to be
@@ -141,9 +150,12 @@ class User(db.Model):
     def hasPermission(self, permission) -> bool:
         for role in self.getRoles():
             if role.hasPermission(permission):
-                print(role, permission)
                 return True
         return False
+
+    def hasPermissionOrAbort(self, permission):
+        if not self.hasPermission(permission):
+            raise NeedPermission
 
     def getHighestRole(self):
         highest_role = None
@@ -221,7 +233,7 @@ def read_user(id: int):
 
 @app.route("/api/users/", methods=["POST"])
 def create_user():
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = User(
         creation_date=timestamp(),
@@ -245,7 +257,7 @@ def create_user():
 
 @app.route("/api/sessions/", methods=["POST"])
 def create_session():
-    data = request.get_json(force=True)
+    data = get_data()
 
     user = db.session.execute(
         db.select(User).where(User.username == data["username"])
@@ -260,7 +272,7 @@ def create_session():
     session = user.createSession()
     db.session.commit()
 
-    response = make_response(redirect("/"))
+    response = make_response()
     response.set_cookie("session", session.getRaw(), path="/", secure=False)
 
     return response
@@ -277,9 +289,7 @@ def validate_session():
 
 @app.route("/api/sessions/all/", methods=["DELETE"])
 def delete_sessions():
-    user = User.getFromRequest()
-    if not user:
-        return make_response("You could not be authenticated.", 401)
+    user = User.getFromRequestOrAbort()
 
     sessions = db.session.execute(
         db.select(Session).where(Session.user_id == user.id)
@@ -335,8 +345,6 @@ def user_profile(id):
 
 @app.route("/settings/")
 def settings():
-    user = User.getFromRequest()
-    if not user:
-        return make_response("You could not be authenticated.", 401)
+    user = User.getFromRequestOrAbort()
 
     return render_template("settings.html", user=user)

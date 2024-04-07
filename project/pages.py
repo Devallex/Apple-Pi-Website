@@ -1,6 +1,6 @@
 # NOTE: Do not remove unused imports
 from app import app, render_template, request
-from flask import Flask, send_from_directory
+from flask import send_from_directory
 from werkzeug.exceptions import HTTPException
 
 
@@ -17,12 +17,50 @@ def attempt_send(paths):
         break
 
 
+class LoggedOut(HTTPException):
+    name = "Logged Out"
+    description = "You must be logged in to access this resource."
+    code = 401
+
+
+class NeedPermission(HTTPException):
+    name = "Need Permission"
+    description = "Your account does not have permissions to access this resource. Please request a higher role from someone with access."
+    code = 403
+
+
+@app.errorhandler(LoggedOut)
+def handle_unauthorized(error):
+    if "text/html" in request.headers.getlist("accept")[0]:
+        return render_template(
+            "error.html",
+            name=error.name,
+            code=error.code,
+            description=error.description + " Try <a href='/login/'>logging in</a>.",
+            show_home=True,
+        )
+    return "Error — " + str(error.code) + "\n\n" + error.description, error.code
+
+
+@app.errorhandler(404)
+def handle_not_found(error):
+    if "text/html" in request.headers.getlist("accept")[0]:
+        return render_template(
+            "error.html",
+            name=error.name,
+            code=error.code,
+            description=error.description,
+            show_home=True,
+        )
+    return "Error — " + str(error.code) + "\n\n" + error.description, error.code
+
+
 @app.errorhandler(HTTPException)
 def handle_error(error):
     if "text/html" in request.headers.getlist("accept")[0]:
         return render_template(
             "error.html",
-            name="Not Found",
+            name=error.name,
             code=error.code,
             description=error.description,
             show_home=True,

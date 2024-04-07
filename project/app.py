@@ -1,4 +1,3 @@
-import flask
 from flask import Flask, request, render_template, redirect, url_for, make_response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Integer, String
@@ -10,12 +9,14 @@ from os import getenv
 
 load_dotenv()
 
+
 class Base(DeclarativeBase):
     pass
 
 
 app = Flask("ApplePiWebsite", template_folder="./project/website")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config["UPLOAD_FOLDER"] = "./instance/"
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
@@ -38,3 +39,13 @@ def run():
             callback()
     scheduler.start()
     app.run()  # TODO: Fix issue with error when starting in debug mode
+
+
+def get_data():
+    if (
+        "application/x-www-form-urlencoded" in request.content_type
+        or "multipart/form-data" in request.content_type
+    ):
+        return request.form
+
+    return request.get_json()

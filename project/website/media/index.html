@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>
-		Site Management
+		Media Gallery
 	</title>
 	<script src="/resources/js/modules.js" id="modules">
 	</script>
@@ -18,24 +18,19 @@
 	</noscript>
 	<header></header>
 	<main>
-		<h1 class="title">Site Management</h1>
-		<h2>Manage Account</h2>
+		<h1 class="title">Media Gallery</h1>
 		<ul>
-			<li><a href="/settings/">Settings</a></li>
-			<li><a href="/users/{{ user.id }}/">Profile</a></li>
-		</ul>
-		<h2>Manage Site</h2>
-		<ul>
+			{% for media in Media.getAll() %}
 			<li>
-				Documents:
-				<ul>
-					<li><a href="/articles/">Articles</a></li>
-					<li><a href="/posts/">Posts</a></li>
-				</ul>
+				<a href="/media/{{ media.getEncodedName() }}/">{{ media.title or "<i>Untitled</i>"}}</a>
+				<embed src="/media/{{ media.getEncodedName() }}/raw/">
 			</li>
-			<li><a href="/users/">Users</a></li>
-			<li><a href="/roles/">Roles</a></li>
+			{% endfor %}
 		</ul>
+		{% if user and user.hasPermission(Permission.EditMedia) %}
+		<hr>
+		<a href="/media/new/" class="center">Upload a media file</a>
+		{% endif %}
 	</main>
 	<footer></footer>
 </body>

@@ -7,3 +7,6 @@ def time() -> datetime:
 
 def timestamp():
     return time().timestamp()
+
+def getDateText(date): # TODO: Replace all instances of getDateText with this
+    return str(datetime.fromtimestamp(date))

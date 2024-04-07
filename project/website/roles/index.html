@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/resources/css/styles.css">
-	</link>
 	<title>
 		Roles
 	</title>
@@ -34,8 +33,10 @@
 			</li>
 			{% endfor %}
 		</ul>
+		{% if user and user.hasPermission(Permission.ManageRoles) %}
 		<hr>
 		<a class="center" href="/roles/new/">Create a new role</a>
+		{% endif %}
 	</main>
 	<footer></footer>
 </body>

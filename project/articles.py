@@ -1,4 +1,12 @@
-from app import app, db, Mapped, mapped_column, request, render_template, redirect
+from app import (
+    app,
+    db,
+    Mapped,
+    mapped_column,
+    render_template,
+    redirect,
+    get_data,
+)
 from users import User
 from roles import Permission
 from datetime import datetime
@@ -25,11 +33,9 @@ class Article(db.Model):
 # API
 @app.route("/api/articles/", methods=["POST"])
 def api_create_article():
-    data = request.get_json(force=True)
+    data = get_data()
 
-    user = User.getFromRequest()
-    if not user:
-        return "You must be logged in to create an article.", 401
+    user = User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.EditDocuments):
         return "You do not have permission to publish documents.", 403
 
@@ -61,15 +67,7 @@ def api_create_article():
 # Pages
 @app.route("/articles/new/")
 def page_create_article():
-    user = User.getFromRequest()
-    if not user:
-        return render_template(
-            "error.html",
-            name="Unauthorized",
-            code=401,
-            description="You must be signed in to create an article. Try <a href='/login'>logging in</a>.",
-            show_home=True,
-        )
+    user = User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.EditDocuments):
         return render_template(
             "error.html",

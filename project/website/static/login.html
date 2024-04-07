@@ -5,7 +5,6 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="/resources/css/styles.css">
-	</link>
 	<title>Login</title>
 	<script src="/resources/js/modules.js" id="modules"></script>
 </head>
@@ -19,7 +18,7 @@
 		<h1 class="title">Login</h1>
 		<p>Don't have an account? <a href="/sign-up/">Sign up here</a>.</p>
 
-		<form action="/sessions/" method="post">
+		<form action="/sessions/" method="post" data-onsuccess="go_back()">
 			<label for="username">Username:</label>
 			<input type="text" id="username" name="username"><br><br>
 
