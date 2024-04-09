@@ -2,27 +2,25 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>{{ code }} {{ name }}</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">{{ code }} — {{ name }}</h1>
 		<p>{{ description|safe }}</p>
 		{% if show_home %}
-		<hr>
+		<hr />
 		<a href="/">Return to the home page.</a>
 		{% endif %}
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

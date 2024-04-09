@@ -45,5 +45,3 @@ if (getSession()) {
 		location.reload()
 	})
 }
-
-loaded()

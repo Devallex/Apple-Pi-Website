@@ -2,84 +2,88 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>Teams</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
-		<nav-breadcrumbs></nav-breadcrumbs>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Teams</h1>
-		
+
 		<h2>Business and Fundraising Team</h2>
 		<p>
-			This team manages interactions between the team and our sponsors, including
-			recognition of sponsors at our events and functions. This team also generates our yearly business plan and
-			develops and maintains a strategy for sustainability of the program.
+			This team manages interactions between the team and our sponsors,
+			including recognition of sponsors at our events and functions. This team
+			also generates our yearly business plan and develops and maintains a
+			strategy for sustainability of the program.
 		</p>
 
 		<h2>Public Relations Team</h2>
 		<p>
 			This team plans outreach programs such as press releases, public events,
-			presentations, and newsletter updates. They are also responsible for developing the team identity including
-			uniforms and themes.
+			presentations, and newsletter updates. They are also responsible for
+			developing the team identity including uniforms and themes.
 		</p>
 
 		<h2>Media Team</h2>
 		<p>
-			This team focuses on documenting the journey of our team in video and pictures. They also
-			manage
-			our website which includes detailed calendar entries and announcements of special events and activities.
+			This team focuses on documenting the journey of our team in video and
+			pictures. They also manage our website which includes detailed calendar
+			entries and announcements of special events and activities.
 		</p>
 
 		<h2>Mechanical Team</h2>
 		<p>
-			This team would focus on developing mechanical aspects of the robot, including drive
-			train,
-			chassis and game piece handling hardware. This team is also responsible for mechanical part manufacturing
-			and assembly of the specified and manufactured hardware. The mechanical team works in concert with the
-			electrical team during the test and debug phase of the build cycle.
+			This team would focus on developing mechanical aspects of the robot,
+			including drive train, chassis and game piece handling hardware. This
+			team is also responsible for mechanical part manufacturing and assembly
+			of the specified and manufactured hardware. The mechanical team works in
+			concert with the electrical team during the test and debug phase of the
+			build cycle.
 		</p>
 
 		<h2>Electrical Team</h2>
 		<p>
-			This team would focus on the implementation of all electronics on the robot, most of which
-			will now be contained in our single modular control box. Programming of the robot is also handled by the
-			electrical team. The electrical team works in concert with the mechanical team during the test and debug
-			phase of the build cycle.
+			This team would focus on the implementation of all electronics on the
+			robot, most of which will now be contained in our single modular control
+			box. Programming of the robot is also handled by the electrical team.
+			The electrical team works in concert with the mechanical team during the
+			test and debug phase of the build cycle.
 		</p>
 
 		<h2>Strategy and Scout Team</h2>
 		<p>
-			This team builds a scouting database at each event so we can go into our matches
-			with knowledge of strengths and weaknesses of our alliance partners and opposition. They are responsible for
-			communication of this data to the drive team.
+			This team builds a scouting database at each event so we can go into our
+			matches with knowledge of strengths and weaknesses of our alliance
+			partners and opposition. They are responsible for communication of this
+			data to the drive team.
 		</p>
 
 		<h2>Drive Team</h2>
 		<p>
-			The drive team is responsible for control of the robot during match play. They have the
-			responsibility to understand all features and modes of operation of the developed robot. They must be aware
-			of all rules and scoring opportunities as defined by the FIRST provided rules of the game. The drive team
-			has primary responsibility for communications with alliance teams prior to each match to jointly decide on
-			strategies that will be deployed.
+			The drive team is responsible for control of the robot during match
+			play. They have the responsibility to understand all features and modes
+			of operation of the developed robot. They must be aware of all rules and
+			scoring opportunities as defined by the FIRST provided rules of the
+			game. The drive team has primary responsibility for communications with
+			alliance teams prior to each match to jointly decide on strategies that
+			will be deployed.
 		</p>
 
 		<h2>Spirit Team</h2>
 		<p>
-			This team, headed up by our team mascot, helps keep the level of excitement at peak levels.
-			Understanding and believing that we are all working toward the same goals, and that having fun while doing
-			so is important to team success. This is the message the Spirit Team embodies.
+			This team, headed up by our team mascot, helps keep the level of
+			excitement at peak levels. Understanding and believing that we are all
+			working toward the same goals, and that having fun while doing so is
+			important to team success. This is the message the Spirit Team embodies.
 		</p>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

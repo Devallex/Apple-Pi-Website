@@ -2,22 +2,20 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>Media Profile</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
 		<meta http-equiv='refresh' content='0; URL=/noscript'>
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Media — {{ media.title }}</h1>
 		<div class="center">
-			<embed id="media"  src="{{ raw_url }}"><br><br>
+			<embed id="media" src="{{ raw_url }}"><br><br>
 			<label for="media">"{{ media.caption|e }}"</label>
 			<p><i>{{ media.name + "."}}<b>{{ media.extension }}</b></i></p>
 			<p>Uploaded on {{ media.getDateText() }} by <a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}
@@ -26,7 +24,7 @@
 				rel="noreferrer noopener">View Raw</a>
 		</div>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

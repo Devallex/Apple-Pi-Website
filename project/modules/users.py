@@ -1,36 +1,26 @@
-from app import (
-    app,
-    db,
-    request,
-    redirect,
-    render_template,
-    Mapped,
-    mapped_column,
-    getenv,
-    make_response,
-    on_create_all,
-    get_data,
-)
-
-from uuid import uuid4
-from bcrypt import hashpw, gensalt, checkpw
+import project.core.app as app
+import project.modules.roles as roles
+import project.core.utils as utils
+import project.core.errors as errors
+import sqlalchemy.orm as orm
+import flask
+import uuid
+import bcrypt
+import json
+import os
 from datetime import datetime
-from json import dumps, loads
-import roles
-from utils import timestamp
-from pages import LoggedOut, NeedPermission
 
 
 def hash(code):
-    return hashpw(code.encode("utf8"), gensalt()).decode("utf8")
+    return bcrypt.hashpw(code.encode("utf8"), bcrypt.gensalt()).decode("utf8")
 
 
 # Classes
-class Session(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column()
-    token: Mapped[str] = mapped_column()
-    expires: Mapped[int] = mapped_column()
+class Session(app.db.Model):
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    user_id: orm.Mapped[int] = orm.mapped_column()
+    token: orm.Mapped[str] = orm.mapped_column()
+    expires: orm.Mapped[int] = orm.mapped_column()
 
     def getRaw(self):
         return str(self.id) + "." + str(self.user_id) + "." + self.token
@@ -39,8 +29,8 @@ class Session(db.Model):
         pieces = raw.split(".")
         id, user_id, token = pieces[0], pieces[1], pieces[2]
 
-        return db.session.execute(
-            db.select(Session).where(
+        return app.db.session.execute(
+            app.db.select(Session).where(
                 Session.id == id,
                 Session.user_id == user_id,
                 Session.token == token,
@@ -48,28 +38,28 @@ class Session(db.Model):
         ).scalar_one_or_none()
 
 
-class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    creation_date: Mapped[float] = mapped_column()
-    username: Mapped[str] = mapped_column(unique=True)
-    password: Mapped[str] = mapped_column(unique=True)
-    roles: Mapped[str] = mapped_column(default="[]")
-    is_admin: Mapped[bool] = mapped_column(default=False)
-    display_name: Mapped[str] = mapped_column(nullable=True)
-    email: Mapped[str] = mapped_column(nullable=True)
-    phone: Mapped[str] = mapped_column(nullable=True)
-    description: Mapped[str] = mapped_column(nullable=True)
+class User(app.db.Model):
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    creation_date: orm.Mapped[float] = orm.mapped_column()
+    username: orm.Mapped[str] = orm.mapped_column(unique=True)
+    password: orm.Mapped[str] = orm.mapped_column(unique=True)
+    roles: orm.Mapped[str] = orm.mapped_column(default="[]")
+    is_admin: orm.Mapped[bool] = orm.mapped_column(default=False)
+    display_name: orm.Mapped[str] = orm.mapped_column(nullable=True)
+    email: orm.Mapped[str] = orm.mapped_column(nullable=True)
+    phone: orm.Mapped[str] = orm.mapped_column(nullable=True)
+    description: orm.Mapped[str] = orm.mapped_column(nullable=True)
 
     def getFromId(id: int):
-        return db.session.execute(
-            db.select(User).where(User.id == id)
+        return app.db.session.execute(
+            app.db.select(User).where(User.id == id)
         ).scalar_one_or_none()
 
     def getFromSession(session: Session):
         return User.getFromId(session.user_id)
 
     def getFromRequest():
-        raw = request.cookies.get("session")
+        raw = flask.request.cookies.get("session")
         if not raw:
             return
 
@@ -83,16 +73,21 @@ class User(db.Model):
         user = User.getFromRequest()
 
         if not user:
-            raise LoggedOut
+            raise errors.LoggedOut
         return user
 
     def createSession(self):
-        token = str(uuid4())  # Session id is unique, so token doesn't need to be
+        token = str(uuid.uuid4())  # Session id is unique, so token doesn't need to be
 
-        session = Session(user_id=self.id, token=token, expires=timestamp() + 2_592_000)
-        db.session.add(session)
+        session = Session(
+            user_id=self.id, token=token, expires=utils.timestamp() + 2_592_000
+        )
+        app.db.session.add(session)
 
         return session
+
+    def getDisplayName(self):
+        return self.display_name or self.username
 
     def getNameText(self):
         name_text = "@" + self.username
@@ -113,7 +108,7 @@ class User(db.Model):
 
     def getRoles(self):
         parsed_roles = []
-        for role_id in loads(self.roles or "[]"):
+        for role_id in json.loads(self.roles or "[]"):
             parsed_roles.append(roles.Role.getFromId(role_id))
 
         return parsed_roles
@@ -128,7 +123,7 @@ class User(db.Model):
             raw_roles.append(role.id)
 
         raw_roles.sort()
-        self.roles = dumps(raw_roles)
+        self.roles = json.dumps(raw_roles)
 
     def addRole(self, role):
         roles = self.getRoles()
@@ -155,7 +150,7 @@ class User(db.Model):
 
     def hasPermissionOrAbort(self, permission):
         if not self.hasPermission(permission):
-            raise NeedPermission
+            raise errors.NeedPermission
 
     def getHighestRole(self):
         highest_role = None
@@ -183,23 +178,23 @@ class User(db.Model):
 
 
 # Create Admin
-@on_create_all
+@app.on_create_all
 def create_admin():
-    if not db.session.execute(
-        db.select(User).where(User.is_admin == True)
+    if not app.db.session.execute(
+        app.db.select(User).where(User.is_admin == True)
     ).scalar_one_or_none():
-        admin_password = getenv("ADMIN_PASSWORD")
+        admin_password = os.getenv("ADMIN_PASSWORD")
         assert (
             admin_password
         ), "Please assign a password to the admin account in the .env file!"
 
-        admin_username = getenv("ADMIN_USERNAME")
+        admin_username = os.getenv("ADMIN_USERNAME")
         assert (
             admin_username
         ), "Please assign a username to the admin account in the .env file!"
 
         admin_user = User(
-            creation_date=timestamp(),
+            creation_date=utils.timestamp(),
             username=admin_username,
             password=hash(admin_password),
             roles="[1]",
@@ -207,19 +202,19 @@ def create_admin():
             display_name=admin_username,
             description="The administrator account for this website.",
         )
-        db.session.add(admin_user)
-        db.session.commit()
+        app.db.session.add(admin_user)
+        app.db.session.commit()
 
 
 # API
-@app.route("/api/users/<int:id>/")
+@app.app.route("/api/users/<int:id>/")
 def read_user(id: int):
     user = User.getFromId(id)
 
     if not user:
-        return make_response("A user with that id was not found.", 404)
+        return flask.make_response("A user with that id was not found.", 404)
 
-    return dumps(
+    return json.dumps(
         {
             "id": user.id,
             "creation_date": user.creation_date,
@@ -231,120 +226,123 @@ def read_user(id: int):
     )
 
 
-@app.route("/api/users/", methods=["POST"])
+@app.app.route("/api/users/", methods=["POST"])
 def create_user():
-    data = get_data()
+    data = app.get_data()
 
     user = User(
-        creation_date=timestamp(),
+        creation_date=utils.timestamp(),
         username=data["username"],
         password=hash(data["password"]),
         description="",
         email=data["email"],
         phone=data["phone"],
     )
-    db.session.add(user)
-    db.session.commit()
+    app.db.session.add(user)
+    app.db.session.commit()
 
     session = user.createSession()
-    db.session.commit()
+    app.db.session.commit()
 
-    response = make_response(redirect("/"))
+    response = flask.make_response(flask.redirect("/"))
     response.set_cookie("session", session.getRaw(), expires=session.expires, path="/")
 
     return response
 
 
-@app.route("/api/sessions/", methods=["POST"])
+@app.app.route("/api/sessions/", methods=["POST"])
 def create_session():
-    data = get_data()
+    data = app.get_data()
 
-    user = db.session.execute(
-        db.select(User).where(User.username == data["username"])
+    user = app.db.session.execute(
+        app.db.select(User).where(User.username == data["username"])
     ).scalar_one_or_none()
 
     if not user:
-        return make_response("The provided username does not exist.", 404)
+        return flask.make_response("The provided username does not exist.", 404)
 
-    if not checkpw(data["password"].encode("utf8"), user.password.encode("utf8")):
-        return make_response("The provided password is incorrect.", 401)
+    if not bcrypt.checkpw(
+        data["password"].encode("utf8"), user.password.encode("utf8")
+    ):
+        return flask.make_response("The provided password is incorrect.", 401)
 
     session = user.createSession()
-    db.session.commit()
+    app.db.session.commit()
 
-    response = make_response()
+    response = flask.make_response()
     response.set_cookie("session", session.getRaw(), path="/", secure=False)
 
     return response
 
 
-@app.route("/api/sessions/validate/", methods=["GET"])
+@app.app.route("/api/sessions/validate/", methods=["GET"])
 def validate_session():
     user = User.getFromRequest()
 
     if user:
-        return dumps(True)
-    return dumps(False)
+        return json.dumps(True)
+    return json.dumps(False)
 
 
-@app.route("/api/sessions/all/", methods=["DELETE"])
+@app.app.route("/api/sessions/all/", methods=["DELETE"])
 def delete_sessions():
     user = User.getFromRequestOrAbort()
 
-    sessions = db.session.execute(
-        db.select(Session).where(Session.user_id == user.id)
+    sessions = app.db.session.execute(
+        app.db.select(Session).where(Session.user_id == user.id)
     ).scalars()
     for session in sessions:
-        db.session.delete(session)
-    db.session.commit()
+        app.db.session.delete(session)
+    app.db.session.commit()
 
-    response = make_response(redirect("/", code=303))
+    response = flask.make_response(flask.redirect("/", code=303))
     response.delete_cookie("session", "/")
 
     return response
 
 
-@app.route("/api/sessions/", methods=["DELETE"])
+@app.app.route("/api/sessions/", methods=["DELETE"])
 def delete_session():
-    session = Session.getFromRaw(request.cookies["session"])
+    session = Session.getFromRaw(flask.request.cookies["session"])
     if not session:
-        return make_response("You could not be authenticated.", 401)
+        return flask.make_response("You could not be authenticated.", 401)
 
-    db.session.delete(session)
-    db.session.commit()
+    app.db.session.delete(session)
+    app.db.session.commit()
 
-    response = make_response(redirect("/", code=303))
+    response = flask.make_response(flask.redirect("/", code=303))
     response.delete_cookie("session", "/")
 
     return response
 
 
 # Pages
-@app.route("/users/")
+@app.app.route("/users/")
+@app.app.route("/team/")  # TODO: Give team a separate page which only shows active users
 def user_list():
-    users = db.session.execute(db.select(User).order_by(User.id)).scalars()
-    return render_template("users/index.html", users=users)
+    users = app.db.session.execute(app.db.select(User).order_by(User.id)).scalars()
+    return flask.render_template("users/index.html", users=users)
 
 
-@app.route("/users/<int:id>/")
+@app.app.route("/users/<int:id>/")
 def user_profile(id):
     target_user = User.getFromId(id)
     if not target_user:
-        return make_response("A user with that id was not found.", 404)
+        raise errors.InstanceNotFound
 
     user = User.getFromRequest()
 
-    return render_template(
+    return flask.render_template(
         "users/profile.html",
         user=user,
         target_user=target_user,
-        roles=db.session.execute(db.select(roles.Role)).scalars(),
+        roles=app.db.session.execute(app.db.select(roles.Role)).scalars(),
         Permission=roles.Permission,
     )
 
 
-@app.route("/settings/")
+@app.app.route("/settings/")
 def settings():
     user = User.getFromRequestOrAbort()
 
-    return render_template("settings.html", user=user)
+    return flask.render_template("settings.html", user=user)

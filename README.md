@@ -1,3 +1,5 @@
+# Overview
+These instructions show only Linux/MacOS. Windows is probably supported but commands may be slightly different.
 # Development
 ## Setup
 1. [Install Python](https://www.python.org/downloads/)

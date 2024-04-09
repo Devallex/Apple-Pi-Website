@@ -2,19 +2,17 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>{{ title }}</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">{{ title }}</h1>
 		<div>
 			{% for item in items %}
@@ -23,26 +21,25 @@
 				<div class="content">
 					<b>{{ item.title }}</b>
 					<p>
-						{{ item.abstract or (item.body|length > max_abstract and item.body[:max_abstract] + "..." or
-						item.body) }}
+						{{ item.abstract or (item.body|length > max_abstract and
+						item.body[:max_abstract] + "..." or item.body) }}
 					</p>
 					<i>Created on {{ item.creation_date }} by {{ item.creator }}</i>
 				</div>
 			</article>
-			<br>
+			<br />
 			{% endfor %}
-			<hr>
+			<hr />
 			<p class="center">
 				<i>Note: This page only includes some recent entries</i>
 				{% if allow_new %}
-				<br><br>
+				<br /><br />
 				<a href="new">Create Content</a>
 				{% endif %}
-
 			</p>
 		</div>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>
