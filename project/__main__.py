@@ -1,9 +1,13 @@
 from os import system
+from sys import path
 
 system("clear")
 
-from app import run
+path.append(".")
+path.append("../")
 
-import pages, manage, users, roles, media, articles, posts
+from project.core import app, pages, errors, utils
+import project.templates
+from project.modules import users, roles, articles, posts, manage, media
 
-run()
+app.run()

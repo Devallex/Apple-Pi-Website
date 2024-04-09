@@ -2,45 +2,52 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>Sign-Up</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Sign Up</h1>
 		<p>Already have an account? <a href="/login/">Login here</a>.</p>
 		<form action="/users/" method="post">
 			<label for="email">Email:</label>
-			<input type="email" id="email" name="email">
-			<caption>(Optional)</caption><br><br>
+			<input type="email" id="email" name="email" />
+			<caption>
+				(Optional)
+			</caption>
+			<br /><br />
 
 			<label for="phone">Phone Number:</label>
-			<input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}">
-			<caption>(Optional)</caption><br><br>
+			<input type="tel" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" />
+			<caption>
+				(Optional)
+			</caption>
+			<br /><br />
 
 			<label for="username">Username:</label>
-			<input type="text" id="username" name="username">
-			<caption>(REQUIRED — The username can only contain letters, numbers, underscores and dashes and be at least
-				5
-				characters long)
-			</caption><br><br>
+			<input type="text" id="username" name="username" />
+			<caption>
+				(REQUIRED — The username can only contain letters, numbers,
+				underscores and dashes and be at least 5 characters long)
+			</caption>
+			<br /><br />
 
 			<label for="password">Password:</label>
-			<input type="password" id="password" name="password">
-			<caption>(REQUIRED — The password must be at least 8 characters long)
-			</caption><br><br>
-			<input type="submit" value="Submit" id="submit">
+			<input type="password" id="password" name="password" />
+			<caption>
+				(REQUIRED — The password must be at least 8 characters long)
+			</caption>
+			<br /><br />
+			<input type="submit" value="Submit" id="submit" />
 		</form>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

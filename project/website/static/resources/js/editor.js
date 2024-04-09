@@ -11,5 +11,3 @@ Array.prototype.slice.call(document.getElementsByClassName("editor")).forEach((e
 	<input type="submit" value="Publish">
 	`
 })
-
-loaded()

@@ -82,5 +82,3 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 			});
 	})
 })
-
-loaded()

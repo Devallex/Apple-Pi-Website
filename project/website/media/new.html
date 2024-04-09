@@ -2,32 +2,30 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>Create Media</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Create Media</h1>
 		<form action="/media/" method="post">
-			<label for="title">Media Title</label><br>
-			<input name="title" id="title" type="text" placeholder="Title..."><br><br>
+			<label for="title">Media Title</label><br />
+			<input name="title" id="title" type="text" placeholder="Title..." /><br /><br />
 
-			<label for="caption">Media Caption</label><br>
-			<input name="caption" id="caption" type="text" placeholder="Caption..."><br><br>
-			<input name="upload" type="file"><br><br>
-			
-			<input type="submit" value="Upload File">
+			<label for="caption">Media Caption</label><br />
+			<input name="caption" id="caption" type="text" placeholder="Caption..." /><br /><br />
+			<input name="upload" type="file" /><br /><br />
+
+			<input type="submit" value="Upload File" />
 		</form>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

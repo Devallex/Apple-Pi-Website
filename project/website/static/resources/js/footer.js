@@ -24,5 +24,3 @@ Array.prototype.slice.call(document.getElementsByTagName("footer")).forEach((foo
 		</div>
 	`
 })
-
-loaded()

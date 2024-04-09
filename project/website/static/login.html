@@ -2,33 +2,31 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>Login</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Login</h1>
 		<p>Don't have an account? <a href="/sign-up/">Sign up here</a>.</p>
 
 		<form action="/sessions/" method="post" data-onsuccess="go_back()">
 			<label for="username">Username:</label>
-			<input type="text" id="username" name="username"><br><br>
+			<input type="text" id="username" name="username" /><br /><br />
 
 			<label for="password">Password:</label>
-			<input type="password" id="password" name="password"><br><br>
+			<input type="password" id="password" name="password" /><br /><br />
 
-			<input type="submit" value="Submit" id="submit">
+			<input type="submit" value="Submit" id="submit" />
 		</form>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

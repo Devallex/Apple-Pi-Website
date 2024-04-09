@@ -2,33 +2,26 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
-	<title>
-		Users
-	</title>
-	<script src="/resources/js/modules.js" id="modules">
-	</script>
+	<title>Users</title>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Users</h1>
-		<p>
-			These are the registered user accounts.
-		</p>
+		<p>These are the registered user accounts.</p>
 		<ul>
 			{% for user in users %}
 			<li><a href="/users/{{ user.id }}">{{ user.username }}</a></li>
 			{% endfor %}
 		</ul>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

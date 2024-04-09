@@ -2,36 +2,30 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
-	<title>
-		Users
-	</title>
-	<script src="/resources/js/modules.js" id="modules">
-	</script>
+	<title>Users</title>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
-		<h1 class="title">Profile — {{ target_user.getNameText() }} </h1>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Profile — {{ target_user.getNameText() }}</h1>
 		<h2>Description</h2>
 		<p>
-			{% if target_user.description %}
-			{{ target_user.description }}
-			{% else %}
+			{% if target_user.description %} {{ target_user.description }} {% else
+			%}
 			<i>This profile has no description</i>
 			{% endif %}
 		</p>
-		<hr>
+		<hr />
 		<h2>Information</h2>
 		<p>
 			Joined on: {{ target_user.getDateText() }}
-			<br>
+			<br />
 		</p>
 		<h2>Roles</h2>
 		<label for="roles">Current roles:</label>
@@ -41,33 +35,34 @@
 			<li>
 				<form class="inline" action="/users/{{ target_user.id }}/roles/{{ role.id }}/" method="delete">
 					<a href="/roles/{{ role.id }}/">{{ role.label }}</a>
-					{% if user and user.hasPermission(Permission.AssignRoles) and user.overseesRole(role) and
-					(user.overseesUser(target_user) or user == target_user) %}
-					<input type="submit" value="Unassign">
+					{% if user and user.hasPermission(Permission.AssignRoles) and
+					user.overseesRole(role) and (user.overseesUser(target_user) or user
+					== target_user) %}
+					<input type="submit" value="Unassign" />
 					{% endif %}
 				</form>
-			</li><br>
+			</li>
+			<br />
 			{% endfor %}
 		</ul>
 		{% else %}
-		<i>None</i><br><br>
-		{% endif %}
-		{% if user and user.hasPermission(Permission.AssignRoles) and (user.overseesUser(target_user) or user == target_user) %}
+		<i>None</i><br /><br />
+		{% endif %} {% if user and user.hasPermission(Permission.AssignRoles) and
+		(user.overseesUser(target_user) or user == target_user) %}
 		<label for="assign-roles">Assign roles:</label>
 		<form id="assign-roles" action="/users/{{ target_user.id }}/roles/" method="patch">
 			<select name="role_id">
 				<option selected value="">None</option>
-				{% for role in roles %}
-				{% if not role in target_user.getRoles() and user.overseesRole(role) %}
+				{% for role in roles %} {% if not role in target_user.getRoles() and
+				user.overseesRole(role) %}
 				<option value="{{ role.id }}">{{ role.label }}</option>
-				{% endif %}
-				{% endfor %}
+				{% endif %} {% endfor %}
 			</select>
-			<input type="submit" value="Assign">
+			<input type="submit" value="Assign" />
 		</form>
 		{% endif %}
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

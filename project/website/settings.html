@@ -2,39 +2,37 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>User Settings</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
-		<nav-breadcrumbs></nav-breadcrumbs>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">User Settings {{ user.getNameText() }}</h1>
 		Here you can modify the settings for your account.
-		<blockquote><strong>WARNING:</strong><br>This website is still in development and data loss may be possible. You
-			may want to save things such as your description to a document to avoid re-writing it later.</blockquote>
+		<blockquote>
+			<strong>WARNING:</strong><br />This website is still in development and
+			data loss may be possible. You may want to save things such as your
+			description to a document to avoid re-writing it later.
+		</blockquote>
 		<h2>Log Out</h2>
 
 		<form action="/sessions/" method="delete">
-			<input type="submit" value="Log Out">
-			<label for="log_out">Click this button to log out on this
-				browser.</label>
+			<input type="submit" value="Log Out" />
+			<label for="log_out">Click this button to log out on this browser.</label>
 		</form>
-		<br>
+		<br />
 		<form action="/sessions/all/" method="delete">
-			<input type="submit" value="Log Out Everywhere">
-			<label for="log_out_everywhere">Click
-				this button to log out on all devices.</label>
+			<input type="submit" value="Log Out Everywhere" />
+			<label for="log_out_everywhere">Click this button to log out on all devices.</label>
 		</form>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

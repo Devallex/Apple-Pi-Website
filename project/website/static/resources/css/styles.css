@@ -46,7 +46,6 @@ html {
 	color: var(--dark-color);
 	font-family: sans-serif;
 	margin: 0px;
-	filter: opacity(0);
 	transition: filter 0.5s;
 }
 

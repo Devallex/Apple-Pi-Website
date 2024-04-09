@@ -1,24 +1,15 @@
-from app import (
-    app,
-    db,
-    Mapped,
-    mapped_column,
-    render_template,
-    on_create_all,
-    getenv,
-    request,
-    make_response,
-    redirect,
-    get_data,
-)
-
-from enum import Enum
-from json import dumps, loads
+import project.core.app as app
+import project.modules.users as users
+import project.core.utils as utils
+import project.core.errors as errors
+import flask
+import sqlalchemy.orm as orm
 from datetime import datetime
-import users
-from utils import timestamp
+import os
+import enum
+import json
 
-Permission = Enum(
+Permission = enum.Enum(
     "Permission",
     [
         "ManageRoles",
@@ -30,17 +21,17 @@ Permission = Enum(
 )
 
 
-class Role(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    parent_id: Mapped[int] = mapped_column(nullable=True)
-    creation_date: Mapped[float] = mapped_column()
-    label: Mapped[str] = mapped_column(unique=True)
-    permissions: Mapped[str] = mapped_column(default="[]")
-    description: Mapped[str] = mapped_column(nullable=True)
+class Role(app.db.Model):
+    id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
+    parent_id: orm.Mapped[int] = orm.mapped_column(nullable=True)
+    creation_date: orm.Mapped[float] = orm.mapped_column()
+    label: orm.Mapped[str] = orm.mapped_column(unique=True)
+    permissions: orm.Mapped[str] = orm.mapped_column(default="[]")
+    description: orm.Mapped[str] = orm.mapped_column(nullable=True)
 
     def getFromId(id: int):
-        return db.session.execute(
-            db.select(Role).where(Role.id == id)
+        return app.db.session.execute(
+            app.db.select(Role).where(Role.id == id)
         ).scalar_one_or_none()
 
     def getRootRole():
@@ -48,7 +39,7 @@ class Role(db.Model):
 
     def getUsers(self):
         all_users = []
-        for user in db.session.execute(db.select(users.User)).scalars():
+        for user in app.db.session.execute(app.db.select(users.User)).scalars():
             if self in user.getRoles():
                 all_users.append(user)
         return all_users
@@ -75,13 +66,13 @@ class Role(db.Model):
         return str(datetime.fromtimestamp(self.creation_date))
 
     def getChildRoles(self):
-        return db.session.execute(
-            db.select(Role).where(Role.parent_id == self.id)
+        return app.db.session.execute(
+            app.db.select(Role).where(Role.parent_id == self.id)
         ).scalars()
 
     def getPermissions(self):
         permissions = []
-        for permission_name in loads(self.permissions):
+        for permission_name in json.loads(self.permissions):
             permissions.append(Permission[permission_name])
         return permissions
 
@@ -91,7 +82,7 @@ class Role(db.Model):
         raw_permissions = []
         for permission in permissions:
             raw_permissions.append(permission.name)
-        self.permissions = dumps(raw_permissions)
+        self.permissions = json.dumps(raw_permissions)
 
     def hasPermission(self, permission: Permission):
         return permission in self.getPermissions()
@@ -106,28 +97,28 @@ class Role(db.Model):
 
 
 # Create Admin
-@on_create_all
+@app.on_create_all
 def create_admin():
     if not Role.getRootRole():
-        label = Role.formatLabel(getenv("ADMIN_USERNAME"))
+        label = Role.formatLabel(os.getenv("ADMIN_USERNAME"))
 
         permissions = []
         for permission_item in Permission:
             permissions.append(permission_item.name)
 
         root_role = Role(
-            creation_date=timestamp(),
+            creation_date=utils.timestamp(),
             label=label,
-            permissions=dumps(permissions),
+            permissions=json.dumps(permissions),
             description="The role reserved for the administrator account.",
         )
 
-        db.session.add(root_role)
-        db.session.commit()
+        app.db.session.add(root_role)
+        app.db.session.commit()
 
 
 # API
-@app.route("/api/roles/", methods=["POST"])
+@app.app.route("/api/roles/", methods=["POST"])
 def api_create_role():
     user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.ManageRoles):
@@ -136,7 +127,7 @@ def api_create_role():
     # TODO: Validate label properly
     # TODO: Validate parent
 
-    data = get_data()
+    data = app.get_data()
 
     parent = Role.getFromId(int(data["parent"]))
     if not parent:
@@ -158,21 +149,21 @@ def api_create_role():
 
     role = Role(
         parent_id=parent.id,
-        creation_date=timestamp(),
+        creation_date=utils.timestamp(),
         label=Role.formatLabel(data["label"]),
-        permissions=dumps(permissions),
+        permissions=json.dumps(permissions),
         description=data["description"],
     )
 
-    db.session.add(role)
-    db.session.commit()
+    app.db.session.add(role)
+    app.db.session.commit()
 
-    return redirect("/roles/" + str(role.id) + "/")
+    return flask.redirect("/roles/" + str(role.id) + "/")
 
 
-@app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
+@app.app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
 def api_user_patch_role(user_id):
-    data = get_data()
+    data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.AssignRoles):
@@ -196,14 +187,14 @@ def api_user_patch_role(user_id):
         return "You do not have permission to assign this role.", 403
 
     target_user.addRole(target_role)
-    db.session.commit()
+    app.db.session.commit()
 
-    return redirect("/users/" + str(user_id) + "/", code=303)
+    return flask.redirect("/users/" + str(user_id) + "/", code=303)
 
 
-@app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
+@app.app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
 def api_user_delete_role(user_id, role_id):
-    data = get_data()
+    data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
     if not user.hasPermission(Permission.AssignRoles):
@@ -223,15 +214,15 @@ def api_user_delete_role(user_id, role_id):
         return "You do not have permission to assign this role.", 403
 
     target_user.removeRole(target_role)
-    db.session.commit()
+    app.db.session.commit()
 
-    return redirect("/users/" + str(user_id) + "/", code=303)
+    return flask.redirect("/users/" + str(user_id) + "/", code=303)
 
 
 # Pages
-@app.route("/roles/")
+@app.app.route("/roles/")
 def page_view_roles():
-    return render_template(
+    return flask.render_template(
         "roles/index.html",
         user=users.User.getFromRequest(),
         Permission=Permission,
@@ -239,12 +230,12 @@ def page_view_roles():
     )
 
 
-@app.route("/roles/<int:id>/")
+@app.app.route("/roles/<int:id>/")
 def page_view_role(id):
     role = Role.getFromId(id)
 
     if not role:
-        return render_template(
+        return flask.render_template(
             "error.html",
             name="Not Found",
             code=404,
@@ -252,21 +243,21 @@ def page_view_role(id):
             show_home=True,
         )
 
-    return render_template(
+    return flask.render_template(
         "roles/profile.html",
         role=role,
         parent_role=role.getParentRole(),
     )
 
 
-@app.route("/roles/new/")
+@app.app.route("/roles/new/")
 def page_create_role():
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(Permission.ManageRoles)
 
-    return render_template(
+    return flask.render_template(
         "roles/new.html",
         user=user,
-        roles=db.session.execute(db.select(Role)).scalars(),
+        roles=app.db.session.execute(app.db.select(Role)).scalars(),
         permissions=Permission,
     )

@@ -2,56 +2,52 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
-	<title>
-		Create Role
-	</title>
-	<script src="/resources/js/modules.js" id="modules">
-	</script>
+	<title>Create Role</title>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Create Role</h1>
 		<form action="/roles/" method="post">
 			<label for="label">Label:</label>
-			<input name="label" id="label" type="text"><br><br>
+			<input name="label" id="label" type="text" /><br /><br />
 
 			<label for="description">Description:</label>
-			<textarea name="description" id="description"></textarea><br><br>
+			<textarea name="description" id="description"></textarea><br /><br />
 
 			<label for="parent">Parent:</label>
 			<select name="parent" id="parent">
-				{% for role in roles %}
-				{% if user.hasRole(role) or user.overseesRole(role) %}
+				{% for role in roles %} {% if user.hasRole(role) or
+				user.overseesRole(role) %}
 				<option value="{{ role.id }}">{{ role.label }}</option>
-				{% endif %}
-				{% endfor %}
-			</select><br><br>
+				{% endif %} {% endfor %}
+			</select><br /><br />
 
 			<label for="permissions">Permissions:</label>
 			<ul id="permissions">
-				{% for permission in permissions %}
-				{% if user.hasPermission(permission) %}
-				<li><input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}"
-						type="checkbox"> <label for="permission-{{ permission.name }}">{{ permission.name }}</label>
+				{% for permission in permissions %} {% if
+				user.hasPermission(permission) %}
+				<li>
+					<input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}"
+						type="checkbox" />
+					<label for="permission-{{ permission.name }}">{{ permission.name }}</label>
 				</li>
-				{% endif %}
-				{% endfor %}
+				{% endif %} {% endfor %}
 			</ul>
 
-			<input type="submit" value="Create Role">
-			<hr>
-			<i class="center">You may not see all roles or permissions based on which ones you have.</i>
+			<input type="submit" value="Create Role" />
+			<hr />
+			<i class="center">You may not see all roles or permissions based on which ones you
+				have.</i>
 		</form>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

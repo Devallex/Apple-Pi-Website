@@ -2,26 +2,21 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
-	<title>
-		Roles
-	</title>
-	<script src="/resources/js/modules.js" id="modules">
-	</script>
+	<title>Roles</title>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">Roles</h1>
 		<p>
-			These are all the user roles across the site. They control what a user is able to do and what they are
-			labeled as.
+			These are all the user roles across the site. They control what a user
+			is able to do and what they are labeled as.
 		</p>
 		<ul>
 			{% for role in [root_role] recursive %}
@@ -34,11 +29,11 @@
 			{% endfor %}
 		</ul>
 		{% if user and user.hasPermission(Permission.ManageRoles) %}
-		<hr>
+		<hr />
 		<a class="center" href="/roles/new/">Create a new role</a>
 		{% endif %}
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

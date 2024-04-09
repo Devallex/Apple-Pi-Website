@@ -2,36 +2,28 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
-	<title>
-		Role — {{ role.label }}
-	</title>
-	<script src="/resources/js/modules.js" id="modules">
-	</script>
+	<title>Role — {{ role.label }}</title>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
-		<meta http-equiv='refresh' content='0; URL=/noscript'>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
-		<h1 class="title">Role — {{ role.label }} </h1>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Role — {{ role.label }}</h1>
 		<h2>Description</h2>
-		<p>
-			{{ role.description or "<i>No description provided</i>"|safe }}
-		</p>
+		<p>{{ role.description or "<i>No description provided</i>"|safe }}</p>
 		<h2>Information</h2>
 		<p>
-			{% if parent_role %}
-			Parent role: <dfn title="{{ parent_role.description }}"><a href="/roles/{{ parent_role.id }}/">{{
-					parent_role.label }}</a></dfn>
-			{% else %}
-			Parent role: <i>None</i>
+			{% if parent_role %} Parent role:
+			<dfn title="{{ parent_role.description }}"><a href="/roles/{{ parent_role.id }}/">{{ parent_role.label
+					}}</a></dfn>
+			{% else %} Parent role: <i>None</i>
 			{% endif %}
-			<br>
+			<br />
 			Created on: {{ role.getDateText() }}
 		</p>
 		<h2>Users</h2>
@@ -45,7 +37,7 @@
 		<i>None</i>
 		{% endif %}
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>

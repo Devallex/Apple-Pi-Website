@@ -2,20 +2,17 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="/resources/css/styles.css">
 	<title>About Us</title>
-	<script src="/resources/js/modules.js" id="modules"></script>
+	{{ head|safe }}
 </head>
 
 <body>
 	<noscript>
 		<meta http-equiv='refresh' content='0; URL=/noscript'>
 	</noscript>
-	<header></header>
+	{{ header|safe }}
 	<main>
-		<nav-breadcrumbs></nav-breadcrumbs>
+		{{ breadcrumbs|safe }}
 		<h1 class="title">About Us</h1>
 		<p>
 			Apple Pi is a group of high school students from Guilford and surrounding communities working to make the
@@ -39,7 +36,7 @@
 		</ul>
 		</p>
 	</main>
-	<footer></footer>
+	{{ footer|safe }}
 </body>
 
 </html>
