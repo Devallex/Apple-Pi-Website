@@ -1,0 +1,94 @@
+a,
+a:visited {
+	text-decoration: none;
+	letter-spacing: 0em;
+	color: var(--primary-color);
+	border-bottom: 2.5px solid var(--dark-color);
+
+	transition-property: color, letter-spacing, border-bottom;
+	transition-duration: 0.2s;
+	transition-timing-function: ease;
+
+	&:hover {
+		letter-spacing: 0.05em;
+		color: var(--secondary-color);
+		border-bottom: 5px solid var(--dark-color);
+	}
+
+	&:active {
+		letter-spacing: -0.05em;
+		color: var(--dark-color);
+		border-bottom: 0.5px solid var(--dark-color);
+	}
+}
+
+abbr,
+dfn {
+	/* TODO: A possible interactive element (click to get definition?) */
+	text-decoration: none;
+	border-bottom: 2px dotted var(--dark-color);
+	transition-property: border-bottom, letter-spacing;
+	transition-duration: 1.5s;
+	transition-timing-function: ease;
+
+	&:hover {
+		letter-spacing: 0.2em;
+		border-bottom: 4px dotted var(--dark-color);
+	}
+}
+
+cite,
+strong {
+	/* TODO: Safari doesn't show (double) underline */
+	letter-spacing: 0em;
+	text-decoration: double underline 1px var(--primary-color);
+
+	transition-property: letter-spacing, text-decoration;
+	transition-duration: 0.2s;
+	transition-timing-function: ease;
+
+	&:hover {
+		letter-spacing: 0.05em;
+		text-decoration: double underline 1px var(--secondary-color);
+	}
+}
+
+/* code {} */
+
+data {}
+
+em {}
+
+i {}
+
+kbd {}
+
+mark {}
+
+q {}
+
+rp {}
+
+rt {}
+
+ruby {}
+
+s {}
+
+samp {}
+
+small {}
+
+span {}
+
+sub {}
+
+sup {}
+
+time {}
+
+u {}
+
+var {}
+
+wbr {}
