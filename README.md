@@ -1,5 +1,18 @@
 # Overview
 These instructions show only Linux/MacOS. Windows is probably supported but commands may be slightly different.
+## Directory Structure
+A brief overview of each directory in the repository.
+> `instance` — A directory containing all the data from the website
+>
+> `project` — All the files from the site
+> > `core` — Scripts which contain a groundwork for the website
+> >
+> > `modules` — Primary website features (users, articles, media, etc.)
+> >
+> > `templates` — Scripts which add global variables to jinja templates
+> >
+> > `website` — Static and dynamic web files
+> > > `static` — Web files which can be directly accessed
 # Development
 ## Setup
 1. [Install Python](https://www.python.org/downloads/)
