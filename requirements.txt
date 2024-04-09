@@ -6,5 +6,5 @@ python-dotenv == 1.0.1
 bcrypt == 4.1.2
 Werkzeug == 3.0.1
 apscheduler == 3.10.4
-build == 1.2.1
-black-with-tabs == 22.10.0
+requests == 2.31.0
+waitress == 3.0.0
