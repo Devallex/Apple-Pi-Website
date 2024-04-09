@@ -130,7 +130,7 @@ def page_view_article(id):
             "error.html",
             name="Not Found",
             code=404,
-            description="This article was not found on the server. It may have been deleted or a faulty link. If you want, you can <a href='/articles/>view all the articles here</a>.",
+            description="This article was not found on the server. It may have been deleted or a faulty link. If you want, you can <a href='/articles/'>view all the articles here</a>.",
             show_home=True,
         )
 

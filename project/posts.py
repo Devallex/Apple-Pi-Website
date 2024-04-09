@@ -159,7 +159,7 @@ def page_view_post(id):
             "error.html",
             name="Not Found",
             code=404,
-            description="This post was not found on the server. It may have been deleted or a faulty link. If you want, you can <a href='/posts/>view all the posts here</a>.",
+            description="This post was not found on the server. It may have been deleted or a faulty link. If you want, you can <a href='/posts/'>view all the posts here</a>.",
             show_home=True,
         )
 

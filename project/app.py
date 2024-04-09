@@ -38,7 +38,21 @@ def run():
         for callback in on_create_all_callbacks:
             callback()
     scheduler.start()
-    app.run()  # TODO: Fix issue with error when starting in debug mode
+
+    mode = getenv("MODE")
+    assert mode in (
+        "dev",
+        "debug",
+        "prod",
+    ), "You must specify the MODE in the .env file!"
+    if mode == "prod":
+        from waitress import serve
+        print("Running production server on %s:%s, press CTRL/CMD + C to exit." % (getenv("PROD_HOST"), getenv("PROD_PORT")))
+        print("Use password '%s' to log into the '%s' account." % (getenv("ADMIN_PASSWORD"), getenv("ADMIN_USERNAME")))
+        print()
+        serve(app, host=getenv("PROD_HOST"), port=getenv("PROD_PORT"))
+    else:
+        app.run(debug=mode == "debug")
 
 
 def get_data():
