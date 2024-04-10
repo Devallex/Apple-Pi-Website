@@ -12,7 +12,9 @@ figcaption {}
 
 figure {}
 
-hr {}
+hr {
+    border: 1px solid var(--dark-color);
+}
 
 li {}
 

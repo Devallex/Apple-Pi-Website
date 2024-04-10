@@ -26,6 +26,6 @@ def header():
             result += "\n\t<a href='%s'><div><b>%s</b></div></a>" % (page[1], page[0])
         else:
             result += "\n\t<a href='%s'><div>%s</div></a>" % (page[1], page[0])
-    result += "</div></header>"
+    result += "</div></header><hr>"
 
     return {"header": result}
