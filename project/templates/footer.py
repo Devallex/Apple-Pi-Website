@@ -1,4 +1,5 @@
 import project.core.app as app
+import project.core.utils as utils
 import flask
 
 contact_email = "applepirobotics4H@gmail.com"
@@ -6,9 +7,34 @@ contact_email = "applepirobotics4H@gmail.com"
 
 @app.add_template
 def footer():
+    year = utils.time().year
+
     return {
         "footer": """
-<footer><div class='background'></div>\n<div class='content center'>\n\t<address>\n\t\t<p>\n\t\t\t<label>Contact:</label>\n\t\t\t<a href='mailto:%s'>%s</a>\n\t\t</p>\n\t\t<p>\n\t\t\t<label>Social Media:</label>\n\t\t\t<a href='https://www.facebook.com/people/Apple-Pi-Robotics-FRC-Team-2067/100054299360253/'>Facebook</a> |\n\t\t\t<a href='https://www.twitter.com/FRC2067'>Twitter</a>\n\t\t</p>\n\t\t<p>\n\t\t\t<label>Address:</label>\n\t\t\t29 Soundview Rd.\n\t\t\tBuilding 2, Unit #3\n\t\t\tGuilford, CT 06437\n\t\t</p>\n\t</address>\n</div></footer>
+<footer>
+    <hr>
+    <div class='background'></div>
+    <div class='content center'>
+        <address>
+            <p>
+                <label>Contact:</label>
+                <a href='mailto:%s'>%s</a>    
+            </p>
+            <p>
+            <label>Social Media:</label>
+            <a href='https://www.facebook.com/people/Apple-Pi-Robotics-FRC-Team-2067/100054299360253/'>Facebook</a> |
+            <a href='https://www.twitter.com/FRC2067'>Twitter</a>
+            </p>
+            <p>
+                <label>Address:</label>
+                29 Soundview Rd.
+                Building 2, Unit #3
+                Guilford, CT 06437
+            </p>
+        </address>
+        <p>© %s Apple Pi Robotics</p>
+    </div>
+</footer>
 """
-        % (contact_email, contact_email)
+        % (contact_email, contact_email, year)
     }
