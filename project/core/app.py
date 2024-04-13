@@ -9,6 +9,7 @@ import dotenv
 import os
 import requests
 import logging
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 if os.path.exists("log.txt"):
     os.remove("log.txt")
@@ -103,10 +104,20 @@ def run():
             "Use password '%s' to log into the '%s' account."
             % (os.getenv("ADMIN_PASSWORD"), os.getenv("ADMIN_USERNAME"))
         )
+
+        if os.getenv("PROD_PROXY") == "true":
+            print("Proxy is enabled. This is dangerous if not actually using a proxy!")
+            app.wsgi_app = ProxyFix(
+                app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+            )
+        else:
+            print("Proxy is disabled. If using a proxy, enable it in .env.")
+
         print(
-            "Running production server on %s:%s, press CTRL/CMD + C to exit."
+            "Running production server on http://%s:%s, press CTRL/CMD + C to exit."
             % (os.getenv("PROD_HOST"), os.getenv("PROD_PORT"))
         )
+
         print()
 
         logger = logging.getLogger("waitress")
