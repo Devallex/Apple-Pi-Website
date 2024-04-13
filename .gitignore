@@ -13,6 +13,5 @@ instance
 .db
 .db-*
 
-# TODOs
-TODO.md
-todo.md
+# Log Files
+log.txt

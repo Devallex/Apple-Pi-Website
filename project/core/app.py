@@ -8,6 +8,9 @@ import apscheduler
 import dotenv
 import os
 import requests
+import logging
+
+os.remove("log.txt")
 
 dotenv.load_dotenv()
 
@@ -104,6 +107,14 @@ def run():
             % (os.getenv("PROD_HOST"), os.getenv("PROD_PORT"))
         )
         print()
+
+        logger = logging.getLogger("waitress")
+        logger.setLevel(logging.DEBUG)
+        # create file handler which logs even debug messages
+        fh = logging.FileHandler("log.txt")
+        fh.setLevel(logging.DEBUG)
+        logger.addHandler(fh)
+
         serve(app, host=os.getenv("PROD_HOST"), port=os.getenv("PROD_PORT"))
     else:
         app.run(debug=mode == "debug")
