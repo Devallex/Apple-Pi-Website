@@ -21,8 +21,8 @@ A brief overview of each directory in the repository.
 1. Create `.env` file:
 ```env
 MODE=dev
-ADMIN_USERNAME="admin"
-ADMIN_PASSWORD="&DM1N"
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=&DM1N
 ```
 ### Environment File
 - `MODE` (required): How the server will run (Either `dev`, `debug`, or `prod`).
