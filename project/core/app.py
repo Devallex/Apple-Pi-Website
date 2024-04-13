@@ -10,7 +10,8 @@ import os
 import requests
 import logging
 
-os.remove("log.txt")
+if os.path.exists("log.txt"):
+    os.remove("log.txt")
 
 dotenv.load_dotenv()
 
