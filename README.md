@@ -2,17 +2,24 @@
 These instructions show only Linux/MacOS. Windows is probably supported but commands may be slightly different.
 ## Directory Structure
 A brief overview of each directory in the repository.
-> `instance` — A directory containing all the data from the website
+> `instance` — A directory containing all the live data from the website (database, user uploaded files, etc). Sometimes it is useful to delete it in the development enviornment when experiencing issues.
 >
-> `project` — All the files from the site
-> > `core` — Scripts which contain a groundwork for the website
+> `project` — All the source code from the website.
+> > `core` — Scripts which contain a central functionality for the website (start the server, create the database, manage page access, errors, utilities, etc).
 > >
-> > `modules` — Primary website features (users, articles, media, etc.)
+> > `modules` — Primary website features which have API endpoints and accessible pages, and may interact with the database in requests (users, articles, media, etc).
 > >
-> > `templates` — Scripts which add global variables to jinja templates
+> > `templates` — Scripts which add global variables to jinja templates (headers, footers, breadcrumbs, etc).
 > >
-> > `website` — Static and dynamic web files
-> > > `static` — Web files which can be directly accessed
+> > `website` — Static and dynamic web files. Modules can render dynamic ones in responses.
+> > > `static` — Web files which can be directly accessed by going to their path. (Static files can still use template variables.)
+## Packages
+These are some important packages which must be understood.
+- [Flask](https://flask.palletsprojects.com/en/) is the web framework used for this application. It can manage incoming requests and deal with them accordingly. 
+- [Jinja Templates](https://jinja.palletsprojects.com/en/) allow data to easily be inserted into text files (like html), can turn generic files into 'rendered pages' with live information
+- [SQL Alchemy](https://www.sqlalchemy.org) allows for easy access to the database without executing bulky string sql commands.
+  - [Flask-SQL Alchemy)(https://flask-sqlalchemy.palletsprojects.com/en/) adds support for flask to use SQL Alchemy.
+
 # Development
 ## Setup
 1. [Install Python](https://www.python.org/downloads/)
