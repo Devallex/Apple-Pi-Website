@@ -18,7 +18,7 @@ These are some important packages which must be understood.
 - [Flask](https://flask.palletsprojects.com/en/) is the web framework used for this application. It can manage incoming requests and deal with them accordingly. 
 - [Jinja Templates](https://jinja.palletsprojects.com/en/) allow data to easily be inserted into text files (like html), can turn generic files into 'rendered pages' with live information
 - [SQL Alchemy](https://www.sqlalchemy.org) allows for easy access to the database without executing bulky string sql commands.
-  - [Flask-SQL Alchemy)(https://flask-sqlalchemy.palletsprojects.com/en/) adds support for flask to use SQL Alchemy.
+  - [Flask-SQL Alchemy](https://flask-sqlalchemy.palletsprojects.com/en/) adds support for flask to use SQL Alchemy.
 
 # Development
 ## Setup
