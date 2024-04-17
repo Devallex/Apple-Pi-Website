@@ -12,7 +12,9 @@
 	</noscript>
 	{{ header|safe }}
 	<main>
+		{% if show_breadcrumbs %}
 		{{ breadcrumbs|safe }}
+		{% endif %}
 		<h1 class="title">{{ code }} — {{ name }}</h1>
 		<p>{{ description|safe }}</p>
 		{% if show_home %}

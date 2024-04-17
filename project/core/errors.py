@@ -28,6 +28,7 @@ def handle_unauthorized(error):
 			code=error.code,
 			description=error.description + " Try <a href='/login/'>logging in</a>.",
 			show_home=True,
+			show_breadcrumbs=True,
 		)
 	return "Error — " + str(error.code) + "\n\n" + error.description, error.code
 
@@ -41,6 +42,7 @@ def handle_not_found(error):
 			code=error.code,
 			description=error.description,
 			show_home=True,
+			show_breadcrumbs=False,
 		)
 	return "Error — " + str(error.code) + "\n\n" + error.description, error.code
 
@@ -54,5 +56,6 @@ def handle_error(error):
 			code=error.code,
 			description=error.description,
 			show_home=True,
+			show_breadcrumbs=True,
 		)
 	return "Error — " + str(error.code) + "\n\n" + error.description, error.code
