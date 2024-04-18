@@ -45,6 +45,8 @@ ADMIN_PASSWORD=&DM1N
 1. Start the web server:<br>
 `python3 project`
 1. Open [http://127.0.0.1:5000](http://127.0.0.1:5000) to preview the project.
+(Note: In the event you reloaded the page while you turned the site off, even if you reload again with the site on, it could cache the blank page. You may need to fully force quit your browser and/or clear the cache. It is reccomended to test with FireFox as you can just force quit whenever this happens)
+
 # Deployment
 1. Complete [setup steps above](#setup)
 2. In the `.env` file, set `MODE=prod`
