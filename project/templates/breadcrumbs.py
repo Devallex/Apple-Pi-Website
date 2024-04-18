@@ -19,6 +19,9 @@ def breadcrumbs():
 
         current_path += sub_path + "/"
         # TODO: Use the HTML document's title instead of the sub_path
-        result += " → <a href='%s'>%s</a>" % (current_path, sub_path)
+        if sub_path == sub_paths[-1]:
+            result += " → <b>%s</b>" % sub_path
+        else:
+            result += " → <a href='%s'>%s</a>" % (current_path, sub_path)
 
     return {"breadcrumbs": result}
