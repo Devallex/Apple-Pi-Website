@@ -4,15 +4,134 @@ article {}
 
 aside {}
 
-footer {}
+footer {
+	width: 100%;
+	height: 10%;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	text-align: center;
+	left: 0px;
+	right: 0px;
 
-header {}
+	.background {
+		background-color: var(--light-color);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		filter: brightness(var(--dim-amount));
+		z-index: -1;
+	}
 
-h1, h2, h3, h4, h5, h6 {}
+	.content {
+		p {
+			margin: 0px;
+			padding: 10px;
+		}
+	}
+}
+
+/* TODO: Clean */
+header {
+	width: 100%;
+	height: 10%;
+	/* margin: 0px; */
+	padding: 20px 0 20px 0;
+	position: relative;
+	text-align: center;
+	left: 0px;
+	right: 0px;
+	top: 0;
+
+	.background {
+		background-color: var(--light-color);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		filter: brightness(var(--dim-amount));
+		z-index: -1;
+	}
+
+	.content {
+		& h1 {
+			margin: 0px;
+			padding: 20px;
+		}
+
+		& nav {
+			width: 100%;
+			height: 10%;
+			margin: 0;
+			padding: 0;
+			position: sticky;
+			position: -webkit-sticky;
+			text-align: center;
+
+			.background {
+				background-color: var(--light-color);
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				filter: brightness(var(--dim-amount));
+				z-index: -1;
+			}
+
+			>a {
+				position: relative;
+				list-style-type: none;
+				margin: 5px 0px 10px 15px;
+				padding: 0;
+				color: var(--raw-light-color);
+				display: inline-block;
+				padding: 20px;
+				text-decoration: none;
+				transition: box-shadow 0.25s ease;
+				background-color: var(--primary-color);
+
+				>div {
+					transition: transform 0.25s ease;
+				}
+
+				&:hover {
+					box-shadow: 8px 8px var(--secondary-color);
+
+					>div {
+						transform: scale(1.25);
+					}
+				}
+
+				&:active {
+					box-shadow: 4px 4px var(--secondary-color);
+				}
+			}
+		}
+	}
+}
+
+h1.title {
+	text-decoration: underline;
+	text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {}
 
 hgroup {}
 
-main {}
+main {
+	margin: 10%;
+	min-height: calc(100vh);
+}
 
 nav {}
 

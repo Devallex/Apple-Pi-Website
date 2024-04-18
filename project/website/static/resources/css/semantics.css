@@ -1,5 +1,4 @@
-a,
-a:visited {
+main a, footer a {
 	text-decoration: none;
 	letter-spacing: 0em;
 	color: var(--primary-color);

@@ -41,4 +41,6 @@ html {
 	background-color: var(--light-color);
 }
 
-body {}
+body {
+	margin: 0;
+}
