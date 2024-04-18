@@ -27,3 +27,7 @@ p {}
 pre {}
 
 ul {}
+
+.center {
+    text-align: center;
+}
