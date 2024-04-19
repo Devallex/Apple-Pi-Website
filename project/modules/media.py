@@ -40,7 +40,7 @@ class Media(app.db.Model):
 
     def getFile(self):
         return flask.send_from_directory(
-            app.config["UPLOAD_FOLDER"] + "media/", self.name + "." + self.extension
+            "instance/media/", self.name + "." + self.extension
         )
 
     def getEncodedName(self):
@@ -92,7 +92,7 @@ def api_create_media():
     )
 
     upload.save(
-        os.path.join(app.config["UPLOAD_FOLDER"] + "media/", name + "." + extension)
+        os.path.join("instance/media/", name + "." + extension)
     )
 
     app.db.session.add(media)
