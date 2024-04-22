@@ -14,7 +14,9 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">{{ document_type }} Editor</h1>
-		<form class="editor" action="{{ api_url }}" method="{{ method }}"></form>
+		<form class="editor" action="{{ api_url }}" method="{{ method }}">
+			{{ other|safe }}
+		</form>
 	</main>
 	{{ footer|safe }}
 </body>

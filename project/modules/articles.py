@@ -13,6 +13,7 @@ class Article(app.db.Model):
     creation_date: orm.Mapped[float] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
     is_published: orm.Mapped[str] = orm.mapped_column(default=False)
+    path: orm.Mapped[str] = orm.mapped_column(unique=True, nullable=True)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
     abstract: orm.Mapped[str] = orm.mapped_column(nullable=True)
     body: orm.Mapped[str] = orm.mapped_column()
@@ -31,7 +32,7 @@ def api_create_article():
     data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(roles.Permission.EditDocuments):
+    if not user.hasPermission(roles.Permission.EditArticles):
         return "You do not have permission to publish documents.", 403
 
     title = data["title"]
@@ -45,12 +46,20 @@ def api_create_article():
             403,
         )
 
+    # TODO: Validate path, ensure unique
+    path = data["path"] or None
+    if path:
+        while "//" in path:
+            path.replace("//", "/")
+        path = path.lower().removeprefix("/").removesuffix("/")
+
     article = Article(
         creation_date=utils.timestamp(),
         creator_id=user.id,
+        is_published="is_published" in data,
         title=title,
         body=data["body"],
-        is_published=True,
+        path=path,
     )
 
     app.db.session.add(article)
@@ -63,7 +72,7 @@ def api_create_article():
 @app.app.route("/articles/new/")
 def page_create_article():
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(roles.Permission.EditDocuments):
+    if not user.hasPermission(roles.Permission.EditArticles):
         return flask.render_template(
             "error.html",
             name="Forbidden",
@@ -73,12 +82,23 @@ def page_create_article():
         )
 
     return flask.render_template(
-        "editor.html", document_type="Article", api_url="/articles/", method="post"
+        "editor.html",
+        document_type="Article",
+        api_url="/articles/",
+        method="post",
+        other="""<fieldset>
+            <legend>Article</legend>
+            <label for='path'><b>Path (Optional):</b> Where should the article be located when published?</label><br>
+            <input name='path' id='path' type='text'></input>
+        </fieldset>""",
     )
 
 
 @app.app.route("/articles/")
 def page_view_articles():
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.PreviewArticles)
+
     articles = (
         app.db.session.execute(
             app.db.select(Article).order_by(Article.creation_date.desc())
@@ -91,7 +111,13 @@ def page_view_articles():
     items = []
     for article in articles:
         if not article.is_published:
-            continue
+            if not user:
+                continue
+            if not (
+                user.hasPermission(roles.Permission.PreviewArticles)
+                or user.hasPermission(roles.Permission.EditArticles)
+            ):
+                continue
 
         items.append(
             {
@@ -112,12 +138,15 @@ def page_view_articles():
         base_url="/articles/",
         max_abstract=250,
         items=items,
-        allow_new=user and user.hasPermission(roles.Permission.EditDocuments),
+        allow_new=user and user.hasPermission(roles.Permission.EditArticles),
     )
 
 
 @app.app.route("/articles/<int:id>/")
 def page_view_article(id):
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.PreviewArticles)
+
     article = app.db.session.execute(
         app.db.select(Article).where(Article.id == id)
     ).scalar_one_or_none()

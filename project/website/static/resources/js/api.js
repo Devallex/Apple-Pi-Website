@@ -37,6 +37,7 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 		event.preventDefault()
 
 		var formData = new FormData(form);
+		var contentType = null;
 
 		const action = form.getAttribute("action")
 		const method = form.getAttribute("method").toUpperCase()
@@ -44,7 +45,11 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 		var body = null
 		if (method != "get") {
 			body = formData
+
+			// contentType = "application/json";
+			// body = JSON.stringify(Object.fromEntries(formData));
 		}
+
 
 		fetch("/api" + action, {
 			method: method,

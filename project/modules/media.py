@@ -92,7 +92,7 @@ def api_create_media():
     )
 
     upload.save(
-        os.path.join("instance/media/", name + "." + extension)
+        os.path.join(app.config["UPLOAD_FOLDER"] + "media/", name + "." + extension)
     )
 
     app.db.session.add(media)

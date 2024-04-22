@@ -19,7 +19,7 @@
 		<br />
 		<i>Posted on: {{ creation_date }}</i>
 		<hr />
-		<p>{{ body }}</p>
+		<p>{{ body|safe }}</p>
 	</main>
 	{{ footer|safe }}
 </body>

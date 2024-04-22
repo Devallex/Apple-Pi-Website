@@ -50,15 +50,15 @@ class User(app.db.Model):
     phone: orm.Mapped[str] = orm.mapped_column(nullable=True)
     description: orm.Mapped[str] = orm.mapped_column(nullable=True)
 
-    def getFromId(id: int):
+    def getFromId(id: int) -> "User":
         return app.db.session.execute(
             app.db.select(User).where(User.id == id)
         ).scalar_one_or_none()
 
-    def getFromSession(session: Session):
+    def getFromSession(session: Session) -> "User":
         return User.getFromId(session.user_id)
 
-    def getFromRequest():
+    def getFromRequest() -> "User":
         raw = flask.request.cookies.get("session")
         if not raw:
             return
@@ -69,7 +69,7 @@ class User(app.db.Model):
 
         return User.getFromSession(session)
 
-    def getFromRequestOrAbort():
+    def getFromRequestOrAbort() -> "User":
         user = User.getFromRequest()
 
         if not user:
