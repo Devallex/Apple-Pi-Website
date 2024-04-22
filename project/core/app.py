@@ -139,4 +139,4 @@ def get_data():
     ):
         return flask.request.form
 
-    return flask.request.get_json()
+    return flask.request.get_json(force=True)

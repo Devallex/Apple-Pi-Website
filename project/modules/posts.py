@@ -36,7 +36,7 @@ def api_create_post():
     user = users.User.getFromRequest()
     if not user:
         return "You must be logged in to create a post.", 401
-    if not user.hasPermission(roles.Permission.EditDocuments):
+    if not user.hasPermission(roles.Permission.EditPosts):
         return "You do not have permission to publish documents.", 403
 
     title = data["title"]
@@ -53,9 +53,9 @@ def api_create_post():
     post = Post(
         creation_date=timestamp(),
         creator_id=user.id,
+        is_published="is_published" in data,
         title=title,
         body=data["body"],
-        is_published=True,
     )
 
     app.db.session.add(post)
@@ -93,7 +93,7 @@ def feed_rss():
 def page_create_post():
     user = users.User.getFromRequestOrAbort()
 
-    if not user.hasPermission(roles.Permission.EditDocuments):
+    if not user.hasPermission(roles.Permission.EditPosts):
         return flask.render_template(
             "error.html",
             name="Forbidden",
@@ -119,7 +119,13 @@ def page_view_posts():
     items = []
     for post in posts:
         if not post.is_published:
-            continue
+            if not user:
+                continue
+            if not (
+                user.hasPermission(roles.Permission.PreviewPosts)
+                or user.hasPermission(roles.Permission.EditPosts)
+            ):
+                continue
 
         items.append(
             {
@@ -140,7 +146,7 @@ def page_view_posts():
         base_url="/posts/",
         max_abstract=250,
         items=items,
-        allow_new=user and user.hasPermission(roles.Permission.EditDocuments),
+        allow_new=user and user.hasPermission(roles.Permission.EditPosts),
     )
 
 

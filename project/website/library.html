@@ -21,8 +21,8 @@
 				<div class="content">
 					<b>{{ item.title }}</b>
 					<p>
-						{{ item.abstract or (item.body|length > max_abstract and
-						item.body[:max_abstract] + "..." or item.body) }}
+						{{ item.abstract or (item.body|safe|length > max_abstract and
+						(item.body|safe)[:max_abstract] + "..." or item.body|safe) }}
 					</p>
 					<i>Created on {{ item.creation_date }} by {{ item.creator }}</i>
 				</div>

@@ -14,8 +14,10 @@ Permission = enum.Enum(
     [
         "ManageRoles",
         "AssignRoles",
-        "PreviewDocuments",
-        "EditDocuments",
+        "PreviewPosts",
+        "EditPosts",
+        "PreviewArticles",
+        "EditArticles",
         "EditMedia",
     ],
 )
