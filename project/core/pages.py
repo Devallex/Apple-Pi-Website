@@ -1,9 +1,14 @@
-from project.core.app import app
+import werkzeug.exceptions
+import project.core.app as app
+import project.modules.users as users
+import project.modules.roles as roles
+import project.modules.articles as articles
 import flask
 import werkzeug
 import mimetypes
 
-@app.route("/<path:path>/")
+
+@app.app.route("/<path:path>/")
 def page(path):
     for sub_path in ("", ".html", "/index.html"):
         final_path = werkzeug.security.safe_join("/static/", path + sub_path)
@@ -18,9 +23,38 @@ def page(path):
                 )
         except:
             pass
+
+    article = app.db.session.execute(
+        app.db.select(articles.Article).where(
+            path and articles.Article.path and articles.Article.path == path
+        )
+    ).scalar_one_or_none()
+
+    if article:
+        user = users.User.getFromRequest()
+
+        if not article.is_published:
+            if not user:
+                return werkzeug.exceptions.Unauthorized
+            if not (
+                user.hasPermission(roles.Permission.PreviewArticles)
+                or user.hasPermission(roles.Permission.EditArticles)
+            ):
+                return werkzeug.exceptions.Forbidden
+
+        return flask.render_template(
+            "wild_article.html",
+            id=article.id,
+            is_published=article.is_published,
+            title=article.title,
+            body=article.body,
+            user=user,
+            Permission=roles.Permission,
+        )
+
     raise werkzeug.exceptions.NotFound
 
 
-@app.route("/")
+@app.app.route("/")
 def root_page():
     return page("index.html")
