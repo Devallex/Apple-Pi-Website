@@ -1,6 +1,17 @@
 address {}
 
-article {}
+article {
+	position: relative;
+
+	.background {
+		background-color: var(--light-color);
+		filter: brightness(var(--dim-amount));
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		z-index: -1;
+	}
+}
 
 aside {}
 
