@@ -1,6 +1,7 @@
 import project.core.app as app
 
-result = """<link rel="stylesheet" href="/resources/css/styles.css">
+result = """<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<link rel="stylesheet" href="/resources/css/styles.css">
 <link rel="icon" type="image/x-icon" href="/favicon.ico/">"""
 
 scripts = (

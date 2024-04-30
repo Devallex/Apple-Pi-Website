@@ -1,0 +1,20 @@
+modules = ["python-3.10:v18-20230807-322e88b"]
+run = "python3 project"
+
+[nix]
+channel = "stable-23_05"
+
+[unitTest]
+language = "python3"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
+
+[deployment]
+run = ["sh", "-c", "python3 project"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+exposeLocalhost = true
