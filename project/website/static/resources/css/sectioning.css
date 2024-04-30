@@ -1,7 +1,8 @@
 address {}
 
 article {
-	position: relative;
+	position: sticky;
+	pointer-events: none;
 
 	.background {
 		background-color: var(--light-color);
@@ -10,6 +11,17 @@ article {
 		height: 100%;
 		position: absolute;
 		z-index: -1;
+		border-radius: 10px;
+		pointer-events: auto;
+
+		&:hover {
+			filter: brightness(calc(var(--dim-amount) - var(--dim-step)))
+		}
+	}
+
+	.content {
+		pointer-events: none;
+		margin: 10px;
 	}
 }
 
