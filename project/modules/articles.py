@@ -116,6 +116,7 @@ def page_view_articles():
                 "creation_date": article.getDateText(),
                 "creator": users.User.getFromId(article.creator_id).getNameText(),
                 "title": article.title,
+                "abstract": article.abstract,
                 "body": article.body,
             }
         )

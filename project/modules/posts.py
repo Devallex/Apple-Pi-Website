@@ -123,6 +123,7 @@ def page_view_posts():
                 "creation_date": post.getDateText(),
                 "creator": users.User.getFromId(post.creator_id).getNameText(),
                 "title": post.title,
+                "abstract": post.abstract,
                 "body": post.body,
             }
         )
