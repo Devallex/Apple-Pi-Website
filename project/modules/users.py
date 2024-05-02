@@ -327,8 +327,9 @@ def delete_session():
 
 
 # Pages
+# TODO: Give team a separate page which only shows active users
 @app.app.route("/users/")
-@app.app.route("/team/")  # TODO: Give team a separate page which only shows active users
+@app.app.route("/team/")
 def user_list():
     users = app.db.session.execute(app.db.select(User).order_by(User.id)).scalars()
     return flask.render_template("users/index.html", users=users)
