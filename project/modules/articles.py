@@ -12,7 +12,7 @@ class Article(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     creation_date: orm.Mapped[float] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
-    is_published: orm.Mapped[str] = orm.mapped_column(default=False)
+    is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     path: orm.Mapped[str] = orm.mapped_column(unique=True, nullable=True)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
     abstract: orm.Mapped[str] = orm.mapped_column(nullable=True)
@@ -142,6 +142,12 @@ def page_view_article(id):
     if not article:
         raise errors.InstanceNotFound
 
+    if not article.is_published:
+        user = users.User.getFromRequestOrAbort()
+        user.hasAPermissionOrAbort(
+            roles.Permission.PreviewArticles, roles.Permission.EditArticles
+        )
+
     creator = users.User.getFromId(article.creator_id)
 
     return flask.render_template(
@@ -150,5 +156,6 @@ def page_view_article(id):
         document_type="Article",
         creator=creator,
         creation_date=article.getDateText(),
+        is_published=article.is_published,
         body=article.body,
     )

@@ -13,7 +13,7 @@ class Post(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     creation_date: orm.Mapped[float] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
-    is_published: orm.Mapped[str] = orm.mapped_column(default=False)
+    is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     event: orm.Mapped[int] = orm.mapped_column(nullable=True)
     propagate: orm.Mapped[bool] = orm.mapped_column(default=False)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
@@ -149,6 +149,12 @@ def page_view_post(id):
     if not post:
         raise errors.InstanceNotFound
 
+    if not post.is_published:
+        user = users.User.getFromRequestOrAbort()
+        user.hasAPermissionOrAbort(
+            roles.Permission.PreviewPosts, roles.Permission.EditPosts
+        )
+
     creator = users.User.getFromId(post.creator_id)
 
     return flask.render_template(
@@ -157,5 +163,6 @@ def page_view_post(id):
         document_type="Post",
         creator=creator,
         creation_date=post.getDateText(),
+        is_published=post.is_published,
         body=post.body,
     )

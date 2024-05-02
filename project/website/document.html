@@ -17,7 +17,8 @@
 		<i>Post creator:
 			<a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a></i>
 		<br />
-		<i>Posted on: {{ creation_date }}</i>
+		<i>Posted on: {{ creation_date }}</i><br />
+		<i>Is published: {{ is_published }}</i><br />
 		<hr />
 		<p>{{ body|safe }}</p>
 	</main>
