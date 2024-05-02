@@ -159,4 +159,5 @@ def page_view_article(id):
         creation_date=article.getDateText(),
         is_published=article.is_published,
         body=article.body,
+        path=article.path,
     )

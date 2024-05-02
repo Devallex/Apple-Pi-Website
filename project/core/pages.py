@@ -1,5 +1,6 @@
 import werkzeug.exceptions
 import project.core.app as app
+import project.core.errors as errors
 import project.modules.users as users
 import project.modules.roles as roles
 import project.modules.articles as articles
@@ -35,11 +36,8 @@ def page(path):
 
         if not article.is_published:
             if not user:
-                return werkzeug.exceptions.Unauthorized
-            if not (
-                user.hasAPermission(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
-            ):
-                return werkzeug.exceptions.Forbidden
+                raise errors.LoggedOut
+            user.hasAPermissionOrAbort(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
 
         return flask.render_template(
             "wild_article.html",

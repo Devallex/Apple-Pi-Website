@@ -19,7 +19,20 @@
             it</i>
         {% endif %}
         <hr />
-        <div>{{ body|safe }}</div>
+        <div id="preview">{{ body|safe }}</div>
+        <script>
+            const quill = new Quill('#preview', {
+                readOnly: true,
+                modules: {
+                    toolbar: null,
+                },
+                placeholder: "[ No content provided ]",
+                // theme: 'snow',
+            });
+
+            // TODO: Security vulnerability
+            quill.setContents({{ body| safe }});
+        </script>
         {% if user and user.hasAPermission(Permission.EditArticles, Permission.PreviewArticles) %}
         <hr />
         <p class="center">
