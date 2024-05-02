@@ -14,10 +14,10 @@ Permission = enum.Enum(
     [
         "ManageRoles",
         "AssignRoles",
-        "PreviewPosts",
         "EditPosts",
-        "PreviewArticles",
+        "PreviewPosts",
         "EditArticles",
+        "PreviewArticles",
         "EditMedia",
     ],
 )
@@ -87,6 +87,8 @@ class Role(app.db.Model):
         self.permissions = json.dumps(raw_permissions)
 
     def hasPermission(self, permission: Permission):
+        if self.id == 1:
+            return True
         return permission in self.getPermissions()
 
     def overseesRole(self, role) -> bool:
@@ -104,14 +106,9 @@ def create_admin():
     if not Role.getRootRole():
         label = Role.formatLabel(os.getenv("ADMIN_USERNAME"))
 
-        permissions = []
-        for permission_item in Permission:
-            permissions.append(permission_item.name)
-
         root_role = Role(
             creation_date=utils.timestamp(),
             label=label,
-            permissions=json.dumps(permissions),
             description="The role reserved for the administrator account.",
         )
 
