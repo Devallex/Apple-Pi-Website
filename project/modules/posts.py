@@ -13,7 +13,7 @@ class Post(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     creation_date: orm.Mapped[float] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
-    is_published: orm.Mapped[str] = orm.mapped_column(default=False)
+    is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     event: orm.Mapped[int] = orm.mapped_column(nullable=True)
     propagate: orm.Mapped[bool] = orm.mapped_column(default=False)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
@@ -33,11 +33,8 @@ class Post(app.db.Model):
 def api_create_post():
     data = app.get_data()
 
-    user = users.User.getFromRequest()
-    if not user:
-        return "You must be logged in to create a post.", 401
-    if not user.hasPermission(roles.Permission.EditPosts):
-        return "You do not have permission to publish documents.", 403
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
     title = data["title"]
     existing_post = app.db.session.execute(
@@ -92,15 +89,7 @@ def feed_rss():
 @app.app.route("/posts/new/")
 def page_create_post():
     user = users.User.getFromRequestOrAbort()
-
-    if not user.hasPermission(roles.Permission.EditPosts):
-        return flask.render_template(
-            "error.html",
-            name="Forbidden",
-            code=403,
-            description="You do not have permission to publish documents. If you need to, please ask someone with permission to give you access.",
-            show_home=True,
-        )
+    user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
     return flask.render_template(
         "editor.html", document_type="Post", api_url="/posts/", method="post"
@@ -122,8 +111,9 @@ def page_view_posts():
             if not user:
                 continue
             if not (
-                user.hasPermission(roles.Permission.PreviewPosts)
-                or user.hasPermission(roles.Permission.EditPosts)
+                user.hasAPermission(
+                    roles.Permission.EditPosts, roles.Permission.PreviewPosts
+                )
             ):
                 continue
 
@@ -133,6 +123,7 @@ def page_view_posts():
                 "creation_date": post.getDateText(),
                 "creator": users.User.getFromId(post.creator_id).getNameText(),
                 "title": post.title,
+                "abstract": post.abstract,
                 "body": post.body,
             }
         )
@@ -159,6 +150,12 @@ def page_view_post(id):
     if not post:
         raise errors.InstanceNotFound
 
+    if not post.is_published:
+        user = users.User.getFromRequestOrAbort()
+        user.hasAPermissionOrAbort(
+            roles.Permission.PreviewPosts, roles.Permission.EditPosts
+        )
+
     creator = users.User.getFromId(post.creator_id)
 
     return flask.render_template(
@@ -167,5 +164,6 @@ def page_view_post(id):
         document_type="Post",
         creator=creator,
         creation_date=post.getDateText(),
+        is_published=post.is_published,
         body=post.body,
     )

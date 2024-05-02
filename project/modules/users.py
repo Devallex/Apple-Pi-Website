@@ -152,6 +152,16 @@ class User(app.db.Model):
         if not self.hasPermission(permission):
             raise errors.NeedPermission
 
+    def hasAPermission(self, *permissions):
+        for permission in permissions:
+            if self.hasPermission(permission):
+                return True
+        return False
+
+    def hasAPermissionOrAbort(self, *permissions):
+        if not self.hasAPermission(*permissions):
+            raise errors.NeedPermission
+
     def getHighestRole(self):
         highest_role = None
         for role in self.getRoles():
@@ -318,10 +328,17 @@ def delete_session():
 
 # Pages
 @app.app.route("/users/")
-@app.app.route("/team/")  # TODO: Give team a separate page which only shows active users
 def user_list():
     users = app.db.session.execute(app.db.select(User).order_by(User.id)).scalars()
     return flask.render_template("users/index.html", users=users)
+
+
+@app.app.route("/teams/")
+def team_list():
+    return flask.render_template(
+        "users/teams.html",
+        roles=app.db.session.execute(app.db.select(roles.Role)).scalars().all(),
+    )
 
 
 @app.app.route("/users/<int:id>/")

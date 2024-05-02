@@ -1,7 +1,4 @@
-from os import system
 from sys import path
-
-system("clear")
 
 path.append(".")
 path.append("../")

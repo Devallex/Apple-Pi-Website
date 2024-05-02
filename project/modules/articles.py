@@ -12,7 +12,7 @@ class Article(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     creation_date: orm.Mapped[float] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
-    is_published: orm.Mapped[str] = orm.mapped_column(default=False)
+    is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     path: orm.Mapped[str] = orm.mapped_column(unique=True, nullable=True)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
     abstract: orm.Mapped[str] = orm.mapped_column(nullable=True)
@@ -72,14 +72,7 @@ def api_create_article():
 @app.app.route("/articles/new/")
 def page_create_article():
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(roles.Permission.EditArticles):
-        return flask.render_template(
-            "error.html",
-            name="Forbidden",
-            code=403,
-            description="You do not have permission to publish documents. If you need to, please ask someone with permission to give you access.",
-            show_home=True,
-        )
+    user.hasPermissionOrAbort(roles.Permission.EditArticles)
 
     return flask.render_template(
         "editor.html",
@@ -96,8 +89,7 @@ def page_create_article():
 
 @app.app.route("/articles/")
 def page_view_articles():
-    user = users.User.getFromRequestOrAbort()
-    user.hasPermissionOrAbort(roles.Permission.PreviewArticles)
+    user = users.User.getFromRequest()
 
     articles = (
         app.db.session.execute(
@@ -114,8 +106,7 @@ def page_view_articles():
             if not user:
                 continue
             if not (
-                user.hasPermission(roles.Permission.PreviewArticles)
-                or user.hasPermission(roles.Permission.EditArticles)
+                user.hasAPermission(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
             ):
                 continue
 
@@ -125,6 +116,7 @@ def page_view_articles():
                 "creation_date": article.getDateText(),
                 "creator": users.User.getFromId(article.creator_id).getNameText(),
                 "title": article.title,
+                "abstract": article.abstract,
                 "body": article.body,
             }
         )
@@ -144,15 +136,18 @@ def page_view_articles():
 
 @app.app.route("/articles/<int:id>/")
 def page_view_article(id):
-    user = users.User.getFromRequestOrAbort()
-    user.hasPermissionOrAbort(roles.Permission.PreviewArticles)
-
     article = app.db.session.execute(
         app.db.select(Article).where(Article.id == id)
     ).scalar_one_or_none()
 
     if not article:
         raise errors.InstanceNotFound
+
+    if not article.is_published:
+        user = users.User.getFromRequestOrAbort()
+        user.hasAPermissionOrAbort(
+            roles.Permission.PreviewArticles, roles.Permission.EditArticles
+        )
 
     creator = users.User.getFromId(article.creator_id)
 
@@ -162,5 +157,7 @@ def page_view_article(id):
         document_type="Article",
         creator=creator,
         creation_date=article.getDateText(),
+        is_published=article.is_published,
         body=article.body,
+        path=article.path,
     )

@@ -15,7 +15,7 @@ def header():
         ("Home", "/"),
         ("About Us", "/about-us/"),
         ("Posts", "/posts/"),
-        ("Our Team", "/team/"),
+        ("Our Team", "/teams/"),
         user_button,
     ]
 

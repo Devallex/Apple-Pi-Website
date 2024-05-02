@@ -14,10 +14,10 @@ Permission = enum.Enum(
     [
         "ManageRoles",
         "AssignRoles",
-        "PreviewPosts",
         "EditPosts",
-        "PreviewArticles",
+        "PreviewPosts",
         "EditArticles",
+        "PreviewArticles",
         "EditMedia",
     ],
 )
@@ -87,6 +87,8 @@ class Role(app.db.Model):
         self.permissions = json.dumps(raw_permissions)
 
     def hasPermission(self, permission: Permission):
+        if self.id == 1:
+            return True
         return permission in self.getPermissions()
 
     def overseesRole(self, role) -> bool:
@@ -104,14 +106,9 @@ def create_admin():
     if not Role.getRootRole():
         label = Role.formatLabel(os.getenv("ADMIN_USERNAME"))
 
-        permissions = []
-        for permission_item in Permission:
-            permissions.append(permission_item.name)
-
         root_role = Role(
             creation_date=utils.timestamp(),
             label=label,
-            permissions=json.dumps(permissions),
             description="The role reserved for the administrator account.",
         )
 
@@ -123,8 +120,7 @@ def create_admin():
 @app.app.route("/api/roles/", methods=["POST"])
 def api_create_role():
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.ManageRoles):
-        return "You do not have permission to manage roles.", 403
+    user.hasAPermissionOrAbort(Permission.ManageRoles)
 
     # TODO: Validate label properly
     # TODO: Validate parent
@@ -168,8 +164,7 @@ def api_user_patch_role(user_id):
     data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.AssignRoles):
-        return "You do not have permission to assign roles.", 403
+    user.hasPermissionOrAbort(Permission.AssignRoles)
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
@@ -199,8 +194,7 @@ def api_user_delete_role(user_id, role_id):
     data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.AssignRoles):
-        return "You do not have permission to assign roles.", 403
+    user.hasPermissionOrAbort(Permission.AssignRoles)
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
