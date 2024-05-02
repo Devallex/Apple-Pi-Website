@@ -37,8 +37,7 @@ def page(path):
             if not user:
                 return werkzeug.exceptions.Unauthorized
             if not (
-                user.hasPermission(roles.Permission.PreviewArticles)
-                or user.hasPermission(roles.Permission.EditArticles)
+                user.hasAPermission(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
             ):
                 return werkzeug.exceptions.Forbidden
 

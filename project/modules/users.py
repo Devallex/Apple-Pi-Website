@@ -152,6 +152,16 @@ class User(app.db.Model):
         if not self.hasPermission(permission):
             raise errors.NeedPermission
 
+    def hasAPermission(self, *permissions):
+        for permission in permissions:
+            if self.hasPermission(permission):
+                return True
+        return False
+
+    def hasAPermissionOrAbort(self, *permissions):
+        if not self.hasAPermission(*permissions):
+            raise errors.NeedPermission
+
     def getHighestRole(self):
         highest_role = None
         for role in self.getRoles():

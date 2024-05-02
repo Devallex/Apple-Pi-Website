@@ -19,11 +19,11 @@
         {% endif %}
         <hr />
         <div>{{ body|safe }}</div>
-        {% if user and (user.hasPermission(Permission.PreviewArticles) or
-        user.hasPermission(Permission.EditArticles))
-        %}
+        {% if user and user.hasAPermission(Permission.EditArticles, Permission.PreviewArticles) %}
         <hr />
-        <a href="/articles/{{ id }}/">View as Article</a>
+        <p class="center">
+            <a href="/articles/{{ id }}/">View as Article</a>
+        </p>
         {% endif %}
     </main>
     {{ footer|safe }}

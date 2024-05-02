@@ -123,8 +123,7 @@ def create_admin():
 @app.app.route("/api/roles/", methods=["POST"])
 def api_create_role():
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.ManageRoles):
-        return "You do not have permission to manage roles.", 403
+    user.hasAPermissionOrAbort(Permission.ManageRoles)
 
     # TODO: Validate label properly
     # TODO: Validate parent
@@ -168,8 +167,7 @@ def api_user_patch_role(user_id):
     data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.AssignRoles):
-        return "You do not have permission to assign roles.", 403
+    user.hasPermissionOrAbort(Permission.AssignRoles)
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
@@ -199,8 +197,7 @@ def api_user_delete_role(user_id, role_id):
     data = app.get_data()
 
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(Permission.AssignRoles):
-        return "You do not have permission to assign roles.", 403
+    user.hasPermissionOrAbort(Permission.AssignRoles)
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
