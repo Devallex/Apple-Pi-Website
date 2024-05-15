@@ -7,6 +7,9 @@ import project.modules.articles as articles
 import flask
 import werkzeug
 import mimetypes
+import re
+import json
+import requests
 
 
 @app.app.route("/<path:path>/")
@@ -37,7 +40,9 @@ def page(path):
         if not article.is_published:
             if not user:
                 raise errors.LoggedOut
-            user.hasAPermissionOrAbort(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
+            user.hasAPermissionOrAbort(
+                roles.Permission.EditArticles, roles.Permission.PreviewArticles
+            )
 
         return flask.render_template(
             "wild_article.html",

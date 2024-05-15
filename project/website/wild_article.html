@@ -2,45 +2,47 @@
 <html lang="en">
 
 <head>
-    <title>{{ title }}</title>
-    {{ head|safe }}
+	<title>{{ title }}</title>
+	{{ head|safe }}
 </head>
 
 <body>
-    <noscript>
-        <meta http-equiv="refresh" content="0; URL=/noscript" />
-    </noscript>
-    {{ header|safe }}
-    <main>
-        {{ breadcrumbs|safe }}
-        <h1 class="title">{{ title }}</h1>
-        {% if not is_published %}
-        <i><b>Unpublished:</b> This article is not published, and can only be viewed by those with permission to see
-            it</i>
-        {% endif %}
-        <hr />
-        <div id="preview">{{ body|safe }}</div>
-        <script>
-            const quill = new Quill('#preview', {
-                readOnly: true,
-                modules: {
-                    toolbar: null,
-                },
-                placeholder: "[ No content provided ]",
-                // theme: 'snow',
-            });
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">{{ title }}</h1>
+		{% if not is_published %}
+		<i><b>Unpublished:</b> This article is not published, and can only be viewed by those with permission to see
+			it</i>
+		{% endif %}
+		<hr />
+		<div id="preview">{{ body|safe }}</div>
+		<script>
+			const quill = new Quill('#preview', {
+				readOnly: true,
+				modules: {
+					toolbar: null,
+				},
+				placeholder: "[ No content provided ]",
+				// theme: 'snow',
+			});
 
-            // TODO: Security vulnerability
-            quill.setContents({{ body| safe }});
-        </script>
-        {% if user and user.hasAPermission(Permission.EditArticles, Permission.PreviewArticles) %}
-        <hr />
-        <p class="center">
-            <a href="/articles/{{ id }}/">View as Article</a>
-        </p>
-        {% endif %}
-    </main>
-    {{ footer|safe }}
+			// TODO: Security vulnerability
+			document.addEventListener('DOMContentLoaded', function () {
+				quill.setContents({{ body| safe }});
+			}, false);
+		</script>
+		{% if user and user.hasAPermission(Permission.EditArticles, Permission.PreviewArticles) %}
+		<hr />
+		<p class="center">
+			<a href="/articles/{{ id }}/">View as Article</a>
+		</p>
+		{% endif %}
+	</main>
+	{{ footer|safe }}
 </body>
 
 </html>

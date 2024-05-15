@@ -255,7 +255,14 @@ def create_user():
     app.db.session.commit()
 
     response = flask.make_response(flask.redirect("/"))
-    response.set_cookie("session", session.getRaw(), expires=session.expires, path="/")
+    response.set_cookie(
+        "session",
+        session.getRaw(),
+        expires=session.expires,
+        path="/",
+        samesite="Strict",
+        secure=True,
+    )
 
     return response
 
@@ -280,7 +287,9 @@ def create_session():
     app.db.session.commit()
 
     response = flask.make_response()
-    response.set_cookie("session", session.getRaw(), path="/", secure=False)
+    response.set_cookie(
+        "session", session.getRaw(), path="/", samesite="Strict", secure=True
+    )
 
     return response
 
