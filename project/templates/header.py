@@ -19,13 +19,21 @@ def header():
         user_button,
     ]
 
-    result = """<header><div class='background'></div><div class='content'><h1>Apple Pi Robotics</h1><nav>"""
+    result = """<header>
+        <div class='background'></div>
+        <div class='content'>
+            <h1>Apple Pi Robotics</h1>
+            <nav>
+    """
 
     for page in pages:
         if flask.request.path == page[1]:
             result += "<a href='%s'><div><b>%s</b></div></a>" % (page[1], page[0])
         else:
             result += "<a href='%s'><div>%s</div></a>" % (page[1], page[0])
-    result += "</nav></div></header>"
+    result += """
+            </nav>
+        </div>
+    </header>"""
 
     return {"header": result}
