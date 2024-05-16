@@ -2,7 +2,6 @@ main a, footer a {
 	text-decoration: none;
 	letter-spacing: 0em;
 	color: var(--primary-color);
-	border-bottom: 2.5px solid var(--dark-color);
 
 	transition-property: color, letter-spacing, border-bottom;
 	transition-duration: 0.2s;
@@ -11,13 +10,33 @@ main a, footer a {
 	&:hover {
 		letter-spacing: 0.05em;
 		color: var(--secondary-color);
-		border-bottom: 5px solid var(--dark-color);
 	}
 
 	&:active {
 		letter-spacing: -0.05em;
 		color: var(--dark-color);
+	}
+}
+main a {
+	border-bottom: 2.5px solid var(--dark-color);
+
+	&:hover {
+		border-bottom: 5px solid var(--dark-color);
+	}
+
+	&:active {
 		border-bottom: 0.5px solid var(--dark-color);
+	}
+}
+footer a {
+	border-bottom: 2.5px solid var(--raw-light-color);
+
+	&:hover {
+		border-bottom: 5px solid var(--raw-light-color);
+	}
+
+	&:active {
+		border-bottom: 0.5px solid var(--raw-light-color);
 	}
 }
 
