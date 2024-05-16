@@ -33,7 +33,7 @@
 			<!-- <comments></comments> -->
 			<!-- <enclosure></enclosure> -->
 			<guid>{{ post.id }}</guid>
-			<pubDate>{{ post.getDateText() }}</pubDate>
+			<pubDate>{{ post.creation_date }}</pubDate>
 			<!-- <source></source> -->
 		</item>
 		{% endfor %}

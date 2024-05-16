@@ -24,7 +24,7 @@
 			{% else %} Parent role: <i>None</i>
 			{% endif %}
 			<br />
-			Created on: {{ role.getDateText() }}
+			Created on: {{ role.creation_date }}
 		</p>
 		<h2>Users</h2>
 		{% if role.getUsers()|length %}
