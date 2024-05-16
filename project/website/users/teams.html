@@ -18,10 +18,10 @@
 			This page shows every role on the site that has users, such as team members and associated supporters. This page doesn't show <a href="/roles/">unused roles</a> and <a href="/users/">users who don't have a role</a>.
 		</p>
 		<ul>
-			{% for role in roles %}
+			{% for role in roles if role.id != 1 %}
             {% if role.getUsers()|length %}
             <li>
-                <a href="/roles/{{ role.id }}/">{{ role.label }}</a>:
+                <a href="/roles/{{ role.id }}/">{{ role.label }}</a>: {{ role.description|e or "<i>No description</i>"|safe }}
                 <ul>
                     {% for user in role.getUsers() %}
                     <li>
