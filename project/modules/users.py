@@ -8,7 +8,7 @@ import uuid
 import bcrypt
 import json
 import os
-from datetime import datetime
+from datetime import timedelta
 
 
 def hash(code):
@@ -40,7 +40,7 @@ class Session(app.db.Model):
 
 class User(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    creation_date: orm.Mapped[float] = orm.mapped_column()
+    creation_date: orm.Mapped[str] = orm.mapped_column()
     username: orm.Mapped[str] = orm.mapped_column(unique=True)
     password: orm.Mapped[str] = orm.mapped_column(unique=True)
     roles: orm.Mapped[str] = orm.mapped_column(default="[]")
@@ -80,7 +80,9 @@ class User(app.db.Model):
         token = str(uuid.uuid4())  # Session id is unique, so token doesn't need to be
 
         session = Session(
-            user_id=self.id, token=token, expires=utils.timestamp() + 2_592_000
+            user_id=self.id,
+            token=token,
+            expires=(utils.now() + timedelta(days=30)).isoformat(),
         )
         app.db.session.add(session)
 
@@ -94,9 +96,6 @@ class User(app.db.Model):
         if self.username != self.display_name and self.display_name:
             name_text = self.display_name + " (" + name_text + ")"
         return name_text
-
-    def getDateText(self):
-        return str(datetime.fromtimestamp(self.creation_date))
 
     # Roles
     def getRolesText(self):
@@ -204,7 +203,7 @@ def create_admin():
         ), "Please assign a username to the admin account in the .env file!"
 
         admin_user = User(
-            creation_date=utils.timestamp(),
+            creation_date=utils.now_iso(),
             username=admin_username,
             password=hash(admin_password),
             roles="[1]",
@@ -241,7 +240,7 @@ def create_user():
     data = app.get_data()
 
     user = User(
-        creation_date=utils.timestamp(),
+        creation_date=utils.now_iso(),
         username=data["username"],
         password=hash(data["password"]),
         description="",
@@ -258,7 +257,7 @@ def create_user():
     response.set_cookie(
         "session",
         session.getRaw(),
-        expires=session.expires,
+        max_age=timedelta(days=30),
         path="/",
         samesite="Strict",
         secure=True,
@@ -288,7 +287,12 @@ def create_session():
 
     response = flask.make_response()
     response.set_cookie(
-        "session", session.getRaw(), path="/", samesite="Strict", secure=True
+        "session",
+        session.getRaw(),
+        max_age=timedelta(days=30),
+        path="/",
+        samesite="Strict",
+        secure=True,
     )
 
     return response

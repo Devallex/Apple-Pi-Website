@@ -4,7 +4,6 @@ import project.core.utils as utils
 import project.core.errors as errors
 import flask
 import sqlalchemy.orm as orm
-from datetime import datetime
 import os
 import enum
 import json
@@ -26,7 +25,7 @@ Permission = enum.Enum(
 class Role(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
     parent_id: orm.Mapped[int] = orm.mapped_column(nullable=True)
-    creation_date: orm.Mapped[float] = orm.mapped_column()
+    creation_date: orm.Mapped[str] = orm.mapped_column()
     label: orm.Mapped[str] = orm.mapped_column(unique=True)
     permissions: orm.Mapped[str] = orm.mapped_column(default="[]")
     description: orm.Mapped[str] = orm.mapped_column(nullable=True)
@@ -63,9 +62,6 @@ class Role(app.db.Model):
             label = label.replace("--", "-")
 
         return label
-
-    def getDateText(self):
-        return str(datetime.fromtimestamp(self.creation_date))
 
     def getChildRoles(self):
         return app.db.session.execute(
@@ -107,7 +103,7 @@ def create_admin():
         label = Role.formatLabel(os.getenv("ADMIN_USERNAME"))
 
         root_role = Role(
-            creation_date=utils.timestamp(),
+            creation_date=utils.now_iso(),
             label=label,
             description="The role reserved for the administrator account.",
         )
@@ -147,7 +143,7 @@ def api_create_role():
 
     role = Role(
         parent_id=parent.id,
-        creation_date=utils.timestamp(),
+        creation_date=utils.now_iso(),
         label=Role.formatLabel(data["label"]),
         permissions=json.dumps(permissions),
         description=data["description"],

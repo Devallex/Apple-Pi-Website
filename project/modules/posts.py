@@ -1,17 +1,16 @@
 import project.core.app as app
 import project.core.errors as errors
+import project.core.utils as utils
 import project.modules.users as users
 import project.modules.roles as roles
 import sqlalchemy.orm as orm
-from datetime import datetime
 import flask
 import urllib.parse as parse
-from project.core.utils import time, timestamp
 
 
 class Post(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    creation_date: orm.Mapped[float] = orm.mapped_column()
+    creation_date: orm.Mapped[str] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
     is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     event: orm.Mapped[int] = orm.mapped_column(nullable=True)
@@ -23,9 +22,6 @@ class Post(app.db.Model):
 
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
-
-    def getDateText(self):
-        return str(datetime.fromtimestamp(self.creation_date))
 
 
 # API
@@ -48,7 +44,7 @@ def api_create_post():
         )
 
     post = Post(
-        creation_date=timestamp(),
+        creation_date=utils.now_iso(),
         creator_id=user.id,
         is_published="is_published" in data,
         title=title,
@@ -81,7 +77,7 @@ def feed_rss():
         base_url=base_url,
         posts=app.db.session.execute(app.db.select(Post)).scalars(),
         max_abstract=250,
-        year=time().year,
+        year=now().year,
     )
 
 
@@ -120,7 +116,7 @@ def page_view_posts():
         items.append(
             {
                 "id": post.id,
-                "creation_date": post.getDateText(),
+                "creation_date": post.creation_date,
                 "creator": users.User.getFromId(post.creator_id).getNameText(),
                 "title": post.title,
                 "abstract": post.abstract,
@@ -163,7 +159,7 @@ def page_view_post(id):
         title=post.title,
         document_type="Post",
         creator=creator,
-        creation_date=post.getDateText(),
+        creation_date=post.creation_date,
         is_published=post.is_published,
         body=post.body,
     )

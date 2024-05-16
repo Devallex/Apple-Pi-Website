@@ -10,7 +10,7 @@ from datetime import datetime
 
 class Article(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    creation_date: orm.Mapped[float] = orm.mapped_column()
+    creation_date: orm.Mapped[str] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
     is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
     path: orm.Mapped[str] = orm.mapped_column(unique=True, nullable=True)
@@ -21,9 +21,6 @@ class Article(app.db.Model):
 
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
-
-    def getDateText(self):
-        return str(datetime.fromtimestamp(self.creation_date))
 
 
 # API
@@ -54,7 +51,7 @@ def api_create_article():
         path = path.lower().removeprefix("/").removesuffix("/")
 
     article = Article(
-        creation_date=utils.timestamp(),
+        creation_date=utils.now_iso().isoformat(),
         creator_id=user.id,
         is_published="is_published" in data,
         title=title,
@@ -106,14 +103,16 @@ def page_view_articles():
             if not user:
                 continue
             if not (
-                user.hasAPermission(roles.Permission.EditArticles, roles.Permission.PreviewArticles)
+                user.hasAPermission(
+                    roles.Permission.EditArticles, roles.Permission.PreviewArticles
+                )
             ):
                 continue
 
         items.append(
             {
                 "id": article.id,
-                "creation_date": article.getDateText(),
+                "creation_date": article.creation_date,
                 "creator": users.User.getFromId(article.creator_id).getNameText(),
                 "title": article.title,
                 "abstract": article.abstract,
@@ -156,7 +155,7 @@ def page_view_article(id):
         title=article.title,
         document_type="Article",
         creator=creator,
-        creation_date=article.getDateText(),
+        creation_date=datetime.fromisoformat(article.creation_date),
         is_published=article.is_published,
         body=article.body,
         path=article.path,
