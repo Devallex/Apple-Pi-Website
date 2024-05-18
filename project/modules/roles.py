@@ -2,6 +2,7 @@ import project.core.app as app
 import project.modules.users as users
 import project.core.utils as utils
 import project.core.errors as errors
+import project.core.config as config
 import flask
 import sqlalchemy.orm as orm
 from datetime import datetime
@@ -104,7 +105,7 @@ class Role(app.db.Model):
 @app.on_create_all
 def create_admin():
     if not Role.getRootRole():
-        label = Role.formatLabel(os.getenv("ADMIN_USERNAME"))
+        label = Role.formatLabel(config.get_config("ADMIN_USERNAME"))
 
         root_role = Role(
             creation_date=utils.timestamp(),

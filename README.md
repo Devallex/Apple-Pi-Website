@@ -25,11 +25,16 @@ These are some important packages which must be understood.
 1. [Install Python](https://www.python.org/downloads/)
 2. Install Python dependencies:<br>
 `pip3 install -r requirements.txt`
-1. Create `.env` file:
+1. Create `config.json` file: (You can also do this by running the project)
 ```env
-MODE=dev
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD=&DM1N
+{
+	"MODE": "prod",
+	"ADMIN_USERNAME": "admin",
+	"ADMIN_PASSWORD": "admin",
+	"PROD_HOST": "127.0.0.1",
+	"PROD_PORT": 8080,
+	"PROD_PROXY": false
+}
 ```
 ### Environment File
 - `MODE` (required): How the server will run (Either `dev`, `debug`, or `prod`).
@@ -49,5 +54,5 @@ ADMIN_PASSWORD=&DM1N
 
 # Deployment
 1. Complete [setup steps above](#setup)
-2. In the `.env` file, set `MODE=prod`
+2. In the `config.json` file, set `MODE=prod`
 3. Open the logged url to preview the project

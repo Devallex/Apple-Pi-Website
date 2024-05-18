@@ -2,6 +2,7 @@ import project.core.app as app
 import project.modules.roles as roles
 import project.core.utils as utils
 import project.core.errors as errors
+import project.core.config as config
 import sqlalchemy.orm as orm
 import flask
 import uuid
@@ -193,15 +194,15 @@ def create_admin():
     if not app.db.session.execute(
         app.db.select(User).where(User.is_admin == True)
     ).scalar_one_or_none():
-        admin_password = os.getenv("ADMIN_PASSWORD")
+        admin_password = config.get_config("ADMIN_PASSWORD")
         assert (
             admin_password
-        ), "Please assign a password to the admin account in the .env file!"
+        ), "Please assign a password to the admin account in the config.json file!"
 
-        admin_username = os.getenv("ADMIN_USERNAME")
+        admin_username = config.get_config("ADMIN_USERNAME")
         assert (
             admin_username
-        ), "Please assign a username to the admin account in the .env file!"
+        ), "Please assign a username to the admin account in the config.json file!"
 
         admin_user = User(
             creation_date=utils.timestamp(),

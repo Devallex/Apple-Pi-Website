@@ -1,3 +1,4 @@
+import project.core.config as config
 import apscheduler.schedulers
 import apscheduler.schedulers.background
 import flask
@@ -5,7 +6,6 @@ import flask_sqlalchemy
 import flask_cors
 import sqlalchemy
 import apscheduler
-import dotenv
 import os
 import requests
 import logging
@@ -13,8 +13,6 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 if os.path.exists("log.txt"):
     os.remove("log.txt")
-
-dotenv.load_dotenv()
 
 app = flask.Flask("ApplePiWebsite", template_folder="./project/website")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
@@ -57,8 +55,8 @@ def on_create_all(callback):
 
 
 last_ip = None
-domain = os.getenv("DUCKDNS_DOMAIN")
-token = os.getenv("DUCKDNS_TOKEN")
+domain = config.get_config("DUCKDNS_DOMAIN")
+token = config.get_config("DUCKDNS_TOKEN")
 
 
 def update_ip():
@@ -83,15 +81,15 @@ def run():
             callback()
     scheduler.start()
 
-    mode = os.getenv("MODE")
+    mode = config.get_config("MODE")
     assert mode in (
         "dev",
         "debug",
         "prod",
-    ), "You must specify the MODE in the .env file!"
+    ), "You must specify the MODE in the config.json file!"
     if mode == "prod":
-        domain = os.getenv("DUCKDNS_DOMAIN")
-        token = os.getenv("DUCKDNS_TOKEN")
+        domain = config.get_config("DUCKDNS_DOMAIN")
+        token = config.get_config("DUCKDNS_TOKEN")
 
         if domain and token:
             print("DuckDNS is enabled for domain '%s'." % domain)
@@ -102,20 +100,20 @@ def run():
 
         print(
             "Use password '%s' to log into the '%s' account."
-            % (os.getenv("ADMIN_PASSWORD"), os.getenv("ADMIN_USERNAME"))
+            % (config.get_config("ADMIN_PASSWORD"), config.get_config("ADMIN_USERNAME"))
         )
 
-        if os.getenv("PROD_PROXY") == "true":
+        if config.get_config("PROD_PROXY") == "true":
             print("Proxy is enabled. This is dangerous if not actually using a proxy!")
             app.wsgi_app = ProxyFix(
                 app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
             )
         else:
-            print("Proxy is disabled. If using a proxy, enable it in .env.")
+            print("Proxy is disabled. If using a proxy, enable it in config.json.")
 
         print(
             "Running production server on http://%s:%s, press CTRL/CMD + C to exit."
-            % (os.getenv("PROD_HOST"), os.getenv("PROD_PORT"))
+            % (config.get_config("PROD_HOST"), config.get_config("PROD_PORT"))
         )
 
         print()
@@ -127,7 +125,11 @@ def run():
         fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
 
-        serve(app, host=os.getenv("PROD_HOST"), port=os.getenv("PROD_PORT"))
+        serve(
+            app,
+            host=config.get_config("PROD_HOST"),
+            port=config.get_config("PROD_PORT"),
+        )
     else:
         app.run(debug=mode == "debug")
 
