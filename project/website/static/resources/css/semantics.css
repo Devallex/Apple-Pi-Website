@@ -3,17 +3,15 @@ main a, footer a {
 	letter-spacing: 0em;
 	color: var(--primary-color);
 
-	transition-property: color, letter-spacing, border-bottom;
+	transition-property: color, border-bottom;
 	transition-duration: 0.2s;
 	transition-timing-function: ease;
 
 	&:hover {
-		letter-spacing: 0.05em;
 		color: var(--secondary-color);
 	}
 
 	&:active {
-		letter-spacing: -0.05em;
 		color: var(--dark-color);
 	}
 }

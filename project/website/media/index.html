@@ -23,7 +23,6 @@
 			{% endfor %}
 		</ul>
 		{% if user and user.hasPermission(Permission.EditMedia) %}
-		<hr />
 		<a href="/media/new/" class="center">Upload a media file</a>
 		{% endif %}
 	</main>

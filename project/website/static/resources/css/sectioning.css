@@ -1,35 +1,54 @@
 address {}
 
 article {
-	position: sticky;
-	pointer-events: none;
+    position: sticky;
+    pointer-events: none;
 
-	.background {
-		background-color: var(--light-color);
-		filter: brightness(var(--dim-amount));
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		z-index: -1;
-		border-radius: 10px;
-		pointer-events: auto;
+    .background {
+        background-color: var(--light-color);
+        filter: brightness(var(--dim-amount));
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: -1;
+        border-radius: 10px;
+        pointer-events: auto;
+        cursor: pointer;
+        &:hover {
+            filter: brightness(calc(var(--dim-amount) - var(--dim-step)))
+        }
+    }
 
-		&:hover {
-			filter: brightness(calc(var(--dim-amount) - var(--dim-step)))
-		}
-	}
+    .content {
+        pointer-events: none;
+        margin: 10px;
+        padding: 30px;
+        cursor: all-scroll;
+    }
+}
 
-	.content {
-		pointer-events: none;
-		margin: 10px;
-	}
+main:not(.homepage) main:not(.formpage) {
+    color: black;
+    padding: 80px;
+    font-size: 20px;
+}
+main:not(.formpage) {
+    padding: 0;
+}
+
+main:not(.homepage) h1{
+    font-size: 50px;
+    text-decoration: none;
+}
+main:not(.homepage) img{
+    width: 100%;
 }
 
 aside {}
 
 h1.title {
-	text-decoration: underline;
-	text-align: center;
+    text-decoration: underline;
+    text-align: center;
 }
 
 h1,
@@ -38,36 +57,36 @@ h3,
 h4,
 h5,
 h6 {
-	line-height: 1.5em;
+    line-height: 1.5em;
 }
 
 hgroup {}
 
 main {
-	min-height: calc(100vh);
+    min-height: calc(100vh);
 }
 
 .breadcrumbs {
-	width: 100%;
-	height: 10%;
-	padding: 20px;
-	position: relative;
-	text-align: center;
-	left: 0px;
-	right: 0px;
-	top: 0;
+    width: 100%;
+    height: 10%;
+    padding: 20px;
+    position: relative;
+    text-align: center;
+    left: 0px;
+    right: 0px;
+    top: 0;
 
-	.background {
-		background-color: var(--light-color);
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-		filter: brightness(var(--dim-amount));
-		z-index: -1;
-		border-radius: 10px;
-	}
+    .background {
+        background-color: var(--light-color);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        filter: brightness(var(--dim-amount));
+        z-index: -1;
+        border-radius: 10px;
+    }
 }
 
 nav {}
@@ -117,9 +136,9 @@ search {}
     font-size: 60px;
 }
 
-@media screen and (max-height: 450px) {
+@media screen and (max-width: 4in) {
     .overlay a {
-        font-size: 20px
+        font-size: 60px;
     }
 
     .overlay .closebtn {
@@ -179,7 +198,7 @@ a {
     display: none;
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 1250pt) {
     #hamb {
         display: inline-block;
     }
@@ -232,7 +251,7 @@ a {
     background-color: white;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 10in) {
     .splitscreen-column {
         float: none;
         width: auto;
@@ -266,6 +285,12 @@ a {
     background-color: #C1C1C1;
 }
 
+@media only screen and (max-width: 4in) {
+    .about-us-box {
+        font-size: 25px;
+    }
+}
+
 .column {
     float: left;
     width: 33%;
@@ -286,11 +311,11 @@ a {
 
 .row {
     float: left;
-    padding: 5%;
+    padding: 10% 5% 5% 5%;
     background-color: #fcfcf5;
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 4in) {
     .row {
         float: none;
         padding: auto;
@@ -340,13 +365,14 @@ footer {
 
 .footer-splitscreen-column p,
 h2,
-a {
+a,
+ul {
     text-align: left;
     list-style-type: none;
     padding-left: 0;
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 4in) {
     .footer-splitscreen-column {
         float: none;
         width: auto;

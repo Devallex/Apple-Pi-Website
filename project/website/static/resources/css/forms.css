@@ -4,7 +4,52 @@ datalist {}
 
 fieldset {}
 
-form {}
+form{
+    background-color: red;
+    border-radius: 10px;
+    padding: 50px 35px;
+    width: 50%;
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    outline: none;
+    border: none;
+}
+.form-background {
+    background-color: black;
+}
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    text-align: center;
+}
+
+label{
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 100%;
+    border-style: none;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+button{
+    margin-top: 50px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 input {}
 
