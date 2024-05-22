@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Events</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Events</h1>
+		<div>
+			<!-- <div class="center">
+				<a href="/events/calendar/">Calendar View</a>
+			</div> -->
+			{% for event in events %}
+			<article onclick="window.location.href = '/events/{{ event.id }}/'">
+				<div class="background"></div>
+				<div class="content">
+					<b>{{ event.title }}</b>
+					<p>
+						{{ event.abstract or "" }}
+					</p>
+					<i>Created on {{ event.creation_date }} by {{ event.creator }}</i>
+				</div>
+			</article>
+			<br />
+			{% endfor %}
+			<hr />
+			<p class="center">
+				<i>Note: This page only includes some recent entries</i>
+				<br /><br />
+				<span>Calendar (.ics)</span><br>
+				<a href="webcal://{{ ical_url }}/events/calendar.ics">Subscribe</a> |
+				<a href="/events/calendar.ics">Download</a>
+				{% if allow_new %}
+				<br /><br />
+				<a href="new">Create Event</a>
+				{% endif %}
+			</p>
+		</div>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

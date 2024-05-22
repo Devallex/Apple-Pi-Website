@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Event</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Event — {{ event.title }}</h1>
+		<div>
+			<p>
+				<b>Starting:</b> {{ event.start_date }}<br>
+				<b>Ending:</b> {{ event.end_date }}<br>
+				<b>Location:</b> {{ event.location or "<i>None</i>"|safe }}<br>
+				<b>Description:</b> {{ event.description or "<i>None</i>"|safe }}<br>
+			</p>
+		</div>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

@@ -286,7 +286,7 @@ def create_session():
     app.db.session.commit()
 
     response = flask.make_response()
-    response.set_cookie(
+    response.set_cookie( # TODO BUG: Safari doesn't save cookie (max_age?) Also see other set_cookie
         "session",
         session.getRaw(),
         max_age=timedelta(days=30),
