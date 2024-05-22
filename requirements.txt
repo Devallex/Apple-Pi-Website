@@ -7,3 +7,4 @@ Werkzeug == 3.0.1
 apscheduler == 3.10.4
 requests == 2.31.0
 waitress == 3.0.0
+icalendar == 5.0.12

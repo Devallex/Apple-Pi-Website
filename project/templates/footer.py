@@ -7,7 +7,7 @@ contact_email = "applepirobotics4H@gmail.com"
 
 @app.add_template
 def footer():
-    year = utils.time().year
+    year = utils.now().year
 
     return {
         "footer": """

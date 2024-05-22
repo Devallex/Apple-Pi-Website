@@ -36,7 +36,9 @@
 			});
 
 			// TODO: Security vulnerability
-			quill.setContents({{ body| safe }});
+			document.addEventListener('DOMContentLoaded', function () {
+				quill.setContents({{ body| safe }});
+			}, false);
 		</script>
 	</main>
 	{{ footer|safe }}

@@ -5,7 +5,6 @@ import project.core.errors as errors
 import project.core.utils as utils
 import sqlalchemy.orm as orm
 import urllib.parse as parse
-from datetime import datetime
 import werkzeug
 import os
 import flask
@@ -17,7 +16,7 @@ os.makedirs("instance/media", exist_ok=True)
 
 class Media(app.db.Model):
     id: orm.Mapped[int] = orm.mapped_column(primary_key=True)
-    creation_date: orm.Mapped[float] = orm.mapped_column()
+    creation_date: orm.Mapped[str] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
     name: orm.Mapped[str] = orm.mapped_column(unique=True)
     extension: orm.Mapped[str] = orm.mapped_column()
@@ -34,9 +33,6 @@ class Media(app.db.Model):
 
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
-
-    def getDateText(self):
-        return str(datetime.fromtimestamp(self.creation_date))
 
     def getFile(self):
         return flask.send_from_directory(
@@ -83,7 +79,7 @@ def api_create_media():
     name = name + " (" + str(number) + ")"
 
     media = Media(
-        creation_date=utils.timestamp(),
+        creation_date=utils.now_iso(),
         creator_id=user.id,
         name=name,
         extension=extension,
