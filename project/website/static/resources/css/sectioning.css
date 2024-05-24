@@ -40,9 +40,6 @@ main:not(.homepage) h1{
     font-size: 50px;
     text-decoration: none;
 }
-main:not(.homepage) img{
-    width: 100%;
-}
 
 aside {}
 

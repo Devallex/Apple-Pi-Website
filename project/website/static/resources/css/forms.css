@@ -4,12 +4,36 @@ datalist {}
 
 fieldset {}
 
+.form-background {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: auto;
+    grid-auto-flow: dense;
+    gap: 6px;
+}
+
+.form-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.form-background img.four-grid-cells {
+    grid-row: span 2 / auto;
+    grid-column: span 2 / auto;
+}
+
+.form-background img.wide-image {
+    grid-column: span 2 / auto;
+}
+
 form{
-    background-color: red;
+    background-color: white;
     border-radius: 10px;
     padding: 35px;
     width: 50%;
-    color: #ffffff;
+    color: black;
     outline: none;
     border: none;
     position: absolute;
@@ -17,18 +41,28 @@ form{
     left: 50%;
     transform: translate(-50%, -50%);
 }
-.form-background {
-    background-color: black;
+.f-background {
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 form h3{
     font-size: 32px;
     font-weight: 500;
     text-align: center;
 }
-
-label{
+form h1 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+}
+form img {
+    display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+label, form i{
     display: block;
     margin-top: 15px;
     font-size: 16px;
@@ -36,26 +70,21 @@ label{
 }
 input{
     width: 100%;
-    margin-top: 15px;
+    margin-top: 10px;
     box-sizing: border-box;
     padding: 10px;
     border-style: none;
     border-radius: 6px;
+    background-color:  #ebebeb;
 }
 input[type=submit] {
+    margin-top: 30px;
     font-size: 30px;
     padding: 30px;
     cursor: pointer;
 }
 input[type=submit]:hover {
     font-style: italic;
-}
-button{
-    width: 100%;
-    background-color: #ffffff;
-    color: #080710;
-    border-style: none;
-    cursor: pointer;
 }
 
 input {}
