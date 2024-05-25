@@ -14,6 +14,7 @@ article {
         border-radius: 10px;
         pointer-events: auto;
         cursor: pointer;
+
         &:hover {
             filter: brightness(calc(var(--dim-amount) - var(--dim-step)))
         }
@@ -32,11 +33,12 @@ main:not(.homepage) main:not(.formpage) {
     padding: 80px;
     font-size: 20px;
 }
+
 main:not(.formpage) {
     padding: 0;
 }
 
-main:not(.homepage) h1{
+main:not(.homepage) h1 {
     font-size: 50px;
     text-decoration: none;
 }

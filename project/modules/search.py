@@ -109,7 +109,7 @@ def api_search():
             "pages_search",
             query=data["search"],
             stay=("stay" in data and data["stay"] and "on") or "off",
-            count=("count" in data and data["count"]) or 5
+            count=("count" in data and data["count"]) or 5,
         )
     )
 
@@ -128,7 +128,7 @@ def pages_search():
 
         results = SearchEngine.searchAll(query)
 
-        if stay == "off" and len(results): # Auto redirect if very confident result
+        if stay == "off" and len(results):  # Auto redirect if very confident result
             sum_secondary_results = 0
             for result_index in range(1, min(len(results) + 1, 3)):
                 result = results[result_index]

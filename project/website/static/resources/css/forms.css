@@ -28,7 +28,7 @@ fieldset {}
     grid-column: span 2 / auto;
 }
 
-form{
+form {
     background-color: white;
     border-radius: 10px;
     padding: 35px;
@@ -41,48 +41,57 @@ form{
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .f-background {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 }
-form h3{
+
+form h3 {
     font-size: 32px;
     font-weight: 500;
     text-align: center;
 }
+
 form h1 {
     margin: 0;
     padding: 0;
     font-weight: 400;
 }
+
 form img {
     display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
 }
-label, form i{
+
+label,
+form i {
     display: block;
     margin-top: 15px;
     font-size: 16px;
     font-weight: 400;
 }
-input{
+
+input {
     width: 100%;
     margin-top: 10px;
     box-sizing: border-box;
     padding: 10px;
     border-style: none;
     border-radius: 6px;
-    background-color:  #ebebeb;
+    background-color: #ebebeb;
 }
+
 input[type=submit] {
     margin-top: 30px;
     font-size: 30px;
     padding: 30px;
     cursor: pointer;
 }
+
 input[type=submit]:hover {
     font-style: italic;
 }

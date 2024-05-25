@@ -4,12 +4,12 @@ import flask
 
 @app.add_template
 def breadcrumbs():
-    result = ("""
+    result = """
         <span class='breadcrumbs'>
             <span class='background'></span>
             <span class='content'>
                 <a href='/'>home</a>
-    """)
+    """
 
     sub_paths = (
         flask.request.path.lower().removeprefix("/").removesuffix("/").split("/")
@@ -32,5 +32,5 @@ def breadcrumbs():
             </span>
         </span>
     """
-    
+
     return {"breadcrumbs": result}

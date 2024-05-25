@@ -30,7 +30,7 @@ function getUserInfo(callback) {
 
 	session = getSession()
 
-	call_api("/users/" + session.user_id, method="get", callback = callback)
+	call_api("/users/" + session.user_id, method = "get", callback = callback)
 }
 
 // Validate

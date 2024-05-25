@@ -15,23 +15,25 @@
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Teams</h1>
 		<p>
-			This page shows every role on the site that has users, such as team members and associated supporters. This page doesn't show <a href="/roles/">unused roles</a> and <a href="/users/">users who don't have a role</a>.
+			This page shows every role on the site that has users, such as team members and associated supporters. This
+			page doesn't show <a href="/roles/">unused roles</a> and <a href="/users/">users who don't have a role</a>.
 		</p>
 		<ul>
 			{% for role in roles if role.id != 1 %}
-            {% if role.getUsers()|length %}
-            <li>
-                <a href="/roles/{{ role.id }}/">{{ role.label }}</a>: {{ role.description|e or "<i>No description</i>"|safe }}
-                <ul>
-                    {% for user in role.getUsers() %}
-                    <li>
-                        <a href="/users/{{ user.id }}/">{{ user.getNameText() }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </li>
-            {% endif %}
-            {% endfor %}
+			{% if role.getUsers()|length %}
+			<li>
+				<a href="/roles/{{ role.id }}/">{{ role.label }}</a>: {{ role.description|e or "<i>No
+					description</i>"|safe }}
+				<ul>
+					{% for user in role.getUsers() %}
+					<li>
+						<a href="/users/{{ user.id }}/">{{ user.getNameText() }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</li>
+			{% endif %}
+			{% endfor %}
 		</ul>
 		{% if user and user.hasPermission(Permission.ManageRoles) %}
 		<hr />
