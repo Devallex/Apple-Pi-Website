@@ -11,6 +11,8 @@
 @import "/resources/css/interactive.css";
 /* Unused: Web Components */
 
+@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap');
+
 /* Root */
 :root {
 	--raw-light-color: #F5F5F5;
@@ -34,7 +36,7 @@
 }
 
 html {
-	font-family: sans-serif;
+	font-family: "Afacad", sans-serif;
 	font-size: large;
 	line-height: 1.75em;
 	color: var(--dark-color);
@@ -43,4 +45,5 @@ html {
 
 body {
 	margin: 0;
+	padding: 0;
 }

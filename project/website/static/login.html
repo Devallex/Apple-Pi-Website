@@ -10,22 +10,68 @@
 	<noscript>
 		<meta http-equiv="refresh" content="0; URL=/noscript" />
 	</noscript>
-	{{ header|safe }}
-	<main>
-		<h1 class="title">Login</h1>
-		<p>Don't have an account? <a href="/sign-up/">Sign up here</a>.</p>
+	<main class="formpage">
+		<div class="f-background">
 
-		<form action="/sessions/" method="post" data-onsuccess="go_back()">
-			<label for="username">Username:</label>
-			<input type="text" id="username" name="username" /><br /><br />
 
-			<label for="password">Password:</label>
-			<input type="password" id="password" name="password" /><br /><br />
+			<div class="form-background">
 
-			<input type="submit" value="Submit" id="submit" />
-		</form>
+				<img class="four-grid-cells"
+					src="https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg"
+					alt="Northern Winter Sky Image" />
+	
+				<img
+					src="https://images.pexels.com/photos/1142950/pexels-photo-1142950.jpeg"
+					alt="Shining Stars Image" />
+	
+				<img class="wide-image"
+					src="https://images.pexels.com/photos/3933881/pexels-photo-3933881.jpeg"
+					alt="A River Flowing Image" />
+	
+				<img
+					src="https://images.pexels.com/photos/5409751/pexels-photo-5409751.jpeg"
+					alt="A cloudy Mountain Image" />
+	
+				<img
+					src="https://images.pexels.com/photos/4101555/pexels-photo-4101555.jpeg"
+					alt="A Winter Rainbow Image" />
+	
+				<img class="wide-image"
+					src="https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg"
+					alt="A Clean Mountain Lake" />
+	
+				<img
+					src="https://images.pexels.com/photos/1142950/pexels-photo-1142950.jpeg"
+					alt="Shining Stars Image" />
+
+				<img class="wide-image"
+					src="https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg"
+					alt="A Clean Mountain Lake" />
+	
+				<img
+					src="https://images.pexels.com/photos/1142950/pexels-photo-1142950.jpeg"
+					alt="Shining Stars Image" />
+				
+				<img
+					src="https://images.pexels.com/photos/5409751/pexels-photo-5409751.jpeg"
+					alt="A cloudy Mountain Image" />
+	
+			</div>
+		
+
+			<form action="/sessions/" method="post" data-onsuccess="go_back()">
+				<h1>Login</h1>
+				<label for="username">Username:</label>
+				<input type="text" id="username" name="username" />
+	
+				<label for="password">Password:</label>
+				<input type="password" id="password" name="password" />
+	
+				<input type="submit" value="Login" id="submit" />
+				<i>Don't have an account? <a href="/sign-up/">Sign up here</a>.</i>
+			</form>
+		</div>
 	</main>
-	{{ footer|safe }}
 </body>
 
 </html>

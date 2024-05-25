@@ -12,29 +12,66 @@ def header():
         user_button = ("Manage: <b>" + user.getDisplayName() + "</b>", "/manage/")
 
     pages = [
-        ("Home", "/"),
+        ("Home", "/", "navbar-only"),
         ("About Us", "/about-us/"),
+        ("Events", "/events/"),
         ("Posts", "/posts/"),
+        ("Media", "/media/"),
         ("Our Team", "/teams/"),
         ("Search", "/search/"),
         user_button,
     ]
 
-    result = """<header>
-        <div class='background'></div>
-        <div class='content'>
-            <h1>Apple Pi Robotics</h1>
-            <nav>
-    """
+    result = """
+<header>
+    <script>
+        function openNav() {
+            document.getElementById("myNav").style.display = "block";
+        }
+
+        function closeNav() {
+            document.getElementById("myNav").style.display = "none";
+        }
+    </script>
+    
+    <div class="navbar">
+        <a href="/">
+            <img id="logo" src="/resources/images/banner.png">
+        </a>
+        <ul id="navlist">
+            %s
+            <span id="hamb" style="font-size:30px;cursor:pointer;padding-top: 10px;" onclick="openNav()">&#9776;</span>
+        </ul>
+    </div>
+
+    <div id="myNav" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div class="overlay-content">
+            %s
+        </div>
+    </div>
+</header>
+"""
+
+    navbar_links = ""
+    overlay_links = ""
 
     for page in pages:
-        if flask.request.path == page[1]:
-            result += "<a href='%s'><div><b>%s</b></div></a>" % (page[1], page[0])
+        page_link = ""
+        if flask.request.path == page[1]:  # Is this button for the current page?
+            page_link = """<a href='%s'><div><b>%s</b></div></a>""" % (
+                page[1],
+                page[0],
+            )
         else:
-            result += "<a href='%s'><div>%s</div></a>" % (page[1], page[0])
-    result += """
-            </nav>
-        </div>
-    </header>"""
+            page_link = """<a href='%s'><div>%s</div></a>""" % (
+                page[1],
+                page[0],
+            )
+        if not "navbar-only" in page:
+            navbar_links += "<li>" + page_link + "</li>"
+        overlay_links += page_link
+
+    result = result % (navbar_links, overlay_links)
 
     return {"header": result}
