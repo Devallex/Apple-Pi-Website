@@ -80,6 +80,9 @@ class Event(app.db.Model):
         return event
 
 
+# TODO: Add search engine for events
+
+
 # API
 @app.app.route("/api/events/", methods=["POST"])
 def api_create_event():

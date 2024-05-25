@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Search</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		<h1 class="title">Search</h1>
+		<form class="center" action="/search/" method="post">
+			<input type="search" name="search" placeholder="{{ query or 'Type here to search...'  }}"
+				value="{{ query }}" />
+			<button>Search</button>
+
+			<fieldset>
+				<legend>Advanced Search</legend>
+
+				<input name="stay" id="stay" type="checkbox" {{ stay=="on" and "checked" }}><label
+					for="stay">Don't
+					Auto-Redirect</label>
+
+				<br><br><label for="count">Maximum Result Count</label> <input name="count" id="count" type="number"
+					placeholder="{{ count }}" value="{{ count or 5 }}" min="1" max="50">
+			</fieldset>
+		</form>
+		{% if results %}
+		<h1>Results</h1>
+		{% if results[0].relevance >= 0.1 %}
+		{% set number_results = 1 %}
+		{% for result in results if result.relevance >= 0.1 %}
+		<article onclick="window.location.href = '{{ result.usage.url(result.item) }}'">
+			<div class="background"></div>
+			<div class="content">
+				<b>{{ result.usage.name(result.item) }}</b>
+				({{ result.usage.type }}, {{ (result.relevance * 100)|round / 100 }}~)
+			</div>
+		</article>
+		<br />
+		{% endfor %}
+		{% else %}
+		<b>No Results Found!</b><br>
+		{% endif %}
+		{% endif %}
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

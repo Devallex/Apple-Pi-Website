@@ -1,11 +1,11 @@
 import project.core.app as app
-import project.modules.users as users
 import project.core.utils as utils
 import project.core.errors as errors
 import project.core.config as config
+import project.modules.users as users
+import project.modules.search as search
 import flask
 import sqlalchemy.orm as orm
-import os
 import enum
 import json
 
@@ -72,12 +72,25 @@ class Role(app.db.Model):
 
     def getPermissions(self):
         permissions = []
-        for permission_name in json.loads(self.permissions):
-            permissions.append(Permission[permission_name])
+        if self.id == 1:
+            for permission in Permission:
+                permissions.append(permission)
+        else:
+            for permission_name in json.loads(self.permissions):
+                permissions.append(Permission[permission_name])
         return permissions
+
+    def getStringPermissions(self):
+        string_permissions = ""
+        for permission in self.getPermissions():
+            string_permissions += permission.name + " "
+        string_permissions = string_permissions.strip()
+        return string_permissions
 
     def setPermissions(self, permissions):
         # TODO: Remove invalid permissions
+        if self.id == 1:
+            self.permissions = "[]"
 
         raw_permissions = []
         for permission in permissions:
@@ -96,6 +109,38 @@ class Role(app.db.Model):
             if parent_role == self:
                 return True
         return False
+
+
+search.SearchEngine(
+    Role,
+    [
+        {
+            "value": "label",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "description",
+            "method": search.basic_text,
+            "multiplier": 1.0,
+        },
+        {
+            "value": "getStringPermissions",
+            "method": search.basic_text,
+            "multiplier": 1.0,
+        },
+        {
+            "value": "creation_date",
+            "method": search.time_iso,
+            "multiplier": 1.0,
+        },
+    ],
+    {
+        "type": "Role",
+        "name": lambda self: self.label,
+        "url": lambda self: "/roles/" + str(self.id) + "/",
+    },
+)
 
 
 # Create Admin
@@ -229,13 +274,7 @@ def page_view_role(id):
     role = Role.getFromId(id)
 
     if not role:
-        return flask.render_template(
-            "error.html",
-            name="Not Found",
-            code=404,
-            description="This role was not found on the server.",
-            show_home=True,
-        )
+        raise errors.InstanceNotFound
 
     return flask.render_template(
         "roles/profile.html",

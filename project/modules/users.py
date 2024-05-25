@@ -1,8 +1,9 @@
 import project.core.app as app
-import project.modules.roles as roles
 import project.core.utils as utils
 import project.core.errors as errors
 import project.core.config as config
+import project.modules.roles as roles
+import project.modules.search as search
 import sqlalchemy.orm as orm
 import flask
 import uuid
@@ -187,6 +188,49 @@ class User(app.db.Model):
         return highest_role.overseesRole(user_highest_role)
 
 
+search.SearchEngine(
+    User,
+    [
+        {
+            "value": "username",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "display_name",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "description",
+            "method": search.basic_text,
+            "multiplier": 1.0,
+        },
+        # TODO: Only show contact information if declared public
+        {
+            "value": "email",
+            "method": search.basic_text,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "phone",
+            "method": search.basic_text,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "creation_date",
+            "method": search.time_iso,
+            "multiplier": 1.0,
+        },
+    ],
+    {
+        "type": "User",
+        "name": lambda self: self.getNameText(),
+        "url": lambda self: "/users/" + str(self.id) + "/",
+    },
+)
+
+
 # Create Admin
 @app.on_create_all
 def create_admin():
@@ -287,7 +331,7 @@ def create_session():
     app.db.session.commit()
 
     response = flask.make_response()
-    response.set_cookie( # TODO BUG: Safari doesn't save cookie (max_age?) Also see other set_cookie
+    response.set_cookie(  # TODO BUG: Safari doesn't save cookie (max_age?) Also see other set_cookie
         "session",
         session.getRaw(),
         max_age=timedelta(days=30),

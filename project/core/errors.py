@@ -36,7 +36,8 @@ def handle_unauthorized(error):
 
 
 @app.errorhandler(404)
-def handle_not_found(error):
+@app.errorhandler(InstanceNotFound)
+def handle_not_found(error):    
     if "text/html" in request.headers.getlist("accept")[0]:
         return render_template(
             "/error.html",
@@ -44,6 +45,7 @@ def handle_not_found(error):
             code=error.code,
             description=error.description,
             show_home=True,
+            show_search=True,
             show_breadcrumbs=False,
         )
     return "Error — " + str(error.code) + "\n\n" + error.description, error.code
@@ -58,6 +60,7 @@ def handle_error(error):
             code=error.code,
             description=error.description,
             show_home=True,
+            show_search=False,
             show_breadcrumbs=True,
         )
     return "Error — " + str(error.code) + "\n\n" + error.description, error.code
