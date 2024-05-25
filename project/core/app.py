@@ -54,6 +54,7 @@ def on_create_all(callback):
     on_create_all_callbacks.append(callback)
 
 
+# TODO: Get rid of DuckDns, proxy should take care of that
 last_ip = None
 domain = config.get_config("DUCKDNS_DOMAIN")
 token = config.get_config("DUCKDNS_TOKEN")

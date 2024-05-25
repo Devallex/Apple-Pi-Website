@@ -37,7 +37,7 @@ def handle_unauthorized(error):
 
 @app.errorhandler(404)
 @app.errorhandler(InstanceNotFound)
-def handle_not_found(error):    
+def handle_not_found(error):
     if "text/html" in request.headers.getlist("accept")[0]:
         return render_template(
             "/error.html",

@@ -23,6 +23,7 @@ file = open("config.json", "r")
 CONFIG = json.loads(file.read())
 file.close()
 
+
 def get_config(key):
     if not key in CONFIG:
         return None
