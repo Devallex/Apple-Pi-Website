@@ -3,6 +3,7 @@ import project.core.errors as errors
 import project.core.utils as utils
 import project.modules.users as users
 import project.modules.roles as roles
+import project.modules.search as search
 import sqlalchemy.orm as orm
 import flask
 import urllib.parse as parse
@@ -13,7 +14,6 @@ class Post(app.db.Model):
     creation_date: orm.Mapped[str] = orm.mapped_column()
     creator_id: orm.Mapped[int] = orm.mapped_column()
     is_published: orm.Mapped[bool] = orm.mapped_column(default=False)
-    event: orm.Mapped[int] = orm.mapped_column(nullable=True)
     propagate: orm.Mapped[bool] = orm.mapped_column(default=False)
     title: orm.Mapped[str] = orm.mapped_column(unique=True)
     abstract: orm.Mapped[str] = orm.mapped_column(nullable=True)
@@ -22,6 +22,38 @@ class Post(app.db.Model):
 
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
+
+
+search.SearchEngine(
+    Post,
+    [
+        {
+            "value": "title",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "abstract",
+            "method": search.basic_text,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "body",
+            "method": search.formatted_text,
+            "multiplier": 1.0,
+        },
+        {
+            "value": "creation_date",
+            "method": search.time_iso,
+            "multiplier": 1.0,
+        },
+    ],
+    {
+        "type": "Post",
+        "name": lambda self: self.title,
+        "url": lambda self: "/posts/" + str(self.id) + "/",
+    },
+)
 
 
 # API

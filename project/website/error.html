@@ -17,9 +17,20 @@
 		{% endif %}
 		<h1 class="title">{{ code }} — {{ name }}</h1>
 		<p>{{ description|safe }}</p>
-		{% if show_home %}
+		{% if show_home or show_search %}
 		<hr />
-		<a href="/">Return to the home page.</a>
+		<div class="center">
+			{% if show_home %}
+			<a href="/">Return to the home page.</a><br><br>
+			{% endif %}
+			{% if show_search %}
+			<i>Try looking for the updated result by searching:</i>
+			<form class="center" action="/search/" method="post">
+				<input type="search" name="search" placeholder="Type here to search..." value="{{ query }}" />
+				<button>Search</button>
+			</form>
+			{% endif %}
+		</div>
 		{% endif %}
 	</main>
 	{{ footer|safe }}

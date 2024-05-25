@@ -97,6 +97,9 @@ def api_create_media():
     return flask.redirect("/media/" + media.getEncodedName() + "/")
 
 
+# TODO: Add search engine for media
+
+
 # Files
 @app.app.route("/media/<string:name>/raw/")
 def file_view_media(name):

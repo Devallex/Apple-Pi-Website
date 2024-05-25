@@ -1,7 +1,8 @@
 import project.core.app as app
+import project.core.utils as utils
 import project.modules.users as users
 import project.modules.roles as roles
-import project.core.utils as utils
+import project.modules.search as search
 import sqlalchemy.orm as orm
 import project.core.errors as errors
 import flask
@@ -21,6 +22,44 @@ class Article(app.db.Model):
 
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
+
+
+search.SearchEngine(
+    Article,
+    [
+        {
+            "value": "title",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "path",
+            "method": search.basic_text,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "abstract",
+            "method": search.basic_text,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "body",
+            "method": search.formatted_text,
+            "multiplier": 1.0,
+        },
+        {
+            "value": "creation_date",
+            "method": search.time_iso,
+            "multiplier": 1.0,
+        },
+    ],
+    {
+        "type": "Article",
+        "name": lambda self: self.title,
+        "url": lambda self: (self.path and "/" + self.path + "/")
+        or ("/articles/" + str(self.id) + "/"),
+    },
+)
 
 
 # API
@@ -51,7 +90,7 @@ def api_create_article():
         path = path.lower().removeprefix("/").removesuffix("/")
 
     article = Article(
-        creation_date=utils.now_iso().isoformat(),
+        creation_date=utils.now_iso(),
         creator_id=user.id,
         is_published="is_published" in data,
         title=title,
