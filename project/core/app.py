@@ -114,7 +114,7 @@ def run():
 
         print(
             "Running production server on http://%s:%s, press CTRL/CMD + C to exit."
-            % (config.get_config("PROD_HOST"), config.get_config("PROD_PORT"))
+            % (config.get_config("HOST"), config.get_config("PORT"))
         )
 
         print()
@@ -128,11 +128,15 @@ def run():
 
         serve(
             app,
-            host=config.get_config("PROD_HOST"),
-            port=config.get_config("PROD_PORT"),
+            host=config.get_config("HOST"),
+            port=config.get_config("PORT"),
         )
     else:
-        app.run(debug=mode == "debug")
+        app.run(
+            debug=mode == "debug",
+            host=config.get_config("HOST"),
+            port=config.get_config("PORT"),
+        )
 
 
 def get_data():
