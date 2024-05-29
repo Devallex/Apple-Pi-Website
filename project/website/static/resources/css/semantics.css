@@ -15,6 +15,7 @@ main a, footer a {
 		color: var(--dark-color);
 	}
 }
+/*
 main a {
 	border-bottom: 2.5px solid var(--dark-color);
 
@@ -36,7 +37,7 @@ footer a {
 	&:active {
 		border-bottom: 0.5px solid var(--raw-light-color);
 	}
-}
+}*/
 
 abbr,
 dfn {
