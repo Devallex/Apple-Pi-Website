@@ -135,7 +135,7 @@ search {}
     font-size: 60px;
 }
 
-@media screen and (max-width: 4in) {
+@media screen and (max-width: 900px) {
     .overlay a {
         font-size: 60px;
     }
@@ -250,7 +250,7 @@ a {
     background-color: white;
 }
 
-@media only screen and (max-width: 60em) {
+@media only screen and (max-width: 900px) {
     .splitscreen-column {
         float: none;
         width: auto;
@@ -284,7 +284,7 @@ a {
     background-color: #C1C1C1;
 }
 
-@media only screen and (max-width: 4in) {
+@media only screen and (max-width: 900px) {
     .about-us-box {
         font-size: 25px;
     }
@@ -314,7 +314,7 @@ a {
     background-color: #fcfcf5;
 }
 
-@media only screen and (max-width: 50.4em) {
+@media only screen and (max-width: 900px) {
     .row {
         float: none;
         padding: auto;
@@ -371,7 +371,7 @@ ul {
     padding-left: 0;
 }
 
-@media only screen and (max-width: 50.4em) {
+@media only screen and (max-width: 900px) {
     .footer-splitscreen-column {
         float: none;
         width: auto;
