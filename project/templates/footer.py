@@ -23,6 +23,7 @@ def footer():
         <ul>
             <li><a href="/events/">Events</a></li>
             <li><a href="/articles/">Posts</a></li>
+            <li><a href="/team/">Media</a></li>
             <li><a href="/team/">Our Team</a></li>
         </ul>
     </div>

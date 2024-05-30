@@ -250,7 +250,7 @@ a {
     background-color: white;
 }
 
-@media only screen and (max-width: 10in) {
+@media only screen and (max-width: 60em) {
     .splitscreen-column {
         float: none;
         width: auto;
@@ -314,7 +314,7 @@ a {
     background-color: #fcfcf5;
 }
 
-@media only screen and (max-width: 4in) {
+@media only screen and (max-width: 50.4em) {
     .row {
         float: none;
         padding: auto;
@@ -371,7 +371,7 @@ ul {
     padding-left: 0;
 }
 
-@media only screen and (max-width: 4in) {
+@media only screen and (max-width: 50.4em) {
     .footer-splitscreen-column {
         float: none;
         width: auto;
