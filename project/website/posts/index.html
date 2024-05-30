@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>{{ title }}</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">{{ title }}</h1>
+		<div>
+			{% for item in items %}
+			<article onclick="window.location.href = '{{ base_url + item.id|string + '/' }}'">
+				<div class="background"></div>
+				<div class="content">
+					<b>{{ item.title }}</b>
+					<p>
+						{{ item.abstract or "" }}
+					</p>
+					<i>Created on {{ item.creation_date }} by {{ item.creator }}</i>
+				</div>
+			</article>
+			<br />
+			{% endfor %}
+			<hr />
+			<p class="center">
+				<i>Note: This page only includes some recent entries</i>
+				{% if allow_new %}
+				<br /><br />
+				<a href="new">Create Content</a>
+				{% endif %}
+			</p>
+		</div>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>
