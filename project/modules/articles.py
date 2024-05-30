@@ -111,7 +111,7 @@ def page_create_article():
     user.hasPermissionOrAbort(roles.Permission.EditArticles)
 
     return flask.render_template(
-        "editor.html",
+        "/articles/new.html",
         document_type="Article",
         api_url="/articles/",
         method="post",
@@ -163,7 +163,7 @@ def page_view_articles():
             break
 
     return flask.render_template(
-        "library.html",
+        "/articles/index.html",
         title="Articles",
         base_url="/articles/",
         max_abstract=250,
@@ -190,7 +190,7 @@ def page_view_article(id):
     creator = users.User.getFromId(article.creator_id)
 
     return flask.render_template(
-        "document.html",
+        "/articles/profile.html",
         title=article.title,
         document_type="Article",
         creator=creator,

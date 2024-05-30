@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>{{ title }}</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">{{ title }} ({{ document_type }})</h1>
+		<i>Creator:
+			<a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a></i>
+		<br />
+		<i>Created on: {{ creation_date }}</i><br />
+		<i>Is published: {{ is_published and "Yes" or "No" }}</i><br />
+		<i>{% if path %}</i>
+		<i>Path: <a href="/{{ path }}/">/{{ path }}</a></i>
+		{% endif %}
+		<hr />
+
+		<div id="preview">{{ body|safe }}</div>
+		<script>
+			const quill = new Quill('#preview', {
+				readOnly: true,
+				modules: {
+					toolbar: null,
+				},
+				placeholder: "[ No content provided ]",
+				// theme: 'snow',
+			});
+
+			// TODO: Security vulnerability
+			document.addEventListener('DOMContentLoaded', function () {
+				quill.setContents({{ body| safe }});
+			}, false);
+		</script>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

@@ -109,7 +109,7 @@ def feed_rss():
         base_url=base_url,
         posts=app.db.session.execute(app.db.select(Post)).scalars(),
         max_abstract=250,
-        year=now().year,
+        year=utils.now().year,
     )
 
 
@@ -120,7 +120,25 @@ def page_create_post():
     user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
     return flask.render_template(
-        "editor.html", document_type="Post", api_url="/posts/", method="post"
+        "/posts/new.html", document_type="Post", api_url="/posts/", method="post"
+    )
+
+
+@app.app.route("/posts/<int:id>/edit/")
+def page_edit_post(id: int):
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.EditPosts)
+
+    post = app.db.session.execute(app.db.select(Post).where(Post.id == id))
+    if not post:
+        raise errors.InstanceNotFound
+
+    return flask.render_template(
+        "/posts/edit.html",
+        document_type="Post",
+        api_url="/posts/",
+        method="post",
+        existing=post,
     )
 
 
@@ -160,7 +178,7 @@ def page_view_posts():
             break
 
     return flask.render_template(
-        "library.html",
+        "/posts/index.html",
         title="Posts",
         base_url="/posts/",
         max_abstract=250,
@@ -187,7 +205,7 @@ def page_view_post(id):
     creator = users.User.getFromId(post.creator_id)
 
     return flask.render_template(
-        "document.html",
+        "/posts/profile.html",
         title=post.title,
         document_type="Post",
         creator=creator,

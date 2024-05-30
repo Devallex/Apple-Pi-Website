@@ -388,7 +388,7 @@ def delete_session():
 @app.app.route("/users/")
 def user_list():
     users = app.db.session.execute(app.db.select(User).order_by(User.id)).scalars()
-    return flask.render_template("users/index.html", users=users)
+    return flask.render_template("/users/index.html", users=users)
 
 
 @app.app.route("/teams/")
@@ -420,4 +420,4 @@ def user_profile(id):
 def settings():
     user = User.getFromRequestOrAbort()
 
-    return flask.render_template("settings.html", user=user)
+    return flask.render_template("/settings.html", user=user)

@@ -45,7 +45,7 @@ def page(path):
             )
 
         return flask.render_template(
-            "wild_article.html",
+            "/articles/wild_article.html",
             id=article.id,
             is_published=article.is_published,
             title=article.title,
