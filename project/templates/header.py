@@ -25,12 +25,13 @@ def header():
     result = """
 <header>
     <script>
-        function openNav() {
-            document.getElementById("myNav").style.display = "block";
-        }
 
+        /* Taken from w3 schools full screen nav animation tutorial */
+        function openNav() {
+            document.getElementById("myNav").style.height = "100%%";
+        }
         function closeNav() {
-            document.getElementById("myNav").style.display = "none";
+            document.getElementById("myNav").style.height = "0%%";
         }
     </script>
     
@@ -73,5 +74,7 @@ def header():
         overlay_links += page_link
 
     result = result % (navbar_links, overlay_links)
+
+    print(result)
 
     return {"header": result}
