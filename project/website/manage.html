@@ -11,30 +11,24 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Site Management</h1>
-		<h2>Manage Account</h2>
+		<h2>Manage Your Account</h2>
 		<ul>
 			<li><a href="/settings/">Settings</a></li>
 			<li><a href="/users/{{ user.id }}/">Profile</a></li>
 		</ul>
 		<h2>Manage Site</h2>
+		<h3>Website Content</h3>
 		<ul>
-			<li>
-				Website Content:
-				<ul>
-					<li><a href="/events/">Events</a> — Calendar with Relevant Occasions</li>
-					<li><a href="/posts/">Posts</a> — Updates and News</li>
-					<li><a href="/articles/">Articles</a> — Site Pages and Documents</li>
-					<li><a href="/media/">Media</a> — Posted Photos and Videos</li>
-				</ul>
-			</li>
-			<li>
-				Account Management:
-				<ul>
-					<li><a href="/teams/">Teams</a> — Used Roles and their Members</li>
-					<li><a href="/users/">Users</a> — Every user account</li>
-					<li><a href="/roles/">Roles</a> — Account Labels</li>
-				</ul>
-			</li>
+			<li><a href="/events/">Events</a> — Calendar with Relevant Occasions</li>
+			<li><a href="/posts/">Posts</a> — Updates and News</li>
+			<li><a href="/articles/">Articles</a> — Site Pages and Documents</li>
+			<li><a href="/media/">Media</a> — Posted Photos and Videos</li>
+		</ul>
+		<h3>Account Management</h3>
+		<ul>
+			<li><a href="/teams/">Teams</a> — Used Roles and their Members</li>
+			<li><a href="/users/">Users</a> — Every user account</li>
+			<li><a href="/roles/">Roles</a> — Account Labels</li>
 		</ul>
 	</main>
 	{{ footer|safe }}
