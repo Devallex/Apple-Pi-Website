@@ -206,7 +206,6 @@ search.SearchEngine(
             "method": search.basic_text,
             "multiplier": 1.0,
         },
-        # TODO: Only show contact information if declared public
         {
             "value": "email",
             "method": search.basic_text,
@@ -292,16 +291,21 @@ def create_user(id=None):
         user.creation_date = utils.now_iso()
     else:
         user = User.getFromId(id)
+    if not user:
+        raise errors.InstanceNotFound
 
     calling_user = User.getFromRequest()
-    if calling_user != user:
-        calling_user.hasPermissionOrAbort(roles.Permission.ManageUsers)
-        if not calling_user.overseesUser(user):
-            raise errors.NeedPermission
+    if flask.request.method != "POST":
+        if not calling_user:
+            raise errors.exceptions.Unauthorized
+        if calling_user and calling_user != user:
+            calling_user.hasPermissionOrAbort(roles.Permission.ManageUsers)
+            if not calling_user.overseesUser(user):
+                raise errors.NeedPermission
 
     if flask.request.method == "DELETE":
         if user.id == 1:
-            return "You cannot delete the admin account."
+            return "You cannot delete the admin account.", 403
         app.db.session.delete(user)
         app.db.session.commit()
         return flask.redirect("/users/")
@@ -368,7 +372,9 @@ def create_user(id=None):
         )
         return response
 
-    return flask.redirect("/settings/", code=303)
+    if user == calling_user:
+        return flask.redirect("/settings/", code=303)
+    return flask.redirect("/users/%d/settings" % user.id)
 
 
 @app.app.route("/api/sessions/", methods=["POST"])
@@ -461,29 +467,40 @@ def team_list():
 
 @app.app.route("/users/<int:id>/")
 def user_profile(id):
-    target_user = User.getFromId(id)
-    if not target_user:
+    user = User.getFromId(id)
+    if not user:
         raise errors.InstanceNotFound
 
-    user = User.getFromRequest()
+    calling_user = User.getFromRequest()
 
     return flask.render_template(
         "users/profile.html",
         user=user,
-        target_user=target_user,
+        calling_user=calling_user,
         roles=app.db.session.execute(app.db.select(roles.Role)).scalars(),
         Permission=roles.Permission,
     )
 
 
 @app.app.route("/settings/")
-def settings():
-    user = User.getFromRequestOrAbort()
-
-    return flask.render_template("/settings.html", user=user)
-
-
 @app.app.route("/users/<int:id>/settings/")
-def other_settings():
-    # TODO
-    return "TODO"
+def other_settings(id=None):
+    if id:
+        user = User.getFromId(id)
+        if not user:
+            raise errors.InstanceNotFound
+    else:
+        user = User.getFromRequestOrAbort()
+
+    calling_user = User.getFromRequestOrAbort()
+    if calling_user != user:
+        calling_user.hasPermissionOrAbort(roles.Permission.ManageUsers)
+        if not calling_user.overseesUser(user):
+            raise errors.NeedPermission
+
+    if id and calling_user == user:
+        return flask.redirect("/settings/")
+
+    return flask.render_template(
+        "/users/settings.html/", user=user, calling_user=calling_user
+    )
