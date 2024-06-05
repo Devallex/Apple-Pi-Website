@@ -35,8 +35,9 @@ def header():
     </script>
     
     <div class="navbar">
-        <a href="/">
-            <img id="logo" src="/resources/images/banner.png">
+        <a href="/" id=logo>
+            <img id="logo" src="/resources/images/icon.svg">
+            <span>apple pi</span>
         </a>
         <ul id="navlist">
             %s

@@ -23,6 +23,11 @@ class Post(app.db.Model):
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
 
+    def getFromId(id):
+        return app.db.session.execute(
+            app.db.select(Post).where(Post.id == id)
+        ).scalar_one_or_none()
+
 
 search.SearchEngine(
     Post,
@@ -58,30 +63,29 @@ search.SearchEngine(
 
 # API
 @app.app.route("/api/posts/", methods=["POST"])
-def api_create_post():
-    data = app.get_data()
-
+@app.app.route("/api/posts/<int:id>/", methods=["PUT", "DELETE"])
+def api_create_post(id=None):
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
-    title = data["title"]
-    existing_post = app.db.session.execute(
-        app.db.select(Post).where(Post.title == title)
-    ).scalar_one_or_none()
+    post = None
+    if flask.request.method == "POST":
+        post = Post()
+        post.creation_date = utils.now_iso()
+    else:
+        post = Post.getFromId(id)
+    if flask.request.method == "DELETE":
+        app.db.session.delete(post)
+        app.db.session.commit()
+        return flask.redirect("/posts/")
 
-    if existing_post:
-        return (
-            "This title is already taken by another post. Please choose another one.",
-            403,
-        )
+    data = app.get_data()
 
-    post = Post(
-        creation_date=utils.now_iso(),
-        creator_id=user.id,
-        is_published="is_published" in data,
-        title=title,
-        body=data["body"],
-    )
+    post.creation_date = utils.now_iso()
+    post.creator_id = user.id
+    post.is_published = "is_published" in data
+    post.title = data["title"]
+    post.body = data["body"]
 
     app.db.session.add(post)
     app.db.session.commit()
@@ -119,9 +123,7 @@ def page_create_post():
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
-    return flask.render_template(
-        "/posts/new.html", document_type="Post", api_url="/posts/", method="post"
-    )
+    return flask.render_template("/posts/new.html", method="post")
 
 
 @app.app.route("/posts/<int:id>/edit/")
@@ -129,16 +131,13 @@ def page_edit_post(id: int):
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(roles.Permission.EditPosts)
 
-    post = app.db.session.execute(app.db.select(Post).where(Post.id == id))
+    post = Post.getFromId(id)
     if not post:
         raise errors.InstanceNotFound
 
     return flask.render_template(
         "/posts/edit.html",
-        document_type="Post",
-        api_url="/posts/",
-        method="post",
-        existing=post,
+        post=post,
     )
 
 
@@ -196,8 +195,10 @@ def page_view_post(id):
     if not post:
         raise errors.InstanceNotFound
 
+    user = users.User.getFromRequest()
     if not post.is_published:
-        user = users.User.getFromRequestOrAbort()
+        if not user:
+            raise errors.LoggedOut
         user.hasAPermissionOrAbort(
             roles.Permission.PreviewPosts, roles.Permission.EditPosts
         )
@@ -212,4 +213,6 @@ def page_view_post(id):
         creation_date=post.creation_date,
         is_published=post.is_published,
         body=post.body,
+        id=post.id,
+        can_edit=user and user.hasPermission(roles.Permission.EditPosts),
     )

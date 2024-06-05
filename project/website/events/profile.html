@@ -22,6 +22,11 @@
 				<b>Description:</b> {{ event.description or "<i>None</i>"|safe }}<br>
 			</p>
 		</div>
+		<div class="center">
+			{% if can_edit %}
+			<a href="/events/{{ event.id }}/edit/">Edit Event</a>
+			{% endif %}
+		</div>
 	</main>
 	{{ footer|safe }}
 </body>

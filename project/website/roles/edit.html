@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Edit Role</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Edit Role</h1>
+		<form action="/roles/{{ role.id }}/" method="put">
+			<label for="label">Label:</label>
+			<input name="label" id="label" type="text" value="{{ role.label }}" /><br /><br />
+
+			<label for="description">Description:</label>
+			<textarea name="description" id="description">{{ role.description }}</textarea><br /><br />
+
+			<label for="parent">Parent:</label>
+			<select name="parent" id="parent">
+				{% for other_role in roles %}
+				<option value="{{ other_role.id }}" {{ (not (user.hasRole(other_role) or user.overseesRole(other_role))
+					or (other_role in role.getDescendantRoles()) or role==other_role and "disabled" ) or "" }} {{
+					(other_role in role.getDescendantRoles() and "selected" ) or "" }}>
+					{{ other_role.label }} </option>
+				{% endfor %}
+			</select><br /><br />
+
+			<label for="permissions">Permissions:</label>
+			<ul id="permissions">
+				{% for permission in permissions %} {% if
+				user.hasPermission(permission) %}
+				<li>
+					<input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}" type="checkbox"
+						{{ role.hasPermission(permission) and "checked" or "" }} />
+					<label for="permission-{{ permission.name }}">{{ permission.name }}</label>
+				</li>
+				{% endif %} {% endfor %}
+			</ul>
+
+			<input type="submit" value="Create Role" />
+			<hr />
+			<i class="center">You may not see all roles or permissions based on which ones you
+				have.</i>
+		</form>
+		<fieldset>
+			<legend>Controls</legend>
+			<form action="/roles/{{ role.id }}/" method="delete">
+				<label for="delete"><b>WARNING:</b> Deleting a roll deletes all it's descendants.</label>
+				<button id="delete">Delete</button>
+			</form>
+		</fieldset>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

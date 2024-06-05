@@ -2,7 +2,7 @@ import project.core.app as app
 
 result = """
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-<link rel="icon" type="image/x-icon" href="/resources/images/favicon.ico/">
+<link rel="icon" type="image/x-icon" href="/resources/images/icon.svg/">
 <link rel="stylesheet" href="/resources/css/styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- Quill.js -->
