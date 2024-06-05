@@ -361,7 +361,7 @@ def create_user(id=None):
     app.db.session.commit()
 
     if flask.request.method == "POST":
-        response = flask.make_response(flask.redirect("/", code=303))
+        response = flask.make_response(flask.redirect("/manage/", code=303))
         response.set_cookie(
             "session",
             session.getRaw(),
@@ -396,7 +396,7 @@ def create_session():
     session = user.createSession()
     app.db.session.commit()
 
-    response = flask.make_response()
+    response = flask.make_response(flask.redirect("/manage/"))
     response.set_cookie(  # TODO BUG: Safari doesn't save cookie (max_age?) Also see other set_cookie
         "session",
         session.getRaw(),
