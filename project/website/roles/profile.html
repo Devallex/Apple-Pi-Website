@@ -34,6 +34,11 @@
 		{% else %}
 		<i>None</i>
 		{% endif %}
+		{% if user and user.hasPermission(Permission.ManageRoles) and user.overseesRole(role) %}
+		<div class="center">
+			<a href="/roles/{{ role.id }}/edit/">Edit Role</a>
+		</div>
+		{% endif %}
 	</main>
 	{{ footer|safe }}
 </body>

@@ -1,8 +1,11 @@
 import project.core.app as app
+import project.core.errors as errors
 import flask
 from difflib import SequenceMatcher
 import json
 from unidecode import unidecode
+
+MAX_REQUEST_LENGTH = 50
 
 
 # TODO: Make a way better search system
@@ -35,6 +38,8 @@ def formatted_text(text, query):  # Quill.js/parchment format
         "ops"
     ]:  # See https://quilljs.com/docs/delta/ for JSON structure
         if not "insert" in item:
+            continue
+        if type(item["insert"]) != str:
             continue
         new_text += item["insert"]
 
@@ -107,7 +112,7 @@ def api_search():
     return flask.redirect(
         flask.url_for(
             "pages_search",
-            query=data["search"],
+            query=data["search"][:MAX_REQUEST_LENGTH],
             stay=("stay" in data and data["stay"] and "on") or "off",
             count=("count" in data and data["count"]) or 5,
         )
@@ -122,18 +127,30 @@ def pages_search():
     count = int(flask.request.args.get("count") or "0") or 5
     count = min(50, count)
 
+    if query and len(query) > MAX_REQUEST_LENGTH:
+        return flask.redirect(
+            flask.url_for(
+                "pages_search",
+                query=query[:MAX_REQUEST_LENGTH],
+                stay=stay,
+                count=count,
+            )
+        )
+
     if query:
-        if len(query) > 50:
-            return 400, ""
+        if len(query) > MAX_REQUEST_LENGTH:
+            raise errors.exceptions.BadRequest
 
         results = SearchEngine.searchAll(query)
 
         if stay == "off" and len(results):  # Auto redirect if very confident result
             sum_secondary_results = 0
             for result_index in range(1, min(len(results) + 1, 3)):
+                if result_index > len(results) - 1:
+                    continue
                 result = results[result_index]
                 sum_secondary_results += result["relevance"]
-            if results[0]["relevance"] > sum_secondary_results * 1.25:
+            if results[0]["relevance"] > max(sum_secondary_results * 1.25, 0.1):
                 return flask.redirect(results[0]["usage"]["url"](results[0]["item"]))
 
         # TODO: Allow results to display HTML (summary, image)

@@ -23,6 +23,11 @@ class Article(app.db.Model):
     def getCreator(self):
         return users.User.getFromId(self.creator_id)
 
+    def getFromId(id):
+        return app.db.session.execute(
+            app.db.select(Article).where(Article.id == id)
+        ).scalar_one_or_none()
+
 
 search.SearchEngine(
     Article,
@@ -64,23 +69,23 @@ search.SearchEngine(
 
 # API
 @app.app.route("/api/articles/", methods=["POST"])
-def api_create_article():
-    data = app.get_data()
-
+@app.app.route("/api/articles/<int:id>/", methods=["PUT", "DELETE"])
+def api_create_article(id: int = None):
     user = users.User.getFromRequestOrAbort()
-    if not user.hasPermission(roles.Permission.EditArticles):
-        return "You do not have permission to publish documents.", 403
+    user.hasPermissionOrAbort(roles.Permission.EditArticles)
 
-    title = data["title"]
-    existing_article = app.db.session.execute(
-        app.db.select(Article).where(Article.title == title)
-    ).scalar_one_or_none()
+    article = None
+    if flask.request.method == "POST":
+        article = Article()
+        article.creation_date = utils.now_iso()
+    else:
+        article = Article.getFromId(id)
+    if flask.request.method == "DELETE":
+        app.db.session.delete(article)
+        app.db.session.commit()
+        return flask.redirect("/articles/")
 
-    if existing_article:
-        return (
-            "This title is already taken by another article. Please choose another one.",
-            403,
-        )
+    data = app.get_data()
 
     # TODO: Validate path, ensure unique
     path = data["path"] or None
@@ -89,14 +94,11 @@ def api_create_article():
             path.replace("//", "/")
         path = path.lower().removeprefix("/").removesuffix("/")
 
-    article = Article(
-        creation_date=utils.now_iso(),
-        creator_id=user.id,
-        is_published="is_published" in data,
-        title=title,
-        body=data["body"],
-        path=path,
-    )
+    article.creator_id = user.id
+    article.is_published = "is_published" in data
+    article.title = data["title"]
+    article.body = data["body"]
+    article.path = path
 
     app.db.session.add(article)
     app.db.session.commit()
@@ -112,14 +114,21 @@ def page_create_article():
 
     return flask.render_template(
         "/articles/new.html",
-        document_type="Article",
-        api_url="/articles/",
-        method="post",
-        other="""<fieldset>
-            <legend>Article</legend>
-            <label for='path'><b>Path (Optional):</b> Where should the article be located when published?</label><br>
-            <input name='path' id='path' type='text'></input>
-        </fieldset>""",
+    )
+
+
+@app.app.route("/articles/<int:id>/edit/")
+def page_edit_article(id: int):
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.EditPosts)
+
+    article = Article.getFromId(id)
+    if not article:
+        raise errors.InstanceNotFound
+
+    return flask.render_template(
+        "/articles/edit.html",
+        article=article,
     )
 
 
@@ -187,6 +196,8 @@ def page_view_article(id):
             roles.Permission.PreviewArticles, roles.Permission.EditArticles
         )
 
+    user = users.User.getFromRequest()
+
     creator = users.User.getFromId(article.creator_id)
 
     return flask.render_template(
@@ -198,4 +209,6 @@ def page_view_article(id):
         is_published=article.is_published,
         body=article.body,
         path=article.path,
+        id=article.id,
+        can_edit=user and user.hasAPermission(roles.Permission.EditArticles),
     )

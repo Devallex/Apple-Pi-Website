@@ -12,6 +12,7 @@ import json
 Permission = enum.Enum(
     "Permission",
     [
+        "ManageUsers",
         "ManageRoles",
         "AssignRoles",
         "EditEvents",
@@ -65,10 +66,21 @@ class Role(app.db.Model):
 
         return label
 
+    # TODO: Fix bug where admin is a descendant of first created role
     def getChildRoles(self):
         return app.db.session.execute(
             app.db.select(Role).where(Role.parent_id == self.id)
         ).scalars()
+
+    def getDescendantRoles(self):
+        print("ROLE", self.label, self.id)
+        descendants = []
+        for child in self.getChildRoles():
+            print("CHILD ROLE", child)
+            descendants.append(child)
+            descendants.extend(child.getDescendantRoles())
+        print(descendants)
+        return descendants
 
     def getPermissions(self):
         permissions = []
@@ -161,23 +173,39 @@ def create_admin():
 
 # API
 @app.app.route("/api/roles/", methods=["POST"])
-def api_create_role():
+@app.app.route("/api/roles/<int:id>/", methods=["PUT", "DELETE"])
+def api_create_role(id=None):
     user = users.User.getFromRequestOrAbort()
     user.hasAPermissionOrAbort(Permission.ManageRoles)
 
     # TODO: Validate label properly
     # TODO: Validate parent
 
-    data = app.get_data()
+    role = None
+    if flask.request.method == "POST":
+        role = Role()
+        role.creation_date = utils.now_iso()
+    else:
+        role = Role.getFromId(id)
+        if not user.overseesRole(role):
+            raise errors.NeedPermission
 
+    data = app.get_data()
     parent = Role.getFromId(int(data["parent"]))
     if not parent:
-        return "The parent supplied does not exist.", 404
+        raise errors.InstanceNotFound
     if not user.overseesRole(parent) and not user.hasRole(parent):
-        return (
-            "Your account does not oversee or have the parent role, and therefore cannot create a child role.",
-            403,
-        )
+        raise errors.exceptions.Forbidden
+
+    if flask.request.method == "DELETE":
+        all_roles = role.getDescendantRoles()
+        all_roles.append(role)
+        for deleted_role in all_roles:
+            for user in deleted_role.getUsers():
+                user.removeRole(role)
+            app.db.session.delete(deleted_role)
+        app.db.session.commit()
+        return flask.redirect("/roles/")
 
     permissions = []
     for permission in Permission:
@@ -188,13 +216,17 @@ def api_create_role():
         if data["permission-" + permission.name] == "on":
             permissions.append(permission.name)
 
-    role = Role(
-        parent_id=parent.id,
-        creation_date=utils.now_iso(),
-        label=Role.formatLabel(data["label"]),
-        permissions=json.dumps(permissions),
-        description=data["description"],
-    )
+    role.parent_id = parent.id
+    role.creation_date = utils.now_iso()
+    role.label = Role.formatLabel(data["label"])
+    role.permissions = json.dumps(permissions)
+    role.description = data["description"]
+
+    if parent == role or parent in role.getDescendantRoles():
+        print("BAD REQUEST PARENT ISSUE")
+        print(role, role.parent_id, role.getDescendantRoles())
+        print(parent, parent.parent_id, parent.getDescendantRoles())
+        raise errors.exceptions.BadRequest
 
     app.db.session.add(role)
     app.db.session.commit()
@@ -211,20 +243,20 @@ def api_user_patch_role(user_id):
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
-        return "A user with that id was not found on the server.", 404
+        raise errors.InstanceNotFound
 
     role_id = data["role_id"]
     if not role_id:
-        return "You must specify a role to assign.", 400
+        raise errors.exceptions.BadRequest
 
     target_role = Role.getFromId(role_id)
     if not target_role:
-        return "A role with that id was not found on the server.", 404
+        raise errors.InstanceNotFound
 
     if not user.overseesUser(target_user) and user != target_user:
-        return "You do not have permission to assign roles to this user.", 403
+        raise errors.NeedPermission
     if not user.overseesRole(target_role):
-        return "You do not have permission to assign this role.", 403
+        raise errors.NeedPermission
 
     target_user.addRole(target_role)
     app.db.session.commit()
@@ -241,16 +273,16 @@ def api_user_delete_role(user_id, role_id):
 
     target_user = users.User.getFromId(user_id)
     if not target_user:
-        return "A user with that id was not found on the server.", 404
+        raise errors.InstanceNotFound
 
     target_role = Role.getFromId(role_id)
     if not target_role:
-        return "A role with that id was not found on the server.", 404
+        raise errors.InstanceNotFound
 
     if not user.overseesUser(target_user) and user != target_user:
-        return "You do not have permission to assign roles to this user.", 403
+        raise errors.NeedPermission
     if not user.overseesRole(target_role):
-        return "You do not have permission to assign this role.", 403
+        raise errors.NeedPermission
 
     target_user.removeRole(target_role)
     app.db.session.commit()
@@ -272,14 +304,17 @@ def page_view_roles():
 @app.app.route("/roles/<int:id>/")
 def page_view_role(id):
     role = Role.getFromId(id)
+    user = users.User.getFromRequest()
 
     if not role:
         raise errors.InstanceNotFound
 
     return flask.render_template(
         "roles/profile.html",
+        user=user,
         role=role,
         parent_role=role.getParentRole(),
+        Permission=Permission,
     )
 
 
@@ -289,8 +324,26 @@ def page_create_role():
     user.hasPermissionOrAbort(Permission.ManageRoles)
 
     return flask.render_template(
-        "roles/new.html",
+        "/roles/new.html",
         user=user,
+        roles=app.db.session.execute(app.db.select(Role)).scalars(),
+        permissions=Permission,
+    )
+
+
+@app.app.route("/roles/<int:id>/edit/")
+def page_edit_role(id):
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(Permission.ManageRoles)
+
+    role = Role.getFromId(id)
+    if not user.overseesRole(role):
+        raise errors.NeedPermission
+
+    return flask.render_template(
+        "/roles/edit.html",
+        user=user,
+        role=role,
         roles=app.db.session.execute(app.db.select(Role)).scalars(),
         permissions=Permission,
     )

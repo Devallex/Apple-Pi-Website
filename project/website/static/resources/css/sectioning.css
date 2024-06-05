@@ -186,6 +186,8 @@ a {
 
 #logo {
     height: 57px;
+    font-size: 2.5em;
+    vertical-align: middle;
 }
 
 #navlist li {

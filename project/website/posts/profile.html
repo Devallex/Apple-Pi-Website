@@ -38,6 +38,12 @@
 				quill.setContents({{ body| safe }});
 			}, false);
 		</script>
+
+		{% if can_edit %}
+		<div class="center">
+			<a href="/posts/{{ id }}/edit/">Edit Post</a>
+		</div>
+		{% endif %}
 	</main>
 	{{ footer|safe }}
 </body>

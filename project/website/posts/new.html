@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>{{ document_type }} Editor</title>
+	<title>Post Editor</title>
 	{{ head|safe }}
 </head>
 
@@ -11,8 +11,8 @@
 	{{ header|safe }}
 	<main>
 		{{ breadcrumbs|safe }}
-		<h1 class="title">{{ document_type }} Editor</h1>
-		<form action="{{ api_url }}" method="{{ method }}">
+		<h1 class="title">Post Editor</h1>
+		<form action="/posts/" method="post">
 			<fieldset>
 				<legend>Document</legend>
 
@@ -108,10 +108,8 @@
 
 					const body = document.getElementById("body");
 					function update_body() {
-						console.log(quill.getContents());
 						const result = JSON.stringify(quill.getContents());
 						body.value = result;
-						console.log(result);
 					}
 
 					quill.on("text-change", update_body);

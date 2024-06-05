@@ -1,14 +1,13 @@
 import project.core.app as app
 import project.core.utils as utils
 import project.core.errors as errors
+import project.modules.search as search
 import project.modules.users as users
 import project.modules.roles as roles
 import flask
 import sqlalchemy.orm as orm
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 import icalendar
-import pytz
-import json
 import re
 import uuid
 
@@ -34,6 +33,11 @@ class Event(app.db.Model):
 
     def getAll():
         return app.db.session.execute(app.db.select(Event)).scalars()
+
+    def getFromId(id: int):
+        return app.db.session.execute(
+            app.db.select(Event).where(Event.id == id)
+        ).scalar_one_or_none()
 
     def generateCalendar():
         calendar = icalendar.Calendar()
@@ -80,30 +84,71 @@ class Event(app.db.Model):
         return event
 
 
-# TODO: Add search engine for events
+search.SearchEngine(
+    Event,
+    [
+        {
+            "value": "title",
+            "method": search.basic_text,
+            "multiplier": 2.0,
+        },
+        {
+            "value": "description",
+            "method": search.basic_text,
+            "multiplier": 1.0,
+        },
+        {
+            "value": "start_date",
+            "method": search.time_iso,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "end_date",
+            "method": search.time_iso,
+            "multiplier": 1.5,
+        },
+        {
+            "value": "creation_date",
+            "method": search.time_iso,
+            "multiplier": 1.5,
+        },
+    ],
+    {
+        "type": "Event",
+        "name": lambda self: self.title,
+        "url": lambda self: "/events/" + str(self.id) + "/",
+    },
+)
 
 
 # API
 @app.app.route("/api/events/", methods=["POST"])
-def api_create_event():
+@app.app.route("/api/events/<int:id>/", methods=["PUT", "DELETE"])
+def api_create_event(id=None):
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(roles.Permission.EditEvents)
 
     data = app.get_data()
 
-    print(data["starting"])
+    event = None
+    if flask.request.method == "POST":
+        event = Event()
+        event.uid = str(uuid.uuid4())
+        event.creation_date = utils.now_iso()
+        event.start_date = data["starting"] + ":00.000000+00:00"  # TODO: Check time
+        event.end_date = data["ending"] + ":00.000000+00:00"
+    else:
+        event = Event.getFromId(id)
+    if flask.request.method == "DELETE":
+        app.db.session.delete(event)
+        app.db.session.commit()
+        return flask.redirect("/events/")
 
     # TODO: Validate/require options
 
-    event = Event(
-        uid=str(uuid.uuid4()),
-        creator_id=user.id,
-        creation_date=utils.now_iso(),
-        start_date=data["starting"] + ":00.000000+00:00",  # TODO: Check time
-        end_date=data["ending"] + ":00.000000+00:00",
-        title=data["title"],
-        description=data["description"],
-    )
+    event.creator_id = user.id
+    event.title = data["title"]
+    event.description = data["description"]
 
     app.db.session.add(event)
     app.db.session.commit()
@@ -156,6 +201,18 @@ def pages_create_event():
     )
 
 
+@app.app.route("/events/<int:id>/edit/")
+def pages_edit_event(id: int):
+    user = users.User.getFromRequestOrAbort()
+    user.hasPermissionOrAbort(roles.Permission.EditEvents)
+
+    event = Event.getFromId(id)
+    if not event:
+        raise errors.InstanceNotFound
+
+    return flask.render_template("/events/edit.html", event=event)
+
+
 @app.app.route("/events/<int:id>/")
 def pages_view_event(id):
     user = users.User.getFromRequest()
@@ -170,5 +227,5 @@ def pages_view_event(id):
     return flask.render_template(
         "/events/profile.html",
         event=event,
-        user=user,
+        can_edit=user.hasPermission(roles.Permission.EditEvents),
     )
