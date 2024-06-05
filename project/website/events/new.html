@@ -14,8 +14,7 @@
 		<h1 class="title">Create Event</h1>
 		<div>
 			<form action="/events/" method="post" class="new-event-form">
-				<fieldset>
-					<legend>Schedule</legend>
+				
 					<!-- <select name="timezone" id="timezone"></select> -->
 					<span id="timezone"><b>Timezone:</b> <i>Unknown</i></span><br>
 					<label for="timezone"><i>Note:</i> When scheduling an event in a different timezone, please convert
@@ -24,10 +23,10 @@
 					<!-- <input name="localized-starting" id="localized-starting" type="text">
 					<input name="localized-ending" id="localized-ending" type="text"> -->
 
-					<br><br><label for="starting"><b>Starting Date (Required):</b> When the event will begin</label>
+					<label for="starting"><b>Starting Date (Required):</b> When the event will begin</label>
 					<input name="starting" id="starting" type="datetime-local">
 
-					<br><br><label for="ending"><b>Ending Date (Required):</b> When the event will end</label>
+					<label for="ending"><b>Ending Date (Required):</b> When the event will end</label>
 					<input name="ending" id="ending" type="datetime-local">
 
 					<script>
@@ -59,24 +58,18 @@
 						document.getElementById("ending").onchange = localizeTime;
 						localizeTime();
 					</script>
-				</fieldset>
-				<fieldset>
-					<legend>Reminders</legend>
 					<p>
 						Please remember that reminders are given to everyone who is subscribed to the calendar.
 					</p>
-				</fieldset>
-				<fieldset>
-					<legend>Information</legend>
+				
 
-					<label for="title"><b>Title (Required):</b> A short name for the event</label><br>
+					<label for="title"><b>Title (Required):</b> A short name for the event</label>
 					<input name="title" id="title" type="text" placeholder="Write the title here..."></textarea><br>
 
 					<label for="description"><b>Description (Optional):</b> More in-depth information about the
-						event</label><br>
+						event</label>
 					<textarea name="description" id="description"
-						placeholder="Write the description here..."></textarea><br>
-				</fieldset>
+						placeholder="Write the description here..."></textarea>
 				<button>Create Event</button>
 			</form>
 		</div>

@@ -124,34 +124,38 @@ textarea {}
 /*this form is for creating a new event*/
 
 
-.new-event-form {
+form {
     background-color: white;
-    border-radius: 10px;
-    padding: 35px;
-    width: 50%;
+    width: 100%;
     color: black;
     outline: none;
     border: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 
-.new-event-form h3{
+form h3{
     font-size: 32px;
     font-weight: 500;
     text-align: center;
 }
 
-.new-event-form h1 {
+form h1 {
     margin: 0;
     padding: 0;
     font-weight: 400;
 }
+form textarea { 
+    resize: none; 
+    width: 100%;
+    box-sizing: border-box;
+    height: 150px;
+    padding: 10px;
+    border-style: none;
+    border-radius: 6px;
+    background-color: #ebebeb;
+}
 
-.new-event-form input{
+form input{
     width: 100%;
     margin-top: 10px;
     box-sizing: border-box;
@@ -161,13 +165,16 @@ textarea {}
     background-color: #ebebeb;
 }
 
-.new-event-form input[type=submit] {
+form button {
     margin-top: 30px;
     font-size: 30px;
     padding: 30px;
     cursor: pointer;
+    border-radius: 10px;
+    background-color: white;
 }
 
-.new-event-form input[type=submit]:hover {
+form button:hover {
     font-style: italic;
+    background-color: #ebebeb;
 }

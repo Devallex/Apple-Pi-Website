@@ -14,17 +14,17 @@
 		<form class="center" action="/search/" method="post">
 			<input type="search" name="search" placeholder="{{ query or 'Type here to search...'  }}"
 				value="{{ query }}" />
-			<button>Search</button>
+			
 
-			<fieldset>
-				<legend>Advanced Search</legend>
-
-				<input name="stay" id="stay" type="checkbox" {{ stay=="on" and "checked" }}><label for="stay">Don't
+				<div class="inline-form">
+				<label for="stay">Don't
 					Auto-Redirect</label>
-
-				<br><br><label for="count">Maximum Result Count</label> <input name="count" id="count" type="number"
+				<input name="stay" id="stay" type="checkbox" {{ stay=="on" and "checked" }}>
+				<label for="count">Maximum Result Count</label> 
+				<input name="count" id="count" type="number"
 					placeholder="{{ count }}" value="{{ count or 5 }}" min="1" max="50">
-			</fieldset>
+				</div>
+				<button>Search</button>
 		</form>
 		{% if results %}
 		<h1>Results</h1>
