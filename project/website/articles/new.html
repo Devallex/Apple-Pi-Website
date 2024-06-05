@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>{{ document_type }} Editor</title>
+	<title>Article Editor</title>
 	{{ head|safe }}
 </head>
 
@@ -13,8 +13,8 @@
 	{{ header|safe }}
 	<main>
 		{{ breadcrumbs|safe }}
-		<h1 class="title">{{ document_type }} Editor</h1>
-		<form action="{{ api_url }}" method="{{ method }}">
+		<h1 class="title">Article Editor</h1>
+		<form action="/articles/" method="post">
 			<fieldset>
 				<legend>Document</legend>
 
@@ -110,10 +110,8 @@
 
 					const body = document.getElementById("body");
 					function update_body() {
-						console.log(quill.getContents());
 						const result = JSON.stringify(quill.getContents());
 						body.value = result;
-						console.log(result);
 					}
 
 					quill.on("text-change", update_body);
@@ -124,8 +122,12 @@
 				<label for="is_published"><b>Published:</b> If the document can be publicly visible. If not, only those
 					with relevant preview or edit permissions can see it.</label><br>
 			</fieldset>
-
-			{{ other|safe }}
+			<fieldset>
+				<legend>Article</legend>
+				<label for='path'><b>Path (Optional):</b> Where should the article be located when
+					published?</label><br>
+				<input name='path' id='path' type='text'></input>
+			</fieldset>
 
 			<input type="submit" value="Create">
 		</form>

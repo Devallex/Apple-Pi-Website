@@ -280,35 +280,95 @@ def read_user(id: int):
     )
 
 
+# TODO: Add a page for ManageUser's to edit other's people settings
 @app.app.route("/api/users/", methods=["POST"])
-def create_user():
+@app.app.route("/api/users/<int:id>/", methods=["PUT", "DELETE"])
+def create_user(id=None):
     data = app.get_data()
 
-    user = User(
-        creation_date=utils.now_iso(),
-        username=data["username"],
-        password=hash(data["password"]),
-        description="",
-        email=data["email"],
-        phone=data["phone"],
-    )
+    user = None
+    if flask.request.method == "POST":
+        user = User()
+        user.creation_date = utils.now_iso()
+    else:
+        user = User.getFromId(id)
+
+    calling_user = User.getFromRequest()
+    if calling_user != user:
+        calling_user.hasPermissionOrAbort(roles.Permission.ManageUsers)
+        if not calling_user.overseesUser(user):
+            raise errors.NeedPermission
+
+    if flask.request.method == "DELETE":
+        if user.id == 1:
+            return "You cannot delete the admin account."
+        app.db.session.delete(user)
+        app.db.session.commit()
+        return flask.redirect("/users/")
+
+    user.creation_date = utils.now_iso()
+    for property_name in ["description", "email", "phone"]:
+        if property_name in data:
+            property_value = data[property_name]
+            if len(property_value) > 200:
+                return (
+                    "The "
+                    + property_name
+                    + " cannot exceed a length of 200 characters."
+                )
+            setattr(user, property_name, property_value)
+
+    if "display_name" in data:
+        display_name = data["display_name"]
+        if len(display_name) < 3:
+            return "Your display name must be at least 3 characters."
+        elif len(display_name) > 20:
+            return "Your display name cannot exceed 20 characters."
+        user.display_name = display_name
+
+    if "username" in data:
+        username = data["username"]
+        if len(username) < 3:
+            return "Your username must be at least 3 characters."
+        elif len(username) > 20:
+            return "Your username cannot exceed 20 characters."
+        user.username = username
+
+    if "username" in data:
+        username = data["username"]
+        if len(username) < 3:
+            return "Your username must be at least 3 characters."
+        elif len(username) > 20:
+            return "Your username cannot exceed 20 characters."
+        user.username = username
+
+    if "password" in data:
+        password = data["password"]
+        if len(password) < 8:
+            return "Your password must be at least 8 characters."
+        elif len(password) > 200:
+            return "Your password must not be longer than 200 characters."
+        user.password = hash(password)
+
     app.db.session.add(user)
     app.db.session.commit()
 
     session = user.createSession()
     app.db.session.commit()
 
-    response = flask.make_response(flask.redirect("/"))
-    response.set_cookie(
-        "session",
-        session.getRaw(),
-        max_age=timedelta(days=30),
-        path="/",
-        samesite="Strict",
-        secure=True,
-    )
+    if flask.request.method == "POST":
+        response = flask.make_response(flask.redirect("/", code=303))
+        response.set_cookie(
+            "session",
+            session.getRaw(),
+            max_age=timedelta(days=30),
+            path="/",
+            samesite="Strict",
+            secure=True,
+        )
+        return response
 
-    return response
+    return flask.redirect("/settings/", code=303)
 
 
 @app.app.route("/api/sessions/", methods=["POST"])
@@ -421,3 +481,9 @@ def settings():
     user = User.getFromRequestOrAbort()
 
     return flask.render_template("/settings.html", user=user)
+
+
+@app.app.route("/users/<int:id>/settings/")
+def other_settings():
+    # TODO
+    return "TODO"

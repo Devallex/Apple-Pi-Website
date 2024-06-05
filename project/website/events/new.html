@@ -54,7 +54,6 @@
 							const endingDate = new Date(ending.value).toLocaleString("en-US", {
 								timeZone: "UTC"
 							});
-							console.log(startingDate);
 						};
 						timezoneSelect.onchange = localizeTime;
 						document.getElementById("starting").onchange = localizeTime;
@@ -62,12 +61,12 @@
 						localizeTime();
 					</script>
 				</fieldset>
-				<fieldset>
+				<!-- <fieldset>
 					<legend>Reminders</legend>
 					<p>
 						Please remember that reminders are given to everyone who is subscribed to the calendar.
 					</p>
-				</fieldset>
+				</fieldset> -->
 				<fieldset>
 					<legend>Information</legend>
 

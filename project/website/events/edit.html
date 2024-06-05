@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Edit Event</title>
+	{{ head|safe }}
+</head>
+
+<body>
+	<noscript>
+		<meta http-equiv="refresh" content="0; URL=/noscript" />
+	</noscript>
+	{{ header|safe }}
+	<main>
+		{{ breadcrumbs|safe }}
+		<h1 class="title">Edit Event</h1>
+		<div>
+			<form action="/events/{{ event.id }}" method="put">
+				<fieldset>
+					<legend>Schedule</legend>
+					<b>Note:</b> Schedule cannot be edited
+				</fieldset>
+				<!-- <fieldset>
+					<legend>Reminders</legend>
+					<p>
+						Please remember that reminders are given to everyone who is subscribed to the calendar.
+					</p>
+				</fieldset> -->
+				<fieldset>
+					<legend>Information</legend>
+
+					<label for="title"><b>Title (Required):</b> A short name for the event</label><br>
+					<input name="title" id="title" type="text" placeholder="Write the title here..."
+						value="{{ event.title }}"></textarea><br>
+
+					<label for="description"><b>Description (Optional):</b> More in-depth information about the
+						event</label><br>
+					<textarea name="description" id="description"
+						placeholder="Write the description here...">{{ event.description }}</textarea><br>
+				</fieldset>
+				<button>Create Event</button>
+			</form>
+			<fieldset>
+				<legend>Controls</legend>
+				<form action="/events/{{ event.id }}/" method="delete">
+					<button>Delete</button>
+				</form>
+			</fieldset>
+		</div>
+	</main>
+	{{ footer|safe }}
+</body>
+
+</html>

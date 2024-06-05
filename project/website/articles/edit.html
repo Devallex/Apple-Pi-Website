@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Post Editor</title>
+	<title>Article Editor</title>
 	{{ head|safe }}
 </head>
 
@@ -13,13 +13,14 @@
 	{{ header|safe }}
 	<main>
 		{{ breadcrumbs|safe }}
-		<h1 class="title">Post Editor</h1>
-		<form action="/posts/" method="post">
+		<h1 class="title">Article Editor</h1>
+		<form action="/articles/{{ article.id }}/" method="put">
 			<fieldset>
 				<legend>Document</legend>
 
 				<label for="title"><b>Title (Required — Unique):</b> What should this document be titled?</label><br>
-				<input name="title" id="title" type="text" placeholder="Unique document name..."><br><br>
+				<input name="title" id="title" type="text" placeholder="Unique document name..."
+					value="{{ article.title }}"><br><br>
 
 				<input name="body" id="body" hidden>
 
@@ -116,17 +117,31 @@
 
 					quill.on("text-change", update_body);
 					update_body();
+
+					// TODO: Security vulnerability
+					document.addEventListener('DOMContentLoaded', function () {
+						quill.setContents({{ article.body | safe }});
+					}, false);
 				</script><br>
 
-				<input name="is_published" id="is_published" type="checkbox">
+				<input name="is_published" id="is_published" type="checkbox" {{ article.is_published and 'checked' }}>
 				<label for="is_published"><b>Published:</b> If the document can be publicly visible. If not, only those
 					with relevant preview or edit permissions can see it.</label><br>
 			</fieldset>
-
-			{{ other|safe }}
-
+			<fieldset>
+				<legend>Article</legend>
+				<label for='path'><b>Path (Optional):</b> Where should the article be located when
+					published?</label><br>
+				<input name='path' id='path' type='text' value="{{ article.path }}"></input>
+			</fieldset>
 			<input type="submit" value="Create">
 		</form>
+		<fieldset>
+			<legend>Controls</legend>
+			<form action="/articles/{{ article.id }}/" method="delete">
+				<button>Delete</button>
+			</form>
+		</fieldset>
 	</main>
 	{{ footer|safe }}
 </body>
