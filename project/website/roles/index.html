@@ -16,7 +16,7 @@
 			These are all the user roles across the site. They control what a user
 			is able to do and what they are labeled as.
 		</p>
-		<ul>
+		<ul class="dash-list">
 			{% for role in [root_role] recursive %}
 			<li>
 				<dfn title="{{ role.description }}"><a href="/roles/{{ role.id }}/">{{ role.label }}</a></dfn>
