@@ -382,7 +382,10 @@ footer {
     padding: 10px;
 }
 
-.footer-splitscreen-column p, .footer-splitscreen-column h2, .footer-splitscreen-column a, .footer-splitscreen-column ul {
+.footer-splitscreen-column p,
+.footer-splitscreen-column h2,
+.footer-splitscreen-column a,
+.footer-splitscreen-column ul {
     text-align: left;
     list-style-type: none;
     padding-left: 0;
@@ -437,10 +440,12 @@ button:hover {
     cursor: pointer;
     font-style: italic;
 }
+
 .dash-list li {
     list-style-type: none;
     text-indent: -20px;
 }
+
 .dash-list li:before {
     content: "—";
 

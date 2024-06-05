@@ -15,111 +15,111 @@
 		<form action="/posts/" method="post" class="create-form">
 
 
-				<label for="title"><b>Title (Required — Unique):</b> What should this document be titled?</label>
-				<input name="title" id="title" type="text" placeholder="Unique document name..." class="post-title-editor">
-				
-				<input name="body" id="body" hidden>
+			<label for="title"><b>Title (Required — Unique):</b> What should this document be titled?</label>
+			<input name="title" id="title" type="text" placeholder="Unique document name..." class="post-title-editor">
 
-				<div id="toolbar">
-					<span class="ql-formats">
-						<select class="ql-header">
-							<option></option>
-							<option value="1"></option>
-							<option value="2"></option>
-							<option value="3"></option>
-							<option value="4"></option>
-							<option value="5"></option>
-							<option value="6"></option>
-						</select>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-bold"></button>
-						<button class="ql-italic"></button>
-						<button class="ql-underline"></button>
-						<button class="ql-strike"></button>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-script" value="sub"></button>
-						<button class="ql-script" value="super"></button>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-blockquote"></button>
-						<button class="ql-code-block"></button>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-list" value="ordered"></button>
-						<button class="ql-list" value="bullet"></button>
-					</span>
-					<span class="ql-formats">
-						<select class="ql-align"></select>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-link"></button>
-						<button class="ql-image"></button>
-						<button class="ql-video"></button>
-						<button class="ql-formula"></button>
-						<button type="button" id="ql-divider">—</button>
-						<button type="button" id="ql-html">&lt&gt</button>
-					</span>
-					<span class="ql-formats">
-						<button class="ql-clean"></button>
-					</span>
-				</div>
-				<div id="editor"></div>
+			<input name="body" id="body" hidden>
 
-				<script>
-					const quill = new Quill('#editor', {
-						modules: {
-							/* toolbar: [
-								[{ header: [false, 1, 2, 3, 4, 5, 6] }],
-								["bold", "italic", "underline", "strike"],
-								[{ list: "ordered" }, { list: "bullet" }],
-								["blockquote", "code-block", "formula"],
-								["link", "image", "video"],
-								[{ script: "sub" }, { script: "super" }],
-								["html"],
-							], */
-							toolbar: "#toolbar"
-						},
-						placeholder: "Click here to type...",
-						theme: 'snow',
-					});
+			<div id="toolbar">
+				<span class="ql-formats">
+					<select class="ql-header">
+						<option></option>
+						<option value="1"></option>
+						<option value="2"></option>
+						<option value="3"></option>
+						<option value="4"></option>
+						<option value="5"></option>
+						<option value="6"></option>
+					</select>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-bold"></button>
+					<button class="ql-italic"></button>
+					<button class="ql-underline"></button>
+					<button class="ql-strike"></button>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-script" value="sub"></button>
+					<button class="ql-script" value="super"></button>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-blockquote"></button>
+					<button class="ql-code-block"></button>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-list" value="ordered"></button>
+					<button class="ql-list" value="bullet"></button>
+				</span>
+				<span class="ql-formats">
+					<select class="ql-align"></select>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-link"></button>
+					<button class="ql-image"></button>
+					<button class="ql-video"></button>
+					<button class="ql-formula"></button>
+					<button type="button" id="ql-divider">—</button>
+					<button type="button" id="ql-html">&lt&gt</button>
+				</span>
+				<span class="ql-formats">
+					<button class="ql-clean"></button>
+				</span>
+			</div>
+			<div id="editor"></div>
 
-					const onClick = (selector, callback) => {
-						document.querySelector(selector).addEventListener('click', callback);
-					};
+			<script>
+				const quill = new Quill('#editor', {
+					modules: {
+						/* toolbar: [
+							[{ header: [false, 1, 2, 3, 4, 5, 6] }],
+							["bold", "italic", "underline", "strike"],
+							[{ list: "ordered" }, { list: "bullet" }],
+							["blockquote", "code-block", "formula"],
+							["link", "image", "video"],
+							[{ script: "sub" }, { script: "super" }],
+							["html"],
+						], */
+						toolbar: "#toolbar"
+					},
+					placeholder: "Click here to type...",
+					theme: 'snow',
+				});
 
-					const EMBED_MESSAGE = `Embed URL:\n\nThis will only work with just the link, do not put <iframe>s and other HTML formatting. Make sure to include "https://" if your URL is not on this site.\n\nYou can cleanly embed pages from this site by putting it's relative URL, such as "/login/" to allow users to quickly interact with the site.\n\n`;
+				const onClick = (selector, callback) => {
+					document.querySelector(selector).addEventListener('click', callback);
+				};
 
-					onClick('#ql-html', () => {
-						const range = quill.getSelection(true);
-						quill.insertText(range.index, "\n", Quill.sources.USER);
-						quill.insertEmbed(range.index + 1, "embed", { "url": prompt(EMBED_MESSAGE) }, Quill.sources.USER);
-						quill.setSelection(range.index + 2, Quill.sources.SILENT);
-					});
+				const EMBED_MESSAGE = `Embed URL:\n\nThis will only work with just the link, do not put <iframe>s and other HTML formatting. Make sure to include "https://" if your URL is not on this site.\n\nYou can cleanly embed pages from this site by putting it's relative URL, such as "/login/" to allow users to quickly interact with the site.\n\n`;
 
-					onClick('#ql-divider', () => {
-						const range = quill.getSelection(true);
-						quill.insertText(range.index, "\n", Quill.sources.USER);
-						quill.insertEmbed(range.index + 1, "divider", true, Quill.sources.USER);
-						quill.setSelection(range.index + 2, Quill.sources.SILENT);
-					});
+				onClick('#ql-html', () => {
+					const range = quill.getSelection(true);
+					quill.insertText(range.index, "\n", Quill.sources.USER);
+					quill.insertEmbed(range.index + 1, "embed", { "url": prompt(EMBED_MESSAGE) }, Quill.sources.USER);
+					quill.setSelection(range.index + 2, Quill.sources.SILENT);
+				});
 
-					const body = document.getElementById("body");
-					function update_body() {
-						const result = JSON.stringify(quill.getContents());
-						body.value = result;
-					}
+				onClick('#ql-divider', () => {
+					const range = quill.getSelection(true);
+					quill.insertText(range.index, "\n", Quill.sources.USER);
+					quill.insertEmbed(range.index + 1, "divider", true, Quill.sources.USER);
+					quill.setSelection(range.index + 2, Quill.sources.SILENT);
+				});
 
-					quill.on("text-change", update_body);
-					update_body();
-				</script>
-				<div class="form-inline">
+				const body = document.getElementById("body");
+				function update_body() {
+					const result = JSON.stringify(quill.getContents());
+					body.value = result;
+				}
+
+				quill.on("text-change", update_body);
+				update_body();
+			</script>
+			<div class="form-inline">
 				<input name="is_published" id="is_published" type="checkbox">
 				<label for="is_published"><b>Published:</b> If the document can be publicly visible. If not, only those
-	with relevant preview or edit permissions can see it</label>
-				
-				</div>
+					with relevant preview or edit permissions can see it</label>
+
+			</div>
 
 			{{ other|safe }}
 

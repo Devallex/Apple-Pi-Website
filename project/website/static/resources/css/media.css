@@ -11,7 +11,7 @@ track {}
 video {}
 
 /*mostly taken from w3 schools image gallery tutorial*/
-.media-gallery{
+.media-gallery {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -25,10 +25,12 @@ video {}
     height: 100%;
     object-fit: cover;
 }
-.media-gallery img:hover{
+
+.media-gallery img:hover {
     opacity: 0.8;
     cursor: pointer;
 }
+
 .media-gallery img.media-gallery-four-grid-cells {
     grid-row: span 2 / auto;
     grid-column: span 2 / auto;

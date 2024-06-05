@@ -72,10 +72,10 @@ Array.prototype.slice.call(document.getElementsByTagName("form")).forEach((form)
 								alert("ERROR: Unknown response type.")
 							}
 						}
-						onsuccess = form.getAttribute("data-onsuccess")
-						if (onsuccess) {
-							eval(onsuccess)
-						}
+						// onsuccess = form.getAttribute("data-onsuccess")
+						// if (onsuccess) {
+						// 	eval(onsuccess)
+						// }
 					}).catch(error => {
 						alert("ERROR: " + error)
 						console.error("ERROR: ", error)
