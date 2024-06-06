@@ -85,10 +85,10 @@ def api_create_post(id=None):
     if "title" in data and len(data["title"]) > 30:
         return "Title cannot exceed 30 characters!"
     if "body" in data:
-        if len(data["body"]) > 50000:
+        if len(data["body"]) > 10000:
             return (
-                "Body cannot exceed 50000 characters! Please remove at least %d. (Note: files will count towards this amount)"
-                % (len(data["body"]) - 50000)
+                "Body cannot exceed 10000 characters! Please remove at least %d. (Note: files will count towards this amount)"
+                % (len(data["body"]) - 10000)
             )
     if "body" in data and not json.loads(data["body"]):
         return "Body format is invalid!"
