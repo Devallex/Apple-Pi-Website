@@ -14,7 +14,7 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Edit Role</h1>
-		<form action="/roles/{{ role.id }}/" method="put">
+		<form action="/roles/{{ role.id }}/" method="put" autocomplete="off">
 			<label for="label">Label:</label>
 			<input name="label" id="label" type="text" value="{{ role.label }}" /><br /><br />
 
@@ -25,22 +25,23 @@
 			<select name="parent" id="parent">
 				{% for other_role in roles %}
 				<option value="{{ other_role.id }}" {{ (not (user.hasRole(other_role) or user.overseesRole(other_role))
-					or (other_role in role.getDescendantRoles()) or role==other_role and "disabled" ) or "" }} {{
-					(other_role in role.getDescendantRoles() and "selected" ) or "" }}>
-					{{ other_role.label }} </option>
+					or other_role in role.getDescendantRoles() or role==other_role and "disabled" ) or "" }} {{
+					(other_role==role.getParentRole() and "selected" ) or "" }}>
+					{{ other_role.label }}
+				</option>
 				{% endfor %}
 			</select><br /><br />
 
 			<label for="permissions">Permissions:</label>
 			<ul id="permissions">
-				{% for permission in permissions %} {% if
-				user.hasPermission(permission) %}
+				{% for permission in permissions %}
 				<li>
 					<input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}" type="checkbox"
-						{{ role.hasPermission(permission) and "checked" or "" }} />
-					<label for="permission-{{ permission.name }}">{{ permission.name }}</label>
+						{{ role.hasPermission(permission) and "checked" or "" }} {{ not user.hasPermission(permission)
+						and "disabled" or "" }} /> <label for="permission-{{ permission.name }}">{{ permission.name
+						}}</label>
 				</li>
-				{% endif %} {% endfor %}
+				{% endfor %}
 			</ul>
 
 			<input type="submit" value="Create Role" />
@@ -50,6 +51,9 @@
 		</form>
 		<fieldset>
 			<legend>Controls</legend>
+			<button type="button" onclick="location.href='/roles/new/?parent={{ role.id }}'">Create Child
+				Role</button>
+
 			<form action="/roles/{{ role.id }}/" method="delete">
 				<label for="delete"><b>WARNING:</b> Deleting a roll deletes all it's descendants.</label>
 				<button id="delete">Delete</button>

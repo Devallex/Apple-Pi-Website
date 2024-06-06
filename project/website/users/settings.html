@@ -20,8 +20,12 @@
 				placeholder="{{ user.username }}">
 
 			<label for="display_name"><b>Description (Optional):</b></label>
-			<textarea name="description" id="description"
-				placeholder="Use this to write things like about me information, more contact methods, and what like about the team.">{{ user.description or '' }}</textarea>
+			<textarea name="description" id="description" placeholder="Some things to include:
+ - About me/bio
+ - Preferred contact information
+ - Stuff you're good at
+ - What you like about the team
+ ">{{ user.description or '' }}</textarea>
 			<br><br><button>Save</button>
 		</form><br>
 		<button type="button" onclick="location.href='/users/{{ user.id }}/'">View Profile</button>

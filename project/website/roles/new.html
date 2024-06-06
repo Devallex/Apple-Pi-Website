@@ -12,7 +12,7 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Create Role</h1>
-		<form action="/roles/" method="post">
+		<form action="/roles/" method="post" autocomplete="off">
 			<label for="label">Label:</label>
 			<input name="label" id="label" type="text" /><br /><br />
 
@@ -21,22 +21,25 @@
 
 			<label for="parent">Parent:</label>
 			<select name="parent" id="parent">
-				{% for role in roles %} {% if user.hasRole(role) or
-				user.overseesRole(role) %}
-				<option value="{{ role.id }}">{{ role.label }}</option>
-				{% endif %} {% endfor %}
+				{% for other_role in roles %}
+				<option value="{{ other_role.id }}" {{ (not (user.hasRole(other_role) or user.overseesRole(other_role))
+					and "disabled" ) or "" }} {{ ((parent and parent==other_role ) or (not parent and
+					other_role==user.getHighestRole())) and "selected" or "" }}>
+					{{ other_role.label }}
+				</option>
+				{% endfor %}
 			</select><br /><br />
 
 			<label for="permissions">Permissions:</label>
 			<ul id="permissions">
-				{% for permission in permissions %} {% if
-				user.hasPermission(permission) %}
+				{% for permission in permissions %}
 				<li>
-					<input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}"
-						type="checkbox" />
-					<label for="permission-{{ permission.name }}">{{ permission.name }}</label>
+					<input name="permission-{{ permission.name }}" id="permission-{{ permission.name }}" type="checkbox"
+						{{ not user.hasPermission(permission) and "disabled" or "" }} /> <label
+						for="permission-{{ permission.name }}">{{ permission.name
+						}}</label>
 				</li>
-				{% endif %} {% endfor %}
+				{% endfor %}
 			</ul>
 
 			<input type="submit" value="Create Role" />

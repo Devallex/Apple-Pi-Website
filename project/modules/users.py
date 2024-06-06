@@ -110,16 +110,19 @@ class User(app.db.Model):
     def getRoles(self):
         parsed_roles = []
         for role_id in json.loads(self.roles or "[]"):
-            parsed_roles.append(roles.Role.getFromId(role_id))
+            role = roles.Role.getFromId(role_id)
+            if not role:
+                continue
+            parsed_roles.append(role)
+
+        self.setRoles(parsed_roles)
 
         return parsed_roles
 
-    def setRoles(self, roles):
-        # TODO: Remove invalid permissions
-
+    def setRoles(self, new_roles):
         raw_roles = []
-        for role in roles:
-            if not role or not role.id:
+        for role in new_roles:
+            if not role or not role.id or not roles.Role.getFromId(role.id):
                 continue
             raw_roles.append(role.id)
 

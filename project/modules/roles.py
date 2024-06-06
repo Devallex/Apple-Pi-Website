@@ -66,20 +66,21 @@ class Role(app.db.Model):
 
         return label
 
-    # TODO: Fix bug where admin is a descendant of first created role
-    def getChildRoles(self):
-        return app.db.session.execute(
-            app.db.select(Role).where(Role.parent_id == self.id)
-        ).scalars()
+    def getChildRoles(self) -> list:
+        if not self.id:
+            return []
+
+        return (
+            app.db.session.execute(app.db.select(Role).where(Role.parent_id == self.id))
+            .scalars()
+            .all()
+        )
 
     def getDescendantRoles(self):
-        print("ROLE", self.label, self.id)
         descendants = []
         for child in self.getChildRoles():
-            print("CHILD ROLE", child)
             descendants.append(child)
             descendants.extend(child.getDescendantRoles())
-        print(descendants)
         return descendants
 
     def getPermissions(self):
@@ -191,16 +192,19 @@ def api_create_role(id=None):
             raise errors.NeedPermission
 
     data = app.get_data()
-    parent = Role.getFromId(int(data["parent"]))
+    parent = None
+    if "parent" in data:
+        parent = Role.getFromId(int(data["parent"]))
+    else:
+        parent = role.getParentRole()
     if not parent:
         raise errors.InstanceNotFound
+    print(user.roles)
     if not user.overseesRole(parent) and not user.hasRole(parent):
         raise errors.exceptions.Forbidden
 
     if flask.request.method == "DELETE":
-        all_roles = role.getDescendantRoles()
-        all_roles.append(role)
-        for deleted_role in all_roles:
+        for deleted_role in role.getDescendantRoles() + [role]:
             for user in deleted_role.getUsers():
                 user.removeRole(role)
             app.db.session.delete(deleted_role)
@@ -216,17 +220,14 @@ def api_create_role(id=None):
         if data["permission-" + permission.name] == "on":
             permissions.append(permission.name)
 
+    if parent == role or parent in role.getDescendantRoles():
+        return "This is an invalid parent that would cause a recursive dependency loop."
+
     role.parent_id = parent.id
     role.creation_date = utils.now_iso()
     role.label = Role.formatLabel(data["label"])
     role.permissions = json.dumps(permissions)
     role.description = data["description"]
-
-    if parent == role or parent in role.getDescendantRoles():
-        print("BAD REQUEST PARENT ISSUE")
-        print(role, role.parent_id, role.getDescendantRoles())
-        print(parent, parent.parent_id, parent.getDescendantRoles())
-        raise errors.exceptions.BadRequest
 
     app.db.session.add(role)
     app.db.session.commit()
@@ -247,7 +248,7 @@ def api_user_patch_role(user_id):
 
     role_id = data["role_id"]
     if not role_id:
-        raise errors.exceptions.BadRequest
+        return "Please select a role to add."
 
     target_role = Role.getFromId(role_id)
     if not target_role:
@@ -266,8 +267,6 @@ def api_user_patch_role(user_id):
 
 @app.app.route("/api/users/<int:user_id>/roles/<int:role_id>/", methods=["DELETE"])
 def api_user_delete_role(user_id, role_id):
-    data = app.get_data()
-
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(Permission.AssignRoles)
 
@@ -320,6 +319,11 @@ def page_view_role(id):
 
 @app.app.route("/roles/new/")
 def page_create_role():
+    parent_id = flask.request.args.get("parent")
+    parent = None
+    if parent_id:
+        parent = Role.getFromId(parent_id)
+
     user = users.User.getFromRequestOrAbort()
     user.hasPermissionOrAbort(Permission.ManageRoles)
 
@@ -327,6 +331,7 @@ def page_create_role():
         "/roles/new.html",
         user=user,
         roles=app.db.session.execute(app.db.select(Role)).scalars(),
+        parent=parent,
         permissions=Permission,
     )
 
