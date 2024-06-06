@@ -232,7 +232,9 @@ def api_create_role(id=None):
     app.db.session.add(role)
     app.db.session.commit()
 
-    return flask.redirect("/roles/" + str(role.id) + "/")
+    if flask.request.method == "POST":
+        return flask.redirect("/roles/%d/" % role.id)
+    return flask.redirect("/roles/%d/edit/" % role.id)
 
 
 @app.app.route("/api/users/<int:user_id>/roles/", methods=["PATCH"])
