@@ -91,11 +91,11 @@ def api_create_article(id: int = None):
         return "Title cannot exceed 30 characters!"
     if "path" in data and len(data["path"]) > 100:
         return "URL cannot exceed 100 characters!"
-    if "body" in data and len(data["body"]) > 100000:
+    if "body" in data and len(data["body"]) > 1e6:
         return (
-            "Body cannot exceed 100000 characters! Please remove at least %d."
+            "Body cannot exceed 1e6 characters! Please remove at least %d."
             % len(data["body"])
-            - 100000
+            - 1e6
         )
 
     # TODO: Validate path, ensure unique
