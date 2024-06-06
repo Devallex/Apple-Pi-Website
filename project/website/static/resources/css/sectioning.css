@@ -433,9 +433,12 @@ button {
     width: 100%;
     border-style: none;
     font-family: "Afacad", sans-serif;
-
 }
-
+#toolbar span button {
+    font-size: 16px;
+    
+    margin: 0;
+}
 button:hover {
     cursor: pointer;
     font-style: italic;

@@ -15,37 +15,28 @@
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Edit Event</h1>
 		<div>
-			<form action="/events/{{ event.id }}" method="put">
-				<fieldset>
-					<legend>Schedule</legend>
+			<form action="/events/{{ event.id }}" method="put" class="create-form">
 					<b>Note:</b> Schedule cannot be edited
-				</fieldset>
 				<!-- <fieldset>
 					<legend>Reminders</legend>
 					<p>
 						Please remember that reminders are given to everyone who is subscribed to the calendar.
 					</p>
 				</fieldset> -->
-				<fieldset>
-					<legend>Information</legend>
 
-					<label for="title"><b>Title (Required):</b> A short name for the event</label><br>
+					<label for="title"><b>Title (Required):</b> A short name for the event</label>
 					<input name="title" id="title" type="text" placeholder="Write the title here..."
-						value="{{ event.title }}"></textarea><br>
+						value="{{ event.title }}"></textarea>
 
 					<label for="description"><b>Description (Optional):</b> More in-depth information about the
-						event</label><br>
+						event</label>
 					<textarea name="description" id="description"
-						placeholder="Write the description here...">{{ event.description }}</textarea><br>
-				</fieldset>
+						placeholder="Write the description here...">{{ event.description }}</textarea>
 				<button>Create Event</button>
 			</form>
-			<fieldset>
-				<legend>Controls</legend>
-				<form action="/events/{{ event.id }}/" method="delete">
+				<form action="/events/{{ event.id }}/" method="delete" class="create-form">
 					<button>Delete</button>
 				</form>
-			</fieldset>
 		</div>
 	</main>
 	{{ footer|safe }}

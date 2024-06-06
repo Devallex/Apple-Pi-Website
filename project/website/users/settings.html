@@ -14,54 +14,52 @@
 		<h1 class="title">User Settings {{ user.getNameText() }}</h1>
 		Here you can modify the settings for your account.
 		<h2>Profile</h2>
-		<form action="/users/{{ user.id }}/" method="put">
+		<form action="/users/{{ user.id }}/" method="put" class="create-form">
 			<label for="display_name"><b>Display Name (Optional):</b></label>
 			<input name="display_name" id="display_name" type="text" value="{{ user.display_name or '' }}"
-				placeholder="{{ user.username }}"><br><br>
+				placeholder="{{ user.username }}">
 
 			<label for="display_name"><b>Description (Optional):</b></label>
 			<textarea name="description" id="description"
 				placeholder="Use this to write things like about me information, more contact methods, and what like about the team.">{{ user.description or '' }}</textarea>
-			<br><br><button>Save</button>
+			<button>Save</button>
 		</form>
 		<a href="/users/{{ user.id}}/">View Profile</a>
 
 		<h2>Contact Information</h2>
-		<form action="/users/{{ user.id }}/" method="put">
+		<form action="/users/{{ user.id }}/" method="put" class="create-form">
 			<i>Note: This information may be shared publicly.</i>
 			<label for="email"><b>Email (Optional):</b> <!--Your personal email which can be used to verify your
 				identity or send you notifications.--></label>
 			<input type="email" id="email" name="email" placeholder="username@example.com"
-				value="{{ user.email or '' }}" /><br><br>
+				value="{{ user.email or '' }}" />
 			<label for="phone"><b>Phone Number (Optional):</b> </label>
 			<input type="tel" id="phone" name="phone" pattern="[0-9]{3}-?[0-9]{3}-?[0-9]{4}"
 				value="{{ user.phone or '' }}" placeholder="000-000-0000" />
 
-			<br><br><button>Save</button>
+			<button>Save</button>
 		</form>
 		<h2>Account</h2>
-		<form action="/users/{{ user.id }}/" method="put">
+		<form action="/users/{{ user.id }}/" method="put" class="create-form">
 			<label for="username"><b>Username (Required — Unique):</b></label>
 			<input type="text" name="username" value="{{ user.username }}" id="username" /> <button>Save</button>
-		</form><br><br>
-		<form action="/users/{{ user.id }}/" method="put">
+		</form>
+		<form action="/users/{{ user.id }}/" method="put" class="create-form">
 			<label for="password"><b>Password (Required):</b></label>
 			<input type="text" name="password" id="password" placeholder="( Hidden )" /> <button>Save</button>
 		</form>
 		<h2>Log Out</h2>
 		{% if user == calling_user %}
-		<form action="/sessions/" method="delete">
+		<form action="/sessions/" method="delete" class="create-form">
 			<input type="submit" value="Log Out" />
 			<label>Click this button to log out on this browser.</label>
 		</form>
 		{% endif %}
-		<br />
-		<form action="/sessions/all/" method="delete">
+		<form action="/sessions/all/" method="delete" class="create-form">
 			<input type="submit" value="Log Out Everywhere" />
 			<label>Click this button to log this account out on all devices.</label>
 		</form>
-		<br />
-		<form action="/users/{{ user.id }}/" method="delete">
+		<form action="/users/{{ user.id }}/" method="delete" class="create-form">
 			<input type="submit" value="Delete Account" />
 			<label>Click this button to delete the account forever.</label>
 		</form>
