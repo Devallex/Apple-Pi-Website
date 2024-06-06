@@ -324,10 +324,11 @@ def create_user(id=None):
 
     if "display_name" in data:
         display_name = data["display_name"]
-        if len(display_name) < 3:
-            return "Your display name must be at least 3 characters."
-        elif len(display_name) > 20:
-            return "Your display name cannot exceed 20 characters."
+        if display_name != "":
+            if len(display_name) < 3:
+                return "Your display name must be at least 3 characters."
+            elif len(display_name) > 20:
+                return "Your display name cannot exceed 20 characters."
         user.display_name = display_name
 
     if "username" in data:

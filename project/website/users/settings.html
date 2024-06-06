@@ -22,9 +22,9 @@
 			<label for="display_name"><b>Description (Optional):</b></label>
 			<textarea name="description" id="description"
 				placeholder="Use this to write things like about me information, more contact methods, and what like about the team.">{{ user.description or '' }}</textarea>
-			<button>Save</button>
-		</form>
-		<a href="/users/{{ user.id}}/">View Profile</a>
+			<br><br><button>Save</button>
+		</form><br>
+		<button type="button" onclick="location.href='/users/{{ user.id }}/'">View Profile</button>
 
 		<h2>Contact Information</h2>
 		<form action="/users/{{ user.id }}/" method="put" class="create-form">
