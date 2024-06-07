@@ -19,19 +19,22 @@
 		<hr />
 		<div id="preview">{{ body|safe }}</div>
 		<script>
-			const quill = new Quill('#preview', {
-				readOnly: true,
-				modules: {
-					toolbar: null,
-				},
-				placeholder: "[ No content provided ]",
-				// theme: 'snow',
-			});
+			document.querySelector('#editor-script').addEventListener('load', () => {
 
-			// TODO: Security vulnerability
-			document.addEventListener('DOMContentLoaded', function () {
-				quill.setContents({{ body| safe }});
+				const quill = new Quill('#preview', {
+					readOnly: true,
+					modules: {
+						toolbar: null,
+					},
+					placeholder: "[ No content provided ]",
+					// theme: 'snow',
+				});
+
+				// TODO: Security vulnerability
+				document.addEventListener('DOMContentLoaded', function () {
+					quill.setContents({{ body| safe }});
 			}, false);
+		});
 		</script>
 		{% if user and user.hasAPermission(Permission.EditArticles, Permission.PreviewArticles) %}
 		<hr />

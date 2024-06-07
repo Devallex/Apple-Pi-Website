@@ -24,19 +24,21 @@
 
 		<div id="preview">{{ body|safe }}</div>
 		<script>
-			const quill = new Quill('#preview', {
-				readOnly: true,
-				modules: {
-					toolbar: null,
-				},
-				placeholder: "[ No content provided ]",
-				// theme: 'snow',
-			});
+			document.querySelector('#editor-script').addEventListener('load', () => {
+				const quill = new Quill('#preview', {
+					readOnly: true,
+					modules: {
+						toolbar: null,
+					},
+					placeholder: "[ No content provided ]",
+					// theme: 'snow',
+				});
 
-			// TODO: Security vulnerability
-			document.addEventListener('DOMContentLoaded', function () {
-				quill.setContents({{ body| safe }});
+				// TODO: Security vulnerability
+				document.addEventListener('DOMContentLoaded', function () {
+					quill.setContents({{ body| safe }});
 			}, false);
+		});
 		</script>
 
 		{% if can_edit %}

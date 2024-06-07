@@ -68,51 +68,53 @@
 			<div id="editor"></div>
 
 			<script>
-				const quill = new Quill('#editor', {
-					modules: {
-						/* toolbar: [
-							[{ header: [false, 1, 2, 3, 4, 5, 6] }],
-							["bold", "italic", "underline", "strike"],
-							[{ list: "ordered" }, { list: "bullet" }],
-							["blockquote", "code-block", "formula"],
-							["link", "image", "video"],
-							[{ script: "sub" }, { script: "super" }],
-							["html"],
-						], */
-						toolbar: "#toolbar"
-					},
-					placeholder: "Click here to type...",
-					theme: 'snow',
+				document.querySelector('#editor-script').addEventListener('load', () => {
+					const quill = new Quill('#editor', {
+						modules: {
+							/* toolbar: [
+								[{ header: [false, 1, 2, 3, 4, 5, 6] }],
+								["bold", "italic", "underline", "strike"],
+								[{ list: "ordered" }, { list: "bullet" }],
+								["blockquote", "code-block", "formula"],
+								["link", "image", "video"],
+								[{ script: "sub" }, { script: "super" }],
+								["html"],
+							], */
+							toolbar: "#toolbar"
+						},
+						placeholder: "Click here to type...",
+						theme: 'snow',
+					});
+
+					const onClick = (selector, callback) => {
+						document.querySelector(selector).addEventListener('click', callback);
+					};
+
+					const EMBED_MESSAGE = `Embed URL:\n\nThis will only work with just the link, do not put <iframe>s and other HTML formatting. Make sure to include "https://" if your URL is not on this site.\n\nYou can cleanly embed pages from this site by putting it's relative URL, such as "/login/" to allow users to quickly interact with the site.\n\n`;
+
+					onClick('#ql-html', () => {
+						const range = quill.getSelection(true);
+						quill.insertText(range.index, "\n", Quill.sources.USER);
+						quill.insertEmbed(range.index + 1, "embed", { "url": prompt(EMBED_MESSAGE) }, Quill.sources.USER);
+						quill.setSelection(range.index + 2, Quill.sources.SILENT);
+					});
+
+					onClick('#ql-divider', () => {
+						const range = quill.getSelection(true);
+						quill.insertText(range.index, "\n", Quill.sources.USER);
+						quill.insertEmbed(range.index + 1, "divider", true, Quill.sources.USER);
+						quill.setSelection(range.index + 2, Quill.sources.SILENT);
+					});
+
+					const body = document.getElementById("body");
+					function update_body() {
+						const result = JSON.stringify(quill.getContents());
+						body.value = result;
+					}
+
+					quill.on("text-change", update_body);
+					update_body();
 				});
-
-				const onClick = (selector, callback) => {
-					document.querySelector(selector).addEventListener('click', callback);
-				};
-
-				const EMBED_MESSAGE = `Embed URL:\n\nThis will only work with just the link, do not put <iframe>s and other HTML formatting. Make sure to include "https://" if your URL is not on this site.\n\nYou can cleanly embed pages from this site by putting it's relative URL, such as "/login/" to allow users to quickly interact with the site.\n\n`;
-
-				onClick('#ql-html', () => {
-					const range = quill.getSelection(true);
-					quill.insertText(range.index, "\n", Quill.sources.USER);
-					quill.insertEmbed(range.index + 1, "embed", { "url": prompt(EMBED_MESSAGE) }, Quill.sources.USER);
-					quill.setSelection(range.index + 2, Quill.sources.SILENT);
-				});
-
-				onClick('#ql-divider', () => {
-					const range = quill.getSelection(true);
-					quill.insertText(range.index, "\n", Quill.sources.USER);
-					quill.insertEmbed(range.index + 1, "divider", true, Quill.sources.USER);
-					quill.setSelection(range.index + 2, Quill.sources.SILENT);
-				});
-
-				const body = document.getElementById("body");
-				function update_body() {
-					const result = JSON.stringify(quill.getContents());
-					body.value = result;
-				}
-
-				quill.on("text-change", update_body);
-				update_body();
 			</script>
 			<div class="form-inline">
 				<input name="is_published" id="is_published" type="checkbox">
