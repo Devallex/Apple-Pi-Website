@@ -2,6 +2,7 @@ import project.core.app as app
 
 result = """
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+<meta name="google-site-verification" content="tR81jGR-kl1MpaqPNJLe6SwqiOF6ZW4gPxRnFf91Nks" />
 <link rel="icon" type="image/x-icon" href="/resources/images/logo.svg/">
 <link rel="stylesheet" href="/resources/css/styles.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
