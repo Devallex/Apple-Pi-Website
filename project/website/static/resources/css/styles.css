@@ -3,15 +3,11 @@
 @import "/resources/css/semantics.css";
 @import "/resources/css/media.css";
 @import "/resources/css/embedded.css";
-/* Unused: SVG and MathMl */
-/* Unused: Scripting */
 @import "/resources/css/demarcating.css";
 @import "/resources/css/table.css";
 @import "/resources/css/forms.css";
 @import "/resources/css/interactive.css";
-/* Unused: Web Components */
-
-@import url('https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&display=swap');
+@import "/resources/css/fonts/fonts.css";
 
 /* Root */
 :root {

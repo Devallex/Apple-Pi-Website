@@ -8,8 +8,6 @@ import flask
 import werkzeug
 import mimetypes
 import re
-import json
-import requests
 
 
 @app.app.route("/<path:path>/")
@@ -60,3 +58,29 @@ def page(path):
 @app.app.route("/")
 def root_page():
     return page("index.html")
+
+
+@app.app.route("/resources/css/styles.css/")
+def dynamic_styles():
+    # @import\s*?["|']\/resources\/css\/(.*).css["|'];
+    # fonts/fonts
+
+    # @import "/resources/css/fonts/fonts.css";
+
+    file = open("./project/website/static/resources/css/styles.css", "r")
+    text = file.read()
+    file.close()
+
+    for result in re.finditer(
+        """@import\s*?["|']\/resources\/css\/(.*).css["|'];""", text
+    ):
+        filename = result.groups()[0]
+        file = open("./project/website/static/resources/css/%s.css" % filename, "r")
+        file_text = file.read()
+        file.close()
+
+        text = text.replace(result.string, file_text)
+
+    response = flask.make_response(text)
+    response.mimetype = "text/css"
+    return response
