@@ -1,19 +1,11 @@
 a {
-	text-decoration: none;
+	text-decoration: underline;
 	letter-spacing: 0em;
-	color: inherit;
+	color: red;
 
 	transition-property: color, border-bottom;
 	transition-duration: 0.2s;
 	transition-timing-function: ease;
-
-	&:hover {
-		color: var(--primary-color);
-	}
-
-	&:active {
-		color: var(--dark-color);
-	}
 }
 
 /*

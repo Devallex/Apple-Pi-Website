@@ -195,6 +195,8 @@ a {
     height: 57px;
     font-size: 2.5em;
     vertical-align: middle;
+    text-decoration: none;
+    color: black;
 
     >img {
         height: 57px;
@@ -361,11 +363,13 @@ footer {
     padding: 10px;
     font-size: 30px;
     text-align: left;
+    text-decoration: none;
 }
 
 .fa-twitter {
     padding: 10px;
     font-size: 30px;
+    text-decoration: none;
 }
 
 .footer-splitscreen-container {
