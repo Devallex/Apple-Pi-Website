@@ -173,11 +173,6 @@ body {
 	font-family: "Afacad", sans-serif;
 }
 
-a {
-	text-decoration: none;
-	color: inherit;
-}
-
 .navbar {
 	background-color: #fcfcf5;
 	display: flex;
