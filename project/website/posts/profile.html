@@ -13,15 +13,14 @@
 		{{ breadcrumbs|safe }}
 		<h1 class="title">{{ title }} ({{ document_type }})</h1>
 		<i>Creator:
-			<a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a>
-		</i>
-		<br>
+			<a href="/users/{{ creator.id }}/">{{ creator.getNameText() }}</a></i>
+		<br />
 		<i>Created on: {{ creation_date }}</i><br>
 		<i>Is published: {{ is_published and "Yes" or "No" }}</i><br>
-		<i>{% if path %}</i>
+		{% if path %}
 		<i>Path: <a href="/{{ path }}/">/{{ path }}</a></i>
 		{% endif %}
-		<hr>
+		<hr />
 
 		<div id="preview">{{ body|safe }}</div>
 		<script>
@@ -33,7 +32,7 @@
 						toolbar: null,
 					},
 					placeholder: "[ No content provided ]",
-					// theme: 'snow',
+					theme: 'snow',
 				});
 
 				// TODO: Security vulnerability
