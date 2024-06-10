@@ -23,14 +23,14 @@
 	--light-color: var(--raw-light-color);
 	--dark-color: var(--raw-dark-color);
 }
-
+/*
 @media (prefers-color-scheme: dark) {
 	:root {
 		--light-color: var(--raw-dark-color);
 		--dark-color: var(--raw-light-color);
 	}
 }
-
+*/
 html {
 	font-family: "Afacad", sans-serif;
 	font-size: large;
