@@ -23,6 +23,7 @@
 	--light-color: var(--raw-light-color);
 	--dark-color: var(--raw-dark-color);
 }
+
 /*
 @media (prefers-color-scheme: dark) {
 	:root {

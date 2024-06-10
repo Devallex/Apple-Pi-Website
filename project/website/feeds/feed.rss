@@ -5,9 +5,11 @@
 	<channel>
 		<title>Apple Pi Robotics Posts</title>
 		<link>{{ base_url }}/posts/</link>
-		<description>The most recent news posts from the Apple Pi Website.</description>
+		<description>The
+			most recent news posts from the Apple Pi Website.</description>
 		<language>en-us</language>
-		<copyright>© {{ year }} Apple Pi Robotics</copyright>
+		<copyright>©
+		{{ year }} Apple Pi Robotics</copyright>
 
 		<!-- <managingEditor></managingEditor>
 		<webMaster></webMaster> -->
@@ -16,14 +18,12 @@
 		<lastBuildDate></lastBuildDate> -->
 
 		<!-- <category></category> -->
-		<!-- <generator>Python Flask and Jinja Templates</generator> -->
-
-		{% for post in posts %}
-		<item>
+		<!-- <generator>Python Flask and Jinja Templates</generator> --> {% for post in posts %} <item>
 			<title>{{ post.title }}</title>
 			<link>{{ base_url }}/posts/{{ post.id }}/</link>
 			<description>
-				{{ post.abstract or (post.body|length > max_abstract and post.body[:max_abstract] + "..." or post.body) }}
+				{{ post.abstract or (post.body|length > max_abstract and post.body[:max_abstract] +
+		"..." or post.body) }}
 			</description>
 			<author>
 				<name>{{ post.getCreator().getNameText() }}</name>
@@ -35,7 +35,5 @@
 			<guid>{{ post.id }}</guid>
 			<pubDate>{{ post.creation_date }}</pubDate>
 			<!-- <source></source> -->
-		</item>
-		{% endfor %}
-	</channel>
+		</item> {% endfor %} </channel>
 </rss>

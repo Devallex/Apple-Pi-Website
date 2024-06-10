@@ -14,7 +14,7 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Article Editor</h1>
-		<form action="/articles/{{ article.id }}/" method="put">
+		<form action="/articles/{{ article.id }}/" method="put" class="create-form">
 			<fieldset>
 				<legend>Document</legend>
 
@@ -139,9 +139,10 @@
 			</fieldset>
 			<input type="submit" value="Create">
 		</form>
+		<hr>
 		<fieldset>
 			<legend>Controls</legend>
-			<form action="/articles/{{ article.id }}/" method="delete">
+			<form action="/articles/{{ article.id }}/" method="delete" class="create-form">
 				<button>Delete</button>
 			</form>
 		</fieldset>

@@ -16,7 +16,7 @@
 		<h1 class="title">Edit Event</h1>
 		<div>
 			<form action="/events/{{ event.id }}" method="put" class="create-form">
-					<b>Note:</b> Schedule cannot be edited
+				<b>Note:</b> Schedule cannot be edited
 				<!-- <fieldset>
 					<legend>Reminders</legend>
 					<p>
@@ -24,19 +24,20 @@
 					</p>
 				</fieldset> -->
 
-					<label for="title"><b>Title (Required):</b> A short name for the event</label>
-					<input name="title" id="title" type="text" placeholder="Write the title here..."
-						value="{{ event.title }}"></textarea>
+				<label for="title"><b>Title (Required):</b> A short name for the event</label>
+				<input name="title" id="title" type="text" placeholder="Write the title here..."
+					value="{{ event.title }}"></textarea>
 
-					<label for="description"><b>Description (Optional):</b> More in-depth information about the
-						event</label>
-					<textarea name="description" id="description"
-						placeholder="Write the description here...">{{ event.description }}</textarea>
+				<label for="description"><b>Description (Optional):</b> More in-depth information about the
+					event</label>
+				<textarea name="description" id="description"
+					placeholder="Write the description here...">{{ event.description }}</textarea>
 				<button>Create Event</button>
+				<hr>
 			</form>
-				<form action="/events/{{ event.id }}/" method="delete" class="create-form">
-					<button>Delete</button>
-				</form>
+			<form action="/events/{{ event.id }}/" method="delete" class="create-form">
+				<button>Delete</button>
+			</form>
 		</div>
 	</main>
 	{{ footer|safe }}

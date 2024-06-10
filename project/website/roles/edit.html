@@ -14,7 +14,7 @@
 	<main>
 		{{ breadcrumbs|safe }}
 		<h1 class="title">Edit Role</h1>
-		<form action="/roles/{{ role.id }}/" method="put" autocomplete="off">
+		<form action="/roles/{{ role.id }}/" method="put" autocomplete="off" class="create-form">
 			<label for="label">Label:</label>
 			<input name="label" id="label" type="text" value="{{ role.label }}" /><br /><br />
 
@@ -49,12 +49,15 @@
 			<i class="center">You may not see all roles or permissions based on which ones you
 				have.</i>
 		</form>
+		<hr>
 		<fieldset>
 			<legend>Controls</legend>
-			<button type="button" onclick="location.href='/roles/new/?parent={{ role.id }}'">Create Child
-				Role</button>
+			<form class="create-form">
+				<button type="button" onclick="location.href='/roles/new/?parent={{ role.id }}'">Create Child
+					Role</button>
 
-			<form action="/roles/{{ role.id }}/" method="delete">
+			</form>
+			<form action="/roles/{{ role.id }}/" method="delete" class="create-form">
 				<label for="delete"><b>WARNING:</b> Deleting a roll deletes all it's descendants.</label>
 				<button id="delete">Delete</button>
 			</form>
