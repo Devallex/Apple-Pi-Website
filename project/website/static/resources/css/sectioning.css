@@ -173,10 +173,6 @@ body {
     font-family: "Afacad", sans-serif;
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
 
 .navbar {
     background-color: #fcfcf5;
@@ -210,9 +206,10 @@ a {
     margin-left: 40px;
 }
 
-#navlist li {
+#navlist li a{
     font-size: 30px;
     color: black;
+    text-decoration: none;
 }
 
 #hamb {
@@ -249,7 +246,7 @@ a {
     width: 60%;
     padding: 50px;
     color: white;
-    background-image: url("/picture.jpg");
+    background-image: url("/Chairmans Hartford1ss.jpg");
     background-repeat: no-repeat;
     background-size: cover;
 }
