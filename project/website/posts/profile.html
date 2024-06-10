@@ -17,9 +17,6 @@
 		<br />
 		<i>Created on: {{ creation_date }}</i><br />
 		<i>Is published: {{ is_published and "Yes" or "No" }}</i><br />
-		<i>{% if path %}</i>
-		<i>Path: <a href="/{{ path }}/">/{{ path }}</a></i>
-		{% endif %}
 		<hr />
 
 		<div id="preview">{{ body|safe }}</div>
@@ -32,7 +29,7 @@
 						toolbar: null,
 					},
 					placeholder: "[ No content provided ]",
-					// theme: 'snow',
+					theme: 'snow',
 				});
 
 				// TODO: Security vulnerability
