@@ -1,0 +1,11 @@
+---
+services:
+  project:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: project
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app

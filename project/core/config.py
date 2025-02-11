@@ -10,8 +10,8 @@ if not config_exists:
 \t"MODE": "dev",
 \t"ADMIN_USERNAME": "admin",
 \t"ADMIN_PASSWORD": "admin",
-\t"HOST": "127.0.0.1",
-\t"PORT": 5000,
+\t"HOST": "0.0.0.0",
+\t"PORT": 8080,
 \t"PROD_PROXY": false
 }"""
     )

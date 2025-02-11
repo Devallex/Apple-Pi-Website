@@ -1,3 +1,4 @@
+**INSTRUCTIONS OUT OF DATE, PLEASE IGNORE**
 # Overview
 These instructions show only Linux/MacOS. Windows is probably supported but commands may be slightly different.
 ## Directory Structure
